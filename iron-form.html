@@ -11,12 +11,35 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../iron-ajax/iron-ajax.html">
 
-<!--
-An `iron-form` is a form element that can validate and submit any custom
-elements that have an 'iron-form-behavior`, as well as any native HTML elements.
--->
-
 <script>
+/*
+``<iron-form>` is an HTML `<form>` element that can validate and submit any custom
+elements that implement `Polymer.IronFormElementBehavior`, as well as any
+native HTML elements.
+
+It supports both `get` and `post` methods, and uses an `iron-ajax` element to
+submit the form data to the action URL.
+
+  Example:
+
+    <form is="iron-form" id="form" method="post" action="/form/handler">
+      <paper-input name="name" label="name"></paper-input>
+      <input name="address">
+      ...
+    </form>
+
+By default, a native `<button>` element will submit this form. However, if you
+want to submit it from a custom element's click handler, you need to explicitly
+call the form's `submit` method.
+
+  Example:
+
+    <paper-button raised onclick="submitForm()">Submit</paper-button>
+
+    function submitForm() {
+      document.getElementById('form').submit();
+    }
+*/
 
   Polymer({
 
@@ -88,25 +111,45 @@ elements that have an 'iron-form-behavior`, as well as any native HTML elements.
 
     /**
      * Returns a json object containing name/value pairs for all the registered
-     * custom components and native elements of the form.
+     * custom components and native elements of the form. If there are elements
+     * with duplicate names, then their values will get aggregated into an
+     * array of values.
      */
     serialize: function() {
       var json = {};
 
+      function addSerializedElement(el) {
+        // If the name doesn't exist, add it. Otherwise, serialize it to
+        // an array,
+        if (!json[el.name]) {
+          json[el.name] = el.value;
+        } else {
+          if (!Array.isArray(json[el.name])) {
+            json[el.name] = [json[el.name]];
+          }
+          json[el.name].push(el.value);
+        }
+      }
+
       // Go through all of the registered custom components.
       for (var el, i = 0; el = this._customElements[i], i < this._customElements.length; i++) {
         if (el.name) {
-          json[el.name] = el.value;
+          addSerializedElement(el);
         }
       }
 
       // Also go through the form's native elements.
       for (var el, i = 0; el = this.elements[i], i < this.elements.length; i++) {
-        // Don't re-add custom elements that extend native elements (like an
-        // `<input is="fancy-input">`), since they will also show up in this list.
-        if (el.name && !json[el.name]) {
-          json[el.name] = el.value;
+        // Checkboxes and radio buttons should only use their value if they're checked.
+        // Also, custom elements that extend native elements (like an
+        // `<input is="fancy-input">`) will appear in both lists. Since they
+        // were already added as a custom element, they don't need
+        // to be re-added.
+        if (!el.name || !this._useValue(el) ||
+            (el.hasAttribute('is') && json[el.name])) {
+          continue;
         }
+        addSerializedElement(el);
       }
 
       return json;
@@ -130,6 +173,15 @@ elements that have an 'iron-form-behavior`, as well as any native HTML elements.
         valid = el.validate() && valid;
       }
       return valid;
+    },
+
+    _useValue: function(el) {
+      // Checkboxes and radio buttons should only use their value if they're checked.
+      if (el.type !== 'checkbox' && el.type !== 'radio') {
+        return true;
+      } else {
+        return el.checked;
+      }
     }
 
   });
