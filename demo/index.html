@@ -10,81 +10,110 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 <html>
 <head>
-
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
-
   <title>iron-form demo</title>
+
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
 
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
 
   <link rel="import" href="../../paper-input/paper-input.html">
   <link rel="import" href="../../paper-button/paper-button.html">
-  <link rel="import" href="../../iron-flex-layout/iron-flex-layout.html">
-  <link rel="stylesheet" href="../../paper-styles/demo.css">
+  <link rel="import" href="../../paper-styles/paper-styles.html">
+  <link rel="import" href="../../paper-styles/demo-pages.html">
   <link rel="import" href="../iron-form.html">
-
 </head>
 <style>
-  form {
-    width: 300px;
-  }
-
-  .divider {
-    margin-left: 20px;
-    margin-right: 20px;
-    border: 1px solid #ccc;
+  .wide {
+    width: 474px;
   }
 </style>
 <body>
+  <div class="horizontal center-center layout">
+    <div>
+      <h4>method="get"</h4>
+      <div class="horizontal-section">
+        <form is="iron-form" id="formGet" method="get" action="/">
+          <paper-input name="name" label="Name" required></paper-input>
+          <paper-input name="animal" label="Favourite animal" required></paper-input>
+          <br>
 
-  <div class="horizontal layout">
-    <form is="iron-form" id="formGet" method="get" action="/">
-      <h1>method="get"</h1>
-      <paper-input name="name" label="Name" required></paper-input>
-      <paper-input name="animal" label="Favourite animal" required></paper-input>
-      <br>
-      <input type="checkbox" name="donuts" value="donuts" checked="checked"> I like donuts<br>
-      <br><br>
-      <paper-button raised
-          onclick="clickHandler(event)">Submit</paper-button>
-      <button type="submit">Native Submit</button>
-    </form>
+          <input type="checkbox" name="food" value="donuts" checked> I like donuts<br>
+          <input type="checkbox" name="food" value="pizza"> I like pizza<br>
+          <br>
 
-    <div class="divider"></div>
+          <input type="radio" name="color" value="red" checked>Red<br>
+          <input type="radio" name="color" value="blue" checked>Blue<br>
+          <input type="radio" name="color" value="green">Green<br>
 
-    <form is="iron-form" id="formPost" method="post" action="/">
-      <h1>method="post"</h1>
-      <paper-input name="name" label="Name" required></paper-input>
-      <paper-input name="animal" label="Favourite animal" required></paper-input>
-      <br><br>
-      <paper-button raised
-          onclick="clickHandler(event)">Submit</paper-button>
-      <button type="submit">Native Submit</button>
-    </form>
+          <br><br>
 
+          <paper-button raised
+              onclick="clickHandler(event)">Submit</paper-button>
+          <button type="submit">Native Submit</button>
+        </form>
+      </div>
+    </div>
+
+    <div>
+      <h4>method="post"</h4>
+      <div class="horizontal-section">
+        <form is="iron-form" id="formPost" method="post" action="/">
+          <paper-input name="name" label="Name" required></paper-input>
+          <paper-input name="name" label="Duplicate name" required></paper-input>
+          <paper-input name="animal" label="Favourite animal" required></paper-input>
+          <br>
+
+          <label>Cars</label>
+          <select name="cars">
+            <option value="volvo">Volvo</option>
+            <option value="saab">Saab</option>
+            <option value="fiat">Fiat</option>
+            <option value="audi">Audi</option>
+          </select>
+
+          <br><br>
+          <label>Browsers</label>
+          <input list="browsers" name="browsers">
+            <datalist id="browsers">
+              <option value="Internet Explorer">
+              <option value="Firefox">
+              <option value="Chrome">
+              <option value="Opera">
+              <option value="Safari">
+            </datalist>
+
+          <br><br><br>
+          <paper-button raised
+              onclick="clickHandler(event)">Submit</paper-button>
+          <button type="submit">Native Submit</button>
+        </form>
+      </div>
+    </div>
   </div>
 
   <br><br>
-
-  <div id="output"></div>
+  <div class="layout vertical center-center">
+    <div>
+      <h4>Submitted form data</h4>
+      <div class="horizontal-section wide">
+        <div id="output"></div>
+      </div>
+    </div>
+  </div>
 
   <script>
-    document.getElementById('formGet').addEventListener('iron-form-submit',
-        function(event){
-          var output = document.getElementById('output');
-          output.innerHTML = 'Form data: ' + JSON.stringify(event.detail);
-        });
+    document.getElementById('formGet').addEventListener('iron-form-submit', display);
+    document.getElementById('formPost').addEventListener('iron-form-submit', display);
 
-    document.getElementById('formPost').addEventListener('iron-form-submit',
-        function(event){
-          var output = document.getElementById('output');
-          output.innerHTML = 'Form data: ' + JSON.stringify(event.detail);
-        });
+    function display(event) {
+      var output = document.getElementById('output');
+      output.innerHTML = JSON.stringify(event.detail);
+    }
 
-    function clickHandler(e) {
-      Polymer.dom(e).localTarget.parentElement.submit();
+    function clickHandler(event) {
+      Polymer.dom(event).localTarget.parentElement.submit();
     }
   </script>
 </body>
