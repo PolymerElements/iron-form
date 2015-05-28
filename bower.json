@@ -17,7 +17,7 @@
     "type": "git",
     "url": "git://github.com/PolymerElements/iron-form.git"
   },
-  "license": "MIT",
+  "license": "http://polymer.github.io/LICENSE.txt",
   "homepage": "https://github.com/PolymerElements/iron-form",
   "ignore": [],
   "dependencies": {
