@@ -95,8 +95,10 @@ call the form's `submit` method.
       this._requestBot.url = this.action;
       this._requestBot.method = this.method;
       this._requestBot.params = json;
+      
+      var postMethod = ['POST', 'PUT', 'PATCH'];
 
-      if (this.method == 'POST') {
+      if (postMethod.indexOf(this.method.toUpperCase()) != -1) {
         this._requestBot.body = JSON.stringify(json);
       }
 
