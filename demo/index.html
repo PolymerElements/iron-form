@@ -40,7 +40,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <br>
 
           <input type="checkbox" name="food" value="donuts" checked> I like donuts<br>
-          <input type="checkbox" name="food" value="pizza"> I like pizza<br>
+          <input type="checkbox" name="food" value="pizza" required> I like pizza<br>
           <br>
 
           <input type="radio" name="color" value="red" checked>Red<br>
@@ -61,9 +61,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div class="horizontal-section">
         <form is="iron-form" id="formPost" method="post" action="/">
           <paper-input name="name" label="Name" required></paper-input>
-          <paper-input name="name" label="Duplicate name" required></paper-input>
-          <paper-input name="animal" label="Favourite animal" required></paper-input>
           <br>
+          <p>Duplicate name <input name="name" required></p>
+          <br><br>
 
           <label>Cars</label>
           <select name="cars">
@@ -75,7 +75,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           <br><br>
           <label>Browsers</label>
-          <input list="browsers" name="browsers">
+          <input list="browsers" name="browsers" required>
             <datalist id="browsers">
               <option value="Internet Explorer">
               <option value="Firefox">
@@ -83,6 +83,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <option value="Opera">
               <option value="Safari">
             </datalist>
+          <br><br>
+
+          <label>Pick a number</label>
+          <input type="range" name="number" min="1" max="100">
 
           <br><br><br>
           <paper-button raised

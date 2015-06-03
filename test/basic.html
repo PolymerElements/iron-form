@@ -72,6 +72,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </template>
   </test-fixture>
 
+  <test-fixture id="InvalidForm">
+    <template>
+      <form is="iron-form" action="/responds_with_json" method="post">
+        <simple-element name="zig"></simple-element>
+        <input name="foo" required>
+      </form>
+    </template>
+  </test-fixture>
+
+
   <script>
   suite('serializing', function() {
     test('serializes both custom and native elements', function() {
@@ -159,6 +169,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       server.restore();
     });
 
+    test('does not submit forms with invalid native elements', function(done) {
+      form = fixture('InvalidForm');
+      var nativeElement = form.querySelector('input');
+      var customElement = form.querySelector('simple-element');
+      customElement.value = "foo";
+
+      var submitted = false;
+      form.addEventListener('iron-form-submit', function() {
+        submitted = true;
+      });
+
+      form.addEventListener('iron-form-invalid', function() {
+        expect(submitted).to.be.equal(false);
+        expect(nativeElement.validity.valid).to.be.equal(false);
+        expect(customElement.invalid).to.be.equal(false);
+        done();
+      });
+
+      form.submit();
+      server.respond();
+    });
+
     test('can submit with method=get', function(done) {
       form = fixture('FormGet');
 
@@ -191,7 +223,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       form.addEventListener('iron-form-response', function(event) {
         expect(submitted).to.be.equal(true);
-
         var response = event.detail;
         expect(response).to.be.ok;
         expect(response).to.be.an('object');
