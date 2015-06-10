@@ -184,17 +184,15 @@ call the form's `submit` method.
       this._customElements.push(e.target);
     },
 
-    /**
-     * @suppress {checkTypes} Needed to avoid an explicit dependency on iron-validatable-behvaior.
-     *     Otherwise this produces "ERROR - Property validate never defined on el".
-     */
     _validate: function() {
       var valid = true;
 
       // Validate all the custom elements.
+      var validatable;
       for (var el, i = 0; el = this._customElements[i], i < this._customElements.length; i++) {
         if (el.required) {
-          valid = el.validate() && valid;
+          validatable = /** @type {{validate: (function() : boolean)}} */ (el);
+          valid = validatable.validate() && valid;
         }
       }
 
