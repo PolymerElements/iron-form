@@ -75,7 +75,7 @@ call the form's `submit` method.
 
     listeners: {
       'iron-form-element-register': '_registerElement',
-      'submit': 'submit'
+      'submit': '_onSubmit'
     },
 
     ready: function() {
@@ -91,14 +91,14 @@ call the form's `submit` method.
     /**
      * Called to submit the form.
      */
-    submit: function(event) {
+    submit: function() {
       if (!this.noValidate && !this._validate()) {
 
         // In order to trigger the native browser invalid-form UI, we need
         // to do perform a fake form submit.
         this._doFakeSubmitForValidation();
         this.fire('iron-form-invalid');
-        return false;
+        return;
       }
 
       var json = this.serialize();
@@ -113,6 +113,10 @@ call the form's `submit` method.
 
       this._requestBot.generateRequest();
       this.fire('iron-form-submit', json);
+    },
+
+    _onSubmit: function(event) {
+      this.submit();
 
       // Don't perform a page refresh.
       if (event) {
@@ -180,6 +184,10 @@ call the form's `submit` method.
       this._customElements.push(e.target);
     },
 
+    /**
+     * @suppress {checkTypes} Needed to avoid an explicit dependency on iron-validatable-behvaior.
+     *     Otherwise this produces "ERROR - Property validate never defined on el".
+     */
     _validate: function() {
       var valid = true;
 
