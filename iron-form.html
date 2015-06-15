@@ -48,7 +48,7 @@ call the form's `submit` method.
     is: 'iron-form',
 
     extends: 'form',
-    
+
     properties: {
       /**
        * Content type to use when sending data.
@@ -56,6 +56,18 @@ call the form's `submit` method.
       contentType: {
         type: String,
         value: "application/x-www-form-urlencoded"
+      },
+
+      /**
+       * By default, the form will display the browser's native validation
+       * UI (i.e. popup bubbles and invalid styles on invalid fields). You can
+       * manually disable this; however, if you do, note that you will have to
+       * manually style invalid *native* HTML fields yourself, as you are
+       * explicitly preventing the native form from doing so.
+       */
+      disableNativeValidationUi: {
+        type: Boolean,
+        value: false
       }
     },
     /**
@@ -101,10 +113,11 @@ call the form's `submit` method.
      */
     submit: function() {
       if (!this.noValidate && !this._validate()) {
-
         // In order to trigger the native browser invalid-form UI, we need
         // to do perform a fake form submit.
-        this._doFakeSubmitForValidation();
+        if (!this.disableNativeValidationUi) {
+          this._doFakeSubmitForValidation();
+        }
         this.fire('iron-form-invalid');
         return;
       }
@@ -114,7 +127,7 @@ call the form's `submit` method.
       this._requestBot.url = this.action;
       this._requestBot.method = this.method;
       this._requestBot.contentType = this.contentType;
-      
+
       if (this.method.toUpperCase() == 'POST') {
         this._requestBot.body = JSON.stringify(json);
       } else {
