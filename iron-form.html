@@ -48,7 +48,16 @@ call the form's `submit` method.
     is: 'iron-form',
 
     extends: 'form',
-
+    
+    properties: {
+      /**
+       * Content type to use when sending data.
+       */
+      contentType: {
+        type: String,
+        value: "application/x-www-form-urlencoded"
+      }
+    },
     /**
      * Fired if the form cannot be submitted because it's invalid.
      *
@@ -72,7 +81,6 @@ call the form's `submit` method.
      *
      * @event iron-form-error
      */
-
     listeners: {
       'iron-form-element-register': '_registerElement',
       'submit': '_onSubmit'
@@ -105,10 +113,12 @@ call the form's `submit` method.
 
       this._requestBot.url = this.action;
       this._requestBot.method = this.method;
-      this._requestBot.params = json;
-
-      if (this.method == 'POST') {
+      this._requestBot.contentType = this.contentType;
+      
+      if (this.method.toUpperCase() == 'POST') {
         this._requestBot.body = JSON.stringify(json);
+      } else {
+        this._requestBot.params = json;
       }
 
       this._requestBot.generateRequest();
