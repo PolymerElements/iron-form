@@ -232,6 +232,10 @@ call the form's `submit` method.
     },
 
     _useValue: function(el) {
+      // Skip disabled elements
+      if (el.disabled) {
+        return false;
+      }
       // Checkboxes and radio buttons should only use their value if they're checked.
       if (el.type !== 'checkbox' && el.type !== 'radio') {
         return true;
