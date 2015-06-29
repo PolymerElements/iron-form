@@ -173,7 +173,7 @@ call the form's `submit` method.
 
       // Go through all of the registered custom components.
       for (var el, i = 0; el = this._customElements[i], i < this._customElements.length; i++) {
-        if (el.name) {
+        if (this._useValue(el)) {
           addSerializedElement(el);
         }
       }
@@ -185,7 +185,7 @@ call the form's `submit` method.
         // `<input is="fancy-input">`) will appear in both lists. Since they
         // were already added as a custom element, they don't need
         // to be re-added.
-        if (!el.name || !this._useValue(el) ||
+        if (!this._useValue(el) ||
             (el.hasAttribute('is') && json[el.name])) {
           continue;
         }
@@ -213,9 +213,12 @@ call the form's `submit` method.
       // Validate all the custom elements.
       var validatable;
       for (var el, i = 0; el = this._customElements[i], i < this._customElements.length; i++) {
-        if (el.required) {
+        if (el.required && this._useValue(el)) {
           validatable = /** @type {{validate: (function() : boolean)}} */ (el);
-          valid = validatable.validate() && valid;
+          // TODO(notwaldorf): IronValidatableBehavior can return undefined if
+          // a validator is not set. It probably shouldn't, but in the meantime
+          // deal with that scenario.
+          valid = !!validatable.validate() && valid;
         }
       }
 
@@ -223,7 +226,7 @@ call the form's `submit` method.
       for (var el, i = 0; el = this.elements[i], i < this.elements.length; i++) {
         // Custom elements that extend a native element will also appear in
         // this list, but they've already been validated.
-        if (!el.hasAttribute('is') && el.willValidate && el.checkValidity) {
+        if (!el.hasAttribute('is') && el.willValidate && el.checkValidity && el.name) {
           valid = el.checkValidity() && valid;
         }
       }
@@ -232,16 +235,21 @@ call the form's `submit` method.
     },
 
     _useValue: function(el) {
-      // Skip disabled elements
-      if (el.disabled) {
+      // Skip disabled elements or elements that don't have a `name` attribute.
+      if (el.disabled || !el.name) {
         return false;
       }
-      // Checkboxes and radio buttons should only use their value if they're checked.
-      if (el.type !== 'checkbox' && el.type !== 'radio') {
-        return true;
-      } else {
+
+      // Checkboxes and radio buttons should only use their value if they're
+      // checked. Custom paper-checkbox and paper-radio-button elements
+      // don't have a type, but they have the correct role set.
+      if (el.type == 'checkbox' ||
+          el.type == 'radio' ||
+          el.getAttribute('role') == 'checkbox' ||
+          el.getAttribute('role') == 'radio') {
         return el.checked;
       }
+      return true;
     },
 
     _doFakeSubmitForValidation: function() {
