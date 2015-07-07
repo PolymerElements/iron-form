@@ -113,7 +113,7 @@ call the form's `submit` method.
      * Called to submit the form.
      */
     submit: function() {
-      if (!this.noValidate && !this._validate()) {
+      if (!this.noValidate && !this.validate()) {
         // In order to trigger the native browser invalid-form UI, we need
         // to do perform a fake form submit.
         if (!this.disableNativeValidationUi) {
@@ -218,7 +218,11 @@ call the form's `submit` method.
       }
     },
 
-    _validate: function() {
+    /**
+     * Validates all the required elements (custom and native) in the form.
+     * @return {boolean} True if all the elements are valid.
+     */
+    validate: function() {
       var valid = true;
 
       // Validate all the custom elements.
