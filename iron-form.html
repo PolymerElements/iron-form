@@ -39,7 +39,6 @@ call the form's `submit` method.
     function submitForm() {
       document.getElementById('form').submit();
     }
-
 @demo demo/index.html
 */
 
@@ -68,8 +67,19 @@ call the form's `submit` method.
       disableNativeValidationUi: {
         type: Boolean,
         value: false
+      },
+
+      /**
+       * By default, the form will prevent a page redirect after the form is
+       * submitted. Set this to true if you want the default HTML form behavior
+       * and redirect to the `action` URL after submission.
+       */
+      allowActionRedirect: {
+        type: Boolean,
+        value: false
       }
     },
+
     /**
      * Fired if the form cannot be submitted because it's invalid.
      *
@@ -137,13 +147,18 @@ call the form's `submit` method.
 
       this._requestBot.generateRequest();
       this.fire('iron-form-submit', json);
+
+      if (this.allowActionRedirect) {
+        var redirectUrl = this.action + '?' + this._requestBot.queryString;
+        window.location = redirectUrl;
+      }
     },
 
     _onSubmit: function(event) {
       this.submit();
 
       // Don't perform a page refresh.
-      if (event) {
+      if (event && !this.allowActionRedirect) {
         event.preventDefault();
       }
 
