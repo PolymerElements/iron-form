@@ -55,7 +55,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </form>
     </template>
   </test-fixture>
-  
+
   <test-fixture id="Disabled">
     <template>
       <form is="iron-form">
@@ -91,9 +91,35 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </template>
   </test-fixture>
 
-
   <script>
+  suite('registration', function() {
+    var f;
+    test('elements can be registered', function() {
+      f = fixture('Basic');
+
+      assert.equal(f._customElements.length, 1);
+      assert.equal(f.elements.length, 1);
+    });
+
+    test('elements can be unregistered', function(done) {
+      f = fixture('Basic');
+      var element = f.querySelector('simple-element');
+
+      assert.equal(f._customElements.length, 1);
+      assert.equal(f.elements.length, 1);
+
+      f.removeChild(element);
+
+      setTimeout(function() {
+        assert.equal(f._customElements.length, 0);
+        assert.equal(f.elements.length, 1);
+        done();
+      }, 200);
+    });
+  });
+
   suite('serializing', function() {
+    var f;
     test('serializes both custom and native elements', function() {
       f = fixture('Basic');
 

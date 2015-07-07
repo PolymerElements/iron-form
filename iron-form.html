@@ -95,6 +95,7 @@ call the form's `submit` method.
      */
     listeners: {
       'iron-form-element-register': '_registerElement',
+      'iron-form-element-unregister': '_unregisterElement',
       'submit': '_onSubmit'
     },
 
@@ -205,6 +206,16 @@ call the form's `submit` method.
 
     _registerElement: function(e) {
       this._customElements.push(e.target);
+    },
+
+    _unregisterElement: function(e) {
+      var target = e.detail.target;
+      if (target) {
+        var index = this._customElements.indexOf(target);
+        if (index > -1) {
+          this._customElements.splice(index, 1);
+        }
+      }
     },
 
     _validate: function() {
