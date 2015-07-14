@@ -262,19 +262,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     test('can submit with method=post', function(done) {
       form = fixture('FormPost');
-      var before_submit = false;
+
       var submitted = false;
-        
-      form.addEventListener('iron-form-before-submit', function() {
-        before_submit = true;
-      });
-        
       form.addEventListener('iron-form-submit', function() {
         submitted = true;
       });
 
       form.addEventListener('iron-form-response', function(event) {
-        expect(before_submit).to.be.equal(true);
         expect(submitted).to.be.equal(true);
         var response = event.detail;
         expect(response).to.be.ok;
