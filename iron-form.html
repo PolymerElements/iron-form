@@ -214,6 +214,7 @@ call the form's `submit` method.
     },
 
     _registerElement: function(e) {
+      e.target._parentForm = this;
       this._customElements.push(e.target);
     },
 
