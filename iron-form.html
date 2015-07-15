@@ -150,8 +150,8 @@ call the form's `submit` method.
         this._requestBot.params = json;
       }
         
-      ev = this.fire('iron-form-before-submit', this._requestBot, {cancelable: true});
-      if(!ev.defaultPrevented) {
+      var event = this.fire('iron-form-before-submit', this._requestBot, {cancelable: true});
+      if(!event.defaultPrevented) {
         this._requestBot.generateRequest();
         this.fire('iron-form-submit', json);
       }
