@@ -139,7 +139,7 @@ call the form's `submit` method.
       this._requestBot.withCredentials = this.withCredentials;
 
       if (this.method.toUpperCase() == 'POST') {
-        this._requestBot.body = JSON.stringify(json);
+        this._requestBot.body = json;
       } else {
         this._requestBot.params = json;
       }
