@@ -240,10 +240,9 @@ call the form's `submit` method.
       for (var el, i = 0; el = this._customElements[i], i < this._customElements.length; i++) {
         if (el.required && this._useValue(el)) {
           validatable = /** @type {{validate: (function() : boolean)}} */ (el);
-          // TODO(notwaldorf): IronValidatableBehavior can return undefined if
-          // a validator is not set. It probably shouldn't, but in the meantime
-          // deal with that scenario.
-          valid = !!validatable.validate() && valid;
+          // Some elements may not have correctly defined a validate method.
+          if (validatable.validate)
+            valid = !!validatable.validate() && valid;
         }
       }
 
