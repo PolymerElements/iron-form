@@ -76,6 +76,14 @@ call the form's `submit` method.
       withCredentials: {
         type: Boolean,
         value: false
+      },
+
+      /**
+       * If set, overrides the default GET/POST limitations of the
+       * form element to enable use of the PUT method
+       */
+      ironMethod: {
+        type: String
       }
     },
     /**
@@ -134,14 +142,14 @@ call the form's `submit` method.
       var json = this.serialize();
 
       this._requestBot.url = this.action;
-      this._requestBot.method = this.method;
+      this._requestBot.method = this.ironMethod ? this.ironMethod : this.method;
       this._requestBot.contentType = this.contentType;
       this._requestBot.withCredentials = this.withCredentials;
 
-      if (this.method.toUpperCase() == 'POST') {
-        this._requestBot.body = json;
-      } else {
+      if (this._requestBot.method.toUpperCase() == 'GET') {
         this._requestBot.params = json;
+      } else {
+        this._requestBot.body = json;
       }
 
       this._requestBot.generateRequest();
@@ -164,7 +172,7 @@ call the form's `submit` method.
      * custom components and native elements of the form. If there are elements
      * with duplicate names, then their values will get aggregated into an
      * array of values.
-     * 
+     *
      * @return {!Object}
      */
     serialize: function() {
