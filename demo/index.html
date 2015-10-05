@@ -24,6 +24,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <link rel="import" href="../../paper-checkbox/paper-checkbox.html">
   <link rel="import" href="../iron-form.html">
   <link rel="import" href="simple-element.html">
+  <link rel="import" href="simple-form.html">
 </head>
 <style>
   .wide {
@@ -105,6 +106,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </form>
       </div>
     </div>
+
+    <div>
+      <h4>Disabling submission until form is valid</h4>
+      <div class="horizontal-section">
+        <simple-form id="simpleForm"></simple-form>
+      </div>
+    </div>
   </div>
 
   <br><br>
@@ -120,6 +128,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script>
     document.getElementById('formGet').addEventListener('iron-form-submit', display);
     document.getElementById('formPost').addEventListener('iron-form-submit', display);
+    document.getElementById('simpleForm').addEventListener('iron-form-submit', display);
 
     function display(event) {
       var output = document.getElementById('output');
