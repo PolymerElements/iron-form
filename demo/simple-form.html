@@ -1,0 +1,55 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../../polymer/polymer.html">
+<link rel="import" href="../../iron-form/iron-form.html">
+<link rel="import" href="../../paper-input/paper-input.html">
+<link rel="import" href="../../paper-button/paper-button.html">
+
+<dom-module id="simple-form">
+  <template>
+    <form is="iron-form" id="form" action="/">
+      <paper-input name="name" label="Name"
+          required auto-validate invalid="{{nameInvalid}}">
+      </paper-input>
+      <paper-input name="animal" label="Favourite animal"
+          required auto-validate invalid="{{animalInvalid}}">
+      </paper-input>
+      <paper-button raised
+          disabled="[[_computeButtonDisabled(nameInvalid, animalInvalid)]]"
+          on-tap="_submit">
+        Submit
+      </paper-button>
+    </form>
+  </template>
+</dom-module>
+
+<script>
+
+  Polymer({
+
+    is: 'simple-form',
+
+    attached: function() {
+      // Since paper-inputs only validate onBlur, and we want to always disable
+      // submission if the form isn't valid, we need to initially validate the
+      // form to start off in a correct state.
+      this.$.form.validate();
+    },
+
+    _computeButtonDisabled: function(nameInvalid, animalInvalid) {
+      return nameInvalid || animalInvalid;
+    },
+
+    _submit: function() {
+      this.$.form.submit();
+    }
+  });
+
+</script>
