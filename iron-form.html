@@ -96,7 +96,13 @@ call the form's `submit` method.
      *
      * @event iron-form-invalid
      */
-
+      
+    /**
+    * Fired before the form is submitted, include iron-ajax object as event detail
+    *
+    * @event iron-form-before-submit
+    */
+      
     /**
      * Fired after the form is submitted.
      *
@@ -145,7 +151,7 @@ call the form's `submit` method.
       }
 
       var json = this.serialize();
-
+        
       this._requestBot.url = this.action;
       this._requestBot.method = this.method;
       this._requestBot.contentType = this.contentType;
@@ -157,9 +163,12 @@ call the form's `submit` method.
       } else {
         this._requestBot.params = json;
       }
-
-      this._requestBot.generateRequest();
-      this.fire('iron-form-submit', json);
+        
+      var event = this.fire('iron-form-before-submit', this._requestBot, {cancelable: true});
+      if(!event.defaultPrevented) {
+        this._requestBot.generateRequest();
+        this.fire('iron-form-submit', json);
+      }
     },
 
     _onSubmit: function(event) {
