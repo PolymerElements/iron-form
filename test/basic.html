@@ -100,6 +100,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </template>
   </test-fixture>
 
+  <test-fixture id="FormForResetting">
+    <template>
+      <form is="iron-form">
+        <simple-element name="zig" value="zag"></simple-element>
+        <input name="foo" value="bar">
+        <input type="checkbox" name="foo" value="bar1" checked>
+        <input type="checkbox" name="foo" value="bar2">
+      </form>
+    </template>
+  </test-fixture>
+
   <script>
   suite('registration', function() {
     var f;
@@ -234,6 +245,48 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       assert.equal(json['foo'], 'bar1');
     });
 
+  });
+
+  suite('resetting', function () {
+    test('form restores the default values', function(done) {
+      var form = fixture('FormForResetting');
+
+      assert.equal(form._customElements.length, 1);
+      assert.equal(form.elements.length, 3);
+
+      // Initial values.
+      var customElement = form.querySelector('simple-element');
+      var input = form.querySelector('input[name="foo"]');
+      var checkbox1 = form.querySelectorAll('input[type="checkbox"]')[0];
+      var checkbox2 = form.querySelectorAll('input[type="checkbox"]')[1];
+
+      assert.equal(customElement.value, 'zag');
+      assert.equal(input.value, 'bar');
+      assert.isTrue(checkbox1.checked);
+      assert.isFalse(checkbox2.checked);
+
+      // Change the values.
+      customElement.value = 'not zag';
+      input.value = 'not bar';
+      checkbox1.checked = false;
+      checkbox2.checked = true;
+      assert.equal(customElement.value, 'not zag');
+      assert.equal(input.value, 'not bar');
+      assert.isFalse(checkbox1.checked);
+      assert.isTrue(checkbox2.checked);
+
+      form.addEventListener('iron-form-reset', function(event) {
+        // Restored initial values.
+        assert.equal(customElement.value, 'zag');
+        assert.equal(input.value, 'bar');
+        assert.isTrue(checkbox1.checked);
+        assert.isFalse(checkbox2.checked);
+        done();
+      });
+
+      form.reset();
+
+    });
   });
 
   suite('submitting', function () {
