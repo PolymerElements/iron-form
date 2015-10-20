@@ -146,8 +146,11 @@ call the form's `submit` method.
 
       var json = this.serialize();
 
-      this._requestBot.url = this.action;
-      this._requestBot.method = this.method;
+      // Native forms can also index elements magically by their name (can't make
+      // this up if I tried) so we need to get the correct attributes, not the
+      // elements with those names.
+      this._requestBot.url = this.getAttribute('action');
+      this._requestBot.method = this.getAttribute('method');
       this._requestBot.contentType = this.contentType;
       this._requestBot.withCredentials = this.withCredentials;
       this._requestBot.headers = this.headers;
@@ -178,7 +181,7 @@ call the form's `submit` method.
      * custom components and native elements of the form. If there are elements
      * with duplicate names, then their values will get aggregated into an
      * array of values.
-     * 
+     *
      * @return {!Object}
      */
     serialize: function() {
