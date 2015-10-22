@@ -40,6 +40,24 @@ call the form's `submit` method.
       document.getElementById('form').submit();
     }
 
+To customize the request sent to the server, you can listen to the `iron-form-presubmit`
+event, and modify the form's[`iron-ajax`](https://elements.polymer-project.org/elements/iron-ajax)
+object. However, If you want to not use `iron-ajax` at all, you can cancel the
+event and do your own custom submission:
+
+  Example of modifying the request, but still using the build-in form submission:
+    form.addEventListener('iron-form-presubmit', function() {
+      this.request.method = 'put';
+      this.request.params = someCustomParams;
+    });
+
+  Example of bypassing the build-in form submission:
+    form.addEventListener('iron-form-presubmit', function(event) {
+      event.preventDefault();
+      var firebase = new Firebase(form.getAttribute('action'));
+      firebase.set(form.serialize());
+    });
+
 @demo demo/index.html
 */
 
@@ -89,12 +107,26 @@ call the form's `submit` method.
         value: function() {
           return {};
         }
+      },
+
+      /**
+      * iron-ajax request object used to submit the form.
+      */
+      request: {
+        type: Object,
       }
     },
+
     /**
      * Fired if the form cannot be submitted because it's invalid.
      *
      * @event iron-form-invalid
+     */
+
+    /**
+     * Fired before the form is submitted.
+     *
+     * @event iron-form-presubmit
      */
 
     /**
@@ -122,9 +154,9 @@ call the form's `submit` method.
 
     ready: function() {
       // Object that handles the ajax form submission request.
-      this._requestBot = document.createElement('iron-ajax');
-      this._requestBot.addEventListener('response', this._handleFormResponse.bind(this));
-      this._requestBot.addEventListener('error', this._handleFormError.bind(this));
+      this.request = document.createElement('iron-ajax');
+      this.request.addEventListener('response', this._handleFormResponse.bind(this));
+      this.request.addEventListener('error', this._handleFormError.bind(this));
 
       // Holds all the custom elements registered with this form.
       this._customElements = [];
@@ -149,20 +181,24 @@ call the form's `submit` method.
       // Native forms can also index elements magically by their name (can't make
       // this up if I tried) so we need to get the correct attributes, not the
       // elements with those names.
-      this._requestBot.url = this.getAttribute('action');
-      this._requestBot.method = this.getAttribute('method');
-      this._requestBot.contentType = this.contentType;
-      this._requestBot.withCredentials = this.withCredentials;
-      this._requestBot.headers = this.headers;
+      this.request.url = this.getAttribute('action');
+      this.request.method = this.getAttribute('method');
+      this.request.contentType = this.contentType;
+      this.request.withCredentials = this.withCredentials;
+      this.request.headers = this.headers;
 
-      if (this.method.toUpperCase() == 'POST') {
-        this._requestBot.body = json;
+      if (this.method.toUpperCase() === 'POST') {
+        this.request.body = json;
       } else {
-        this._requestBot.params = json;
+        this.request.params = json;
       }
 
-      this._requestBot.generateRequest();
-      this.fire('iron-form-submit', json);
+      // Allow for a presubmit hook
+      var event = this.fire('iron-form-presubmit', {}, {cancelable: true});
+      if(!event.defaultPrevented) {
+        this.request.generateRequest();
+        this.fire('iron-form-submit', json);
+      }
     },
 
     _onSubmit: function(event) {
@@ -286,10 +322,10 @@ call the form's `submit` method.
       // Checkboxes and radio buttons should only use their value if they're
       // checked. Custom paper-checkbox and paper-radio-button elements
       // don't have a type, but they have the correct role set.
-      if (el.type == 'checkbox' ||
-          el.type == 'radio' ||
-          el.getAttribute('role') == 'checkbox' ||
-          el.getAttribute('role') == 'radio') {
+      if (el.type === 'checkbox' ||
+          el.type === 'radio' ||
+          el.getAttribute('role') === 'checkbox' ||
+          el.getAttribute('role') === 'radio') {
         return el.checked;
       }
       return true;
