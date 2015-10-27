@@ -4,20 +4,13 @@
   "description": "Makes it easier to manage forms",
   "keywords": [
     "web-components",
-    "polymer",
-    "form"
+    "web-component",
+    "polymer"
   ],
   "authors": [
     "The Polymer Authors"
   ],
-  "keywords": [
-    "web-components",
-    "web-component",
-    "polymer"
-  ],
-  "main": [
-    "iron-form.html"
-  ],
+  "main": "iron-form.html",
   "private": true,
   "repository": {
     "type": "git",
