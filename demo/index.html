@@ -69,7 +69,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <br><br>
 
           <paper-button raised
-              onclick="clickHandler(event)">Submit</paper-button>
+              onclick="submitHandler(event)">Submit</paper-button>
+          <paper-button raised
+              onclick="resetHandler(event)">Reset</paper-button>
         </form>
       </div>
     </div>
@@ -112,8 +114,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           <br><br><br>
           <paper-button raised
-              onclick="clickHandler(event)">Submit</paper-button>
+              onclick="submitHandler(event)">Submit</paper-button>
           <button type="submit">Native Submit</button>
+          <button type="reset">Native Reset</button>
         </form>
       </div>
     </div>
@@ -138,8 +141,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       output.innerHTML = JSON.stringify(event.detail);
     }
 
-    function clickHandler(event) {
+    function submitHandler(event) {
       Polymer.dom(event).localTarget.parentElement.submit();
+    }
+    function resetHandler(event) {
+      Polymer.dom(event).localTarget.parentElement.reset();
     }
   </script>
 </body>

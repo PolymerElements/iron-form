@@ -135,6 +135,12 @@ event and do your own custom submission:
      * @event iron-form-submit
      */
 
+     /**
+      * Fired after the form is reset.
+      *
+      * @event iron-form-reset
+      */
+
     /**
     * Fired after the form is submitted and a response is received.
     *
@@ -149,7 +155,8 @@ event and do your own custom submission:
     listeners: {
       'iron-form-element-register': '_registerElement',
       'iron-form-element-unregister': '_unregisterElement',
-      'submit': '_onSubmit'
+      'submit': '_onSubmit',
+      'reset': '_onReset'
     },
 
     ready: function() {
@@ -160,10 +167,12 @@ event and do your own custom submission:
 
       // Holds all the custom elements registered with this form.
       this._customElements = [];
+      // Holds the initial values of the custom elements registered with this form.
+      this._customElementsInitialValues = [];
     },
 
     /**
-     * Called to submit the form.
+     * Submits the form.
      */
     submit: function() {
       if (!this.noValidate && !this.validate()) {
@@ -201,6 +210,11 @@ event and do your own custom submission:
       }
     },
 
+    /**
+     * Handler that is called when the native form fires a `submit` event
+     *
+     * @param {Event} event A `submit` event.
+     */
     _onSubmit: function(event) {
       this.submit();
 
@@ -210,6 +224,15 @@ event and do your own custom submission:
       }
 
       return false;
+    },
+
+    /**
+     * Handler that is called when the native form fires a `reset` event
+     *
+     * @param {Event} event A `reset` event.
+     */
+    _onReset: function(event) {
+      this._resetCustomElements();
     },
 
     /**
@@ -269,8 +292,13 @@ event and do your own custom submission:
     },
 
     _registerElement: function(e) {
-      e.target._parentForm = this;
-      this._customElements.push(e.target);
+      var element = e.target;
+      element._parentForm = this;
+      this._customElements.push(element);
+
+      // Save the original value of this input.
+      this._customElementsInitialValues.push(
+          this._usesCheckedInsteadOfValue(element) ? element.checked : element.value);
     },
 
     _unregisterElement: function(e) {
@@ -279,6 +307,7 @@ event and do your own custom submission:
         var index = this._customElements.indexOf(target);
         if (index > -1) {
           this._customElements.splice(index, 1);
+          this._customElementsInitialValues.splice(index, 1);
         }
       }
     },
@@ -313,6 +342,20 @@ event and do your own custom submission:
       return valid;
     },
 
+    /**
+     * Returns whether the given element is a radio-button or a checkbox.
+     * @return {boolean} True if the element has a `checked` property.
+     */
+    _usesCheckedInsteadOfValue: function(el) {
+      if (el.type == 'checkbox' ||
+          el.type == 'radio' ||
+          el.getAttribute('role') == 'checkbox' ||
+          el.getAttribute('role') == 'radio') {
+        return true;
+      }
+      return false;
+    },
+
     _useValue: function(el) {
       // Skip disabled elements or elements that don't have a `name` attribute.
       if (el.disabled || !el.name) {
@@ -322,12 +365,8 @@ event and do your own custom submission:
       // Checkboxes and radio buttons should only use their value if they're
       // checked. Custom paper-checkbox and paper-radio-button elements
       // don't have a type, but they have the correct role set.
-      if (el.type === 'checkbox' ||
-          el.type === 'radio' ||
-          el.getAttribute('role') === 'checkbox' ||
-          el.getAttribute('role') === 'radio') {
+      if (this._usesCheckedInsteadOfValue(el))
         return el.checked;
-      }
       return true;
     },
 
@@ -340,6 +379,30 @@ event and do your own custom submission:
       fakeSubmit.click();
 
       this.removeChild(fakeSubmit);
+    },
+
+    /**
+     * Resets all non-disabled form custom elements to their initial values.
+     */
+    _resetCustomElements: function() {
+      // Reset all the registered custom components. We need to do this after
+      // the native reset, since programmatically changing the `value` of some
+      // native elements (iron-input in particular) does not notify its
+      // parent `paper-input`, which will now display the wrong value.
+      this.async(function() {
+        for (var el, i = 0; el = this._customElements[i], i < this._customElements.length; i++) {
+          if (el.disabled)
+            continue;
+
+          if (this._usesCheckedInsteadOfValue(el)) {
+            el.checked = this._customElementsInitialValues[i];
+          } else {
+            el.value = this._customElementsInitialValues[i];
+          }
+        }
+
+        this.fire('iron-form-reset');
+      }, 1);
     }
 
   });
