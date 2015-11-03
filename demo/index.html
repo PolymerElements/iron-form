@@ -19,6 +19,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
   <link rel="import" href="../../paper-input/paper-input.html">
   <link rel="import" href="../../paper-button/paper-button.html">
+  <link rel="import" href="../../paper-spinner/paper-spinner.html">
   <link rel="import" href="../../paper-styles/paper-styles.html">
   <link rel="import" href="../../paper-styles/demo-pages.html">
   <link rel="import" href="../../paper-checkbox/paper-checkbox.html">
@@ -32,13 +33,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   .wide {
     width: 474px;
   }
+  paper-spinner {
+    width: 16px;
+    height: 16px;
+  }
 </style>
 <body>
   <div class="horizontal center-center layout">
     <div>
       <h4>method="get"</h4>
       <div class="horizontal-section">
-        <form is="iron-form" id="formGet" method="get" action="/">
+        <form is="iron-form" id="formGet" method="get" action="https://httpbin.org/delay/2">
           <paper-input name="name" label="Name" required></paper-input>
           <paper-input name="animal" label="Favourite animal" required></paper-input>
           <br>
@@ -69,7 +74,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <br><br>
 
           <paper-button raised
-              onclick="clickHandler(event)">Submit</paper-button>
+              onclick="clickHandler(event)" id="submitButton">
+            <paper-spinner id="spinner" hidden></paper-spinner>
+            Submit
+          </paper-button>
         </form>
       </div>
     </div>
@@ -77,7 +85,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <div>
       <h4>method="post"</h4>
       <div class="horizontal-section">
-        <form is="iron-form" id="formPost" method="post" action="/">
+        <form is="iron-form" id="formPost" method="post" action="https://httpbin.org/post">
           <paper-input name="name" label="Name" required></paper-input>
           <br>
           <p>Duplicate name <input name="name" required></p>
@@ -130,12 +138,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </div>
 
   <script>
-    document.getElementById('formGet').addEventListener('iron-form-submit', display);
-    document.getElementById('formPost').addEventListener('iron-form-submit', display);
+    document.getElementById('formGet').addEventListener('iron-form-response', display);
+    document.getElementById('formPost').addEventListener('iron-form-response', display);
+
+    for (var l=['iron-form-submit', 'iron-form-response'], i=0, j; j=l[i]; i++) {
+      document.getElementById('formGet').addEventListener(j, updateLoading);
+    }
+
+    function updateLoading(event) {
+      var button = document.getElementById('submitButton');
+      var spinner = document.getElementById('spinner');
+      button.toggleAttribute('disabled', this.request.loading);
+      spinner.toggleAttribute('active', this.request.loading);
+      spinner.toggleAttribute('hidden', !this.request.loading);
+    }
 
     function display(event) {
       var output = document.getElementById('output');
-      output.innerHTML = JSON.stringify(event.detail);
+      var field = this.method.toLowerCase() === 'get' ? 'args' : 'form';
+      output.innerHTML = JSON.stringify(event.detail.response[field]);
     }
 
     function clickHandler(event) {
