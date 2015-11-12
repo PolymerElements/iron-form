@@ -254,12 +254,12 @@ event and do your own custom submission:
         // If the name doesn't exist, add it. Otherwise, serialize it to
         // an array,
         if (!json[el.name]) {
-          json[el.name] = el.value;
+          json[el.name] = el.valueForFormSerialization();
         } else {
           if (!Array.isArray(json[el.name])) {
             json[el.name] = [json[el.name]];
           }
-          json[el.name].push(el.value);
+          json[el.name].push(el.valueForFormSerialization());
         }
       }
 
