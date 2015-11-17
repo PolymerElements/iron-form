@@ -354,7 +354,8 @@ event and do your own custom submission:
       if (el.type == 'checkbox' ||
           el.type == 'radio' ||
           el.getAttribute('role') == 'checkbox' ||
-          el.getAttribute('role') == 'radio') {
+          el.getAttribute('role') == 'radio' ||
+          el._hasIronCheckedElementBehavior) {
         return true;
       }
       return false;
