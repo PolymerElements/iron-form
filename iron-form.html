@@ -15,7 +15,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 /*
 `<iron-form>` is an HTML `<form>` element that can validate and submit any custom
 elements that implement `Polymer.IronFormElementBehavior`, as well as any
-native HTML elements.
+native HTML elements. For more information on which attributes are
+available on the native form element, see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form
 
 It supports both `get` and `post` methods, and uses an `iron-ajax` element to
 submit the form data to the action URL.
@@ -71,14 +72,6 @@ event and do your own custom submission:
 
     properties: {
       /**
-       * Content type to use when sending data.
-       */
-      contentType: {
-        type: String,
-        value: "application/x-www-form-urlencoded"
-      },
-
-      /**
        * By default, the form will display the browser's native validation
        * UI (i.e. popup bubbles and invalid styles on invalid fields). You can
        * manually disable this; however, if you do, note that you will have to
@@ -99,7 +92,24 @@ event and do your own custom submission:
       },
 
       /**
-      * HTTP request headers to send
+       * Content type to use when sending data. If the `contentType` property
+       * is set and a `Content-Type` header is specified in the `headers`
+       * property, the `headers` property value will take precedence.
+       * If Content-Type is set to a value listed below, then
+       * the `body` (typically used with POST requests) will be encoded accordingly.
+       *
+       *    * `content-type="application/json"`
+       *      * body is encoded like `{"foo":"bar baz","x":1}`
+       *    * `content-type="application/x-www-form-urlencoded"`
+       *      * body is encoded like `foo=bar+baz&x=1`
+       */
+      contentType: {
+        type: String,
+        value: "application/x-www-form-urlencoded"
+      },
+
+      /**
+      * HTTP request headers to send.
       *
       * Note: setting a `Content-Type` header here will override the value
       * specified by the `contentType` property of this element.
