@@ -250,23 +250,23 @@ event and do your own custom submission:
     serialize: function() {
       var json = {};
 
-      function addSerializedElement(el) {
+      function addSerializedElement(name, value) {
         // If the name doesn't exist, add it. Otherwise, serialize it to
         // an array,
-        if (!json[el.name]) {
-          json[el.name] = el.value;
+        if (!json[name]) {
+          json[name] = value;
         } else {
-          if (!Array.isArray(json[el.name])) {
-            json[el.name] = [json[el.name]];
+          if (!Array.isArray(json[name])) {
+            json[name] = [json[name]];
           }
-          json[el.name].push(el.value);
+          json[name].push(value);
         }
       }
 
       // Go through all of the registered custom components.
       for (var el, i = 0; el = this._customElements[i], i < this._customElements.length; i++) {
         if (this._useValue(el)) {
-          addSerializedElement(el);
+          addSerializedElement(el.name, el.value);
         }
       }
 
@@ -280,8 +280,16 @@ event and do your own custom submission:
         if (!this._useValue(el) ||
             (el.hasAttribute('is') && json[el.name])) {
           continue;
+        } else if (el.tagName.toLowerCase() === 'select' && el.multiple) {
+          // A <select multiple> has an array of values.
+          for (var o = 0; o < el.options.length; o++) {
+            if (el.options[o].selected) {
+              addSerializedElement(el.name, el.options[o].value);
+            }
+          }
+        } else {
+          addSerializedElement(el.name, el.value);
         }
-        addSerializedElement(el);
       }
 
       return json;

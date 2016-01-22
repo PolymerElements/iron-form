@@ -109,6 +109,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </template>
   </test-fixture>
 
+  <test-fixture id="NativeSelect">
+    <template>
+      <form is="iron-form">
+        <select name="numbers" multiple>
+          <option value="one" selected>one</option>
+          <option value="two">two</option>
+          <option value="three" selected>three</option>
+          <option value="four">four</option>
+        </select>
+
+        <select name="cheese">
+          <option value="yes" selected>yes</option>
+          <option value="no">no</option>
+        </select>
+      </form>
+    </template>
+  </test-fixture>
+
   <script>
   suite('registration', function() {
     var f;
@@ -230,6 +248,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       assert.equal(json['foo'].length, 2);
       assert.equal(json['foo'][0], 'bar1');
       assert.equal(json['foo'][1], 'bar3');
+    });
+
+    test('serializes a native select element with or without multiple selection', function() {
+      f = fixture('NativeSelect');
+
+      assert.equal(f._customElements.length, 0);
+      assert.equal(f.elements.length, 2);
+
+      var json = f.serialize();
+      assert.equal(Object.keys(json).length, 2);
+      
+      // Single selection.
+      assert.equal(json['cheese'], 'yes');
+
+      // Multiple selection.
+      assert.equal(json['numbers'].length, 2);
+      assert.equal(json['numbers'][0], 'one');
+      assert.equal(json['numbers'][1], 'three');
     });
 
     test('does not serialize disabled elements', function() {
