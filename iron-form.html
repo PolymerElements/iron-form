@@ -338,7 +338,7 @@ event and do your own custom submission:
       for (var el, i = 0; el = this.elements[i], i < this.elements.length; i++) {
         // Custom elements that extend a native element will also appear in
         // this list, but they've already been validated.
-        if (!el.hasAttribute('is') && el.willValidate && el.checkValidity && el.name) {
+        if (!el.hasAttribute('is') && el.willValidate && el.checkValidity) {
           valid = el.checkValidity() && valid;
         }
       }
