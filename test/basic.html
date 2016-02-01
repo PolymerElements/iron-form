@@ -324,6 +324,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       form.reset();
 
     });
+
+    test('validation messages are cleared', function(done) {
+      var form = fixture('FormWithRequiredCustomElements');
+      assert.equal(form._customElements.length, 1);
+
+      var customElement = form.querySelector('simple-element');
+
+      assert.isFalse(form.validate());
+      assert.isTrue(customElement.invalid);
+
+      form.addEventListener('iron-form-reset', function(event) {
+        // Cleared validation messages.
+        assert.isFalse(customElement.invalid);
+        done();
+      });
+
+      form.reset();
+
+    });
+
   });
 
   suite('submitting', function () {
