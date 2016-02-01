@@ -404,6 +404,7 @@ event and do your own custom submission:
           } else {
             el.value = this._customElementsInitialValues[i];
           }
+          el.invalid = false;
         }
 
         this.fire('iron-form-reset');
