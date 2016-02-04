@@ -12,16 +12,17 @@ thing! https://github.com/PolymerLabs/tedium/issues
 
 -->
 
-[![Build Status](https://travis-ci.org/PolymerElements/iron-form.svg?branch=master)](https://travis-ci.org/PolymerElements/iron-form)
+[![Build status](https://travis-ci.org/PolymerElements/iron-form.svg?branch=master)](https://travis-ci.org/PolymerElements/iron-form)
 
-_[Demo and API Docs](https://elements.polymer-project.org/elements/iron-form)_
+_[Demo and API docs](https://elements.polymer-project.org/elements/iron-form)_
 
 
 ##&lt;iron-form&gt;
 
 `<iron-form>` is an HTML `<form>` element that can validate and submit any custom
 elements that implement `Polymer.IronFormElementBehavior`, as well as any
-native HTML elements.
+native HTML elements. For more information on which attributes are
+available on the native form element, see [https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form)
 
 It supports both `get` and `post` methods, and uses an `iron-ajax` element to
 submit the form data to the action URL.
