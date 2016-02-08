@@ -302,10 +302,17 @@ event and do your own custom submission:
         }
       }
 
+      // Array to hold form.elements items that are children of custom elements
+      var excluded = [];
+
       // Go through all of the registered custom components.
       for (var el, i = 0; el = this._customElements[i], i < this._customElements.length; i++) {
         if (this._useValue(el)) {
           addSerializedElement(el.name, el.value);
+          
+          // Checking for child elements with the same name to avoid double submission
+          var childFormInput = el.querySelector("[name='" + el.name + "']") 
+          if (childFormInput !== null) excluded.push(childFormInput) 
         }
       }
 
@@ -317,7 +324,8 @@ event and do your own custom submission:
         // were already added as a custom element, they don't need
         // to be re-added.
         if (!this._useValue(el) ||
-            (el.hasAttribute('is') && json[el.name])) {
+            (el.hasAttribute('is') && json[el.name]) || 
+            (excluded.indexOf(el !== -1))) {
           continue;
         } else if (el.tagName.toLowerCase() === 'select' && el.multiple) {
           // A <select multiple> has an array of values.
