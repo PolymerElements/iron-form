@@ -9,10 +9,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 <link rel="import" href="../../polymer/polymer.html">
 <link rel="import" href="../../iron-form-element-behavior/iron-form-element-behavior.html">
+<link rel="import" href="simple-element.html">
 
-<dom-module id="simple-element">
+<dom-module id="element-with-nested-form-element">
   <template>
-    <span>[[value]]</span>
+    <simple-element name$="[[name]]"></simple-element>
   </template>
 </dom-module>
 
@@ -20,24 +21,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   Polymer({
 
-    is: 'simple-element',
+    is: 'element-with-nested-form-element',
 
     behaviors: [
       Polymer.IronFormElementBehavior
-    ],
-
-    properties: {
-      invalid: {
-        type: Boolean,
-        value: false
-      }
-    },
-
-    validate: function() {
-      var valid = this.value ? this.value != '' : false;
-      this.invalid = !valid;
-      return valid;
-    }
+    ]
 
   });
 

@@ -18,6 +18,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <link rel="import" href="../../polymer/polymer.html">
   <link rel="import" href="../iron-form.html">
   <link rel="import" href="simple-element.html">
+  <link rel="import" href="element-with-nested-form-element.html">
+  <link rel="import" href="element-with-nested-input.html">
 
 </head>
 <body>
@@ -39,6 +41,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <simple-element name="zig" value="zig"></simple-element>
         <simple-element name="zig" value="zag"></simple-element>
         <simple-element name="zig" value="zug"></simple-element>
+      </form>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="NestedDupes">
+    <template>
+      <form is="iron-form">
+        <element-with-nested-form-element name="foo" value="bar"></element-with-nested-form-element>
+        <element-with-nested-input name="zig" value="zag"></element-with-nested-input>
       </form>
     </template>
   </test-fixture>
@@ -316,6 +327,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       var json = f.serialize();
       assert.equal(Object.keys(json).length, 1);
       assert.equal(json['foo'], 'bar1');
+    });
+
+    test('nested elements are only serialized once', function() {
+      f = fixture('NestedDupes');
+
+      assert.equal(f._customElements.length, 3);
+      
+      var json = f.serialize();
+      assert.equal(Object.keys(json).length, 2);
+      assert.equal(json['foo'], 'bar');
+      assert.equal(json['zig'], 'zag');
     });
 
   });
