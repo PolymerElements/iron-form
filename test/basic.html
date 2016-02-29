@@ -54,6 +54,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </template>
   </test-fixture>
 
+  <test-fixture id="NestedSubmittable">
+    <template>
+      <form is="iron-form">
+        <element-with-nested-form-element>
+          <simple-element name="foo" value="bar"></simple-element>
+        </element-with-nested-form-element>
+      </form>
+    </template>
+  </test-fixture>
+
   <test-fixture id="CheckedStates">
     <template>
       <form is="iron-form">
@@ -333,11 +343,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       f = fixture('NestedDupes');
 
       assert.equal(f._customElements.length, 3);
-      
+
       var json = f.serialize();
       assert.equal(Object.keys(json).length, 2);
       assert.equal(json['foo'], 'bar');
       assert.equal(json['zig'], 'zag');
+    });
+
+
+    test('nested elements can be submitted if parents aren\'t submittable', function() {
+      f = fixture('NestedSubmittable');
+
+      var json = f.serialize();
+      assert.equal(Object.keys(json).length, 1);
+      assert.equal(json['foo'], 'bar');
     });
 
   });
