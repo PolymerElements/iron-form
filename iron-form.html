@@ -473,8 +473,8 @@ event and do your own custom submission:
         // Use logical parentnode, or native ShadowRoot host.
         parent = Polymer.dom(parent).parentNode || parent.host;
 
-        // Check if the parent was registered.
-        if (parent && parent._parentForm === this) {
+        // Check if the parent was registered and submittable.
+        if (parent && parent.name && parent._parentForm === this) {
           return true;
         }
       }
