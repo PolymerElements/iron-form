@@ -128,6 +128,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </template>
   </test-fixture>
 
+  <test-fixture id="FormWithPreventInvalidCustomElements">
+    <template>
+      <form is="iron-form" action="/responds_with_json" method="post">
+        <paper-input label="numbers" prevent-invalid-input pattern="^[0-9]+$" ></paper-input>
+      </form>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="FormWithPreventInvalidElements">
+    <template>
+      <form is="iron-form" action="/responds_with_json" method="post">
+        <input type="text" name="letters" prevent-invalid-input prevent-invalid-input pattern="^[a-z]+$" >
+      </form>
+    </template>
+  </test-fixture>
+
   <test-fixture id="FormForResetting">
     <template>
       <form is="iron-form">
@@ -267,6 +283,39 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     // The elements have names, so they're serialized.
     var json = f.serialize();
     assert.equal(Object.keys(json).length, 1);
+  });
+
+  test('custom elements with `prevent-invalid-input` are validated', function() {
+    var
+      f = fixture('FormWithPreventInvalidCustomElements'),
+      elements = f.getEffectiveChildren(),
+      input = elements && elements[0]
+    ;
+
+    assert.equal(elements.length, 1);
+
+    assert.isTrue(f.validate());
+    assert.isTrue(input.validate());
+
+    input.value = "abcdefg";
+
+    assert.isFalse(f.validate());
+    assert.isFalse(input.validate());
+  });
+
+  test('native elements with `prevent-invalid-input` are validated', function() {
+    var f = fixture('FormWithPreventInvalidElements');
+    assert.equal(f.elements.length, 1);
+
+    var input = f.elements[0];
+
+    assert.isTrue(f.validate());
+    assert.isTrue(input.validity.valid);
+
+    input.value = "012345";
+
+    assert.isFalse(f.validate());
+    assert.isFalse(input.validity.valid);
   });
 });
 
