@@ -128,7 +128,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </template>
   </test-fixture>
 
-  <test-fixture id="FormWithPreventInvalidCustomElements">
+  <test-fixture id="FormValidateNonRequiredCustomElements">
     <template>
       <form is="iron-form" action="/responds_with_json" method="post">
         <paper-input label="numbers" pattern="^[0-9]$" ></paper-input>
@@ -136,7 +136,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </template>
   </test-fixture>
 
-  <test-fixture id="FormWithPreventInvalidElements">
+  <test-fixture id="FormValidateNonRequiredElements">
     <template>
       <form is="iron-form" action="/responds_with_json" method="post">
         <input type="text" name="letters" pattern="^[a-z]$" >
@@ -285,9 +285,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       assert.equal(Object.keys(json).length, 1);
     });
 
-    test('custom elements with `prevent-invalid-input` are validated', function() {
+    test('non-required custom elements are validated', function() {
       var
-        f = fixture('FormWithPreventInvalidCustomElements'),
+        f = fixture('FormValidateNonRequiredCustomElements'),
         elements = f.getEffectiveChildren(),
         input = elements && elements[0]
       ;
@@ -303,8 +303,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       assert.isFalse(input.validate());
     });
 
-    test('native elements with `prevent-invalid-input` are validated', function() {
-      var f = fixture('FormWithPreventInvalidElements');
+    test('non-required native elements are validated', function() {
+      var f = fixture('FormValidateNonRequiredElements');
       assert.equal(f.elements.length, 1);
 
       var input = f.elements[0];
