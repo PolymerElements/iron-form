@@ -150,6 +150,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <simple-element name="zig" value="zag"></simple-element>
         <paper-input name="zig" value="zug"></paper-input>
         <paper-textarea name="zig" value="zog"></paper-textarea>
+        <paper-textarea name="empty"></paper-textarea>
         <input name="foo" value="bar">
         <input type="checkbox" name="foo" value="bar1" checked>
         <input type="checkbox" name="foo" value="bar2">
@@ -477,7 +478,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       var checkbox1 = form.querySelectorAll('input[type="checkbox"]')[0];
       var checkbox2 = form.querySelectorAll('input[type="checkbox"]')[1];
       var paperInput = form.querySelector('paper-input');
-      var paperTextarea = form.querySelector('paper-textarea');
+      var paperTextarea = form.querySelector('paper-textarea[name="zig"]');
 
       assert.equal(customElement.value, 'zag');
       assert.equal(input.value, 'bar');
@@ -498,6 +499,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         assert.equal(paperInput.inputElement.value, 'zug');
         assert.equal(paperTextarea.value, 'zog');
         assert.equal(paperTextarea.inputElement.textarea.value, 'zog');
+        done();
+      });
+
+      form.reset();
+    });
+
+    test('form restores empty paper-textarea if no changes were made', function(done) {
+      var form = fixture('FormForResetting');
+      var paperTextarea = form.querySelector('paper-textarea[name="empty"]');
+
+      form.addEventListener('iron-form-reset', function(event) {
+        // Restored initial values.
+        assert.equal(paperTextarea.value, null);
+        assert.equal(paperTextarea.inputElement.textarea.value, '');
         done();
       });
 

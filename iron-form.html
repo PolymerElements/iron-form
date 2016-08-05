@@ -451,7 +451,9 @@ event and do your own custom submission:
           if (this._usesCheckedInsteadOfValue(el)) {
             el.checked = this._customElementsInitialValues[i];
           } else {
-            el.value = this._customElementsInitialValues[i];
+            // The native input/textarea displays literal "undefined" when its
+            // its value is set to undefined, so default to null instead.
+            el.value = this._customElementsInitialValues[i] || null;
 
             // In the shady DOM, the native form is all-seeing, and will
             // reset the nested inputs inside <paper-input> and <paper-textarea>.
