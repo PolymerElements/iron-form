@@ -22,6 +22,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <link rel="import" href="simple-element.html">
   <link rel="import" href="element-with-nested-form-element.html">
   <link rel="import" href="element-with-nested-input.html">
+  <link rel="import" href="validatable-element-with-nested-elements.html">
 
 </head>
 <body>
@@ -140,6 +141,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <template>
       <form is="iron-form" action="/responds_with_json" method="post">
         <input type="text" name="letters" pattern="^[a-z]$" >
+      </form>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="FormValidateNestedElements">
+    <template>
+      <form is="iron-form">
+        <validatable-element-with-nested-elements>
+          <simple-element required></simple-element>
+          <input required>
+        </validatable-element-with-nested-elements>
       </form>
     </template>
   </test-fixture>
@@ -318,7 +330,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       assert.isFalse(f.validate());
       assert.isFalse(input.validity.valid);
     });
-});
+
+    test('nested elements are not validated', function() {
+      var f = fixture('FormValidateNestedElements');
+
+      // <validatable-element-with-nested-elements> returns true.
+      assert.isTrue(f.validate());
+
+      // The form also contains an invalid custom and native element, but those
+      // shouldn't affect the form's validity.
+      assert.equal(f._customElements.length, 2);
+      assert.equal(f.elements.length, 1);
+      assert.isFalse(f.$$('simple-element').validate());
+      assert.isFalse(f.$$('input').checkValidity());
+    });
+  });
 
   suite('serializing', function() {
     var f;
