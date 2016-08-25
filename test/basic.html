@@ -162,7 +162,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <simple-element name="zig" value="zag"></simple-element>
         <paper-input name="zig" value="zug"></paper-input>
         <paper-textarea name="zig" value="zog"></paper-textarea>
-        <paper-textarea name="empty"></paper-textarea>
+        <paper-textarea name="undef"></paper-textarea>
         <input name="foo" value="bar">
         <input type="checkbox" name="foo" value="bar1" checked>
         <input type="checkbox" name="foo" value="bar2">
@@ -531,12 +531,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       form.reset();
     });
 
-    test('form restores empty paper-textarea if no changes were made', function(done) {
+    test('form restores null-value paper-textarea if initially undefined', function(done) {
       var form = fixture('FormForResetting');
-      var paperTextarea = form.querySelector('paper-textarea[name="empty"]');
+      var paperTextarea = form.querySelector('paper-textarea[name="undef"]');
 
       form.addEventListener('iron-form-reset', function(event) {
-        // Restored initial values.
+        // Setting the native textarea's value to undefined causes it to
+        // display literal "undefined", and paper-textarea.value is indirectly
+        // bound to the textarea's value, so iron-form resets any undefined
+        // initial values to null in order to avoid this problem.
         assert.equal(paperTextarea.value, null);
         assert.equal(paperTextarea.inputElement.textarea.value, '');
         done();
