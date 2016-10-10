@@ -23,8 +23,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <link rel="import" href="../../paper-button/paper-button.html">
   <link rel="import" href="../../paper-checkbox/paper-checkbox.html">
   <link rel="import" href="../../paper-dropdown-menu/paper-dropdown-menu.html">
+  <link rel="import" href="../../paper-styles/shadow.html">
   <link rel="import" href="../iron-form.html">
-  <link rel="import" href="simple-element.html">
+  <link rel="import" href="cats-only.html">
 
   <custom-style>
     <style is="custom-style" include="demo-pages-shared-styles">
@@ -32,8 +33,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         width: 474px;
       }
       iron-form {
-        background: white;
-        border: 1px solid grey;
+        @apply --shadow-elevation-2dp;
+        padding: 20px;
       }
       paper-button {
         display: inline-block;
@@ -42,124 +43,83 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </custom-style>
 </head>
 <body unresolved>
-  <div class="horizontal-section-container">
-      <div>
-        <h1>No redirect</h1>
-        <iron-form>
+  <div class="vertical-section-container centered">
+    <h3>Iron-form works with native and custom elements, and can prevent automatic redirection</h3>
+    <demo-snippet>
+      <template>
+        <input type="checkbox" checked onchange="form1.allowRedirect = !this.checked;"> Prevent automatic form redirection<br><br>
+
+        <iron-form id="form1">
           <form action="http://localhost:3000/foo" method="get">
             <input type="text" name="firstname" value="Mickey">
             <input type="text" name="lastname" value="Mouse">
-            <paper-input type="text" name="animal" value="cute"></paper-input>
+            <cats-only name="cats"></cats-only>
+            <paper-input type="text" name="animal" value="meerkat" label="animal"></paper-input>
             <br>
             <input type="checkbox" name="donuts" checked> I like donuts<br>
             <paper-checkbox name="food" value="pizza" checked>pizza</paper-checkbox>
             <paper-checkbox name="food" value="cheese">cheese</paper-checkbox>
             <br><br>
-            <input type="submit" value="Submit">
-            <input type="reset" value="Reset">
 
-            <paper-button raised
-                onclick="submitHandler(event)">Submit</paper-button>
-            <paper-button raised
-                onclick="resetHandler(event)">Reset</paper-button>
+            <input type="reset" name="reset1" value="Reset"></input>
+            <input type="submit" name="submit1" value="Submit"></input>
+            <button name="button1" value="button">text button</button>
+
+            <paper-button raised onclick="submitHandler(event)">Submit</paper-button>
+            <paper-button raised onclick="resetHandler(event)">Reset</paper-button>
           </form>
         </iron-form>
+      </template>
+    </demo-snippet>
 
-        <h1>Yes redirect</h1>
-        <iron-form allow-redirect>
-          <form action="http://localhost:3000/foo" method="get">
-            <input type="text" name="firstname" value="Mickey">
-            <input type="text" name="lastname" value="Mouse">
-            <paper-input type="text" name="animal" value="cute"></paper-input>
-            <br>
-            <input type="checkbox" name="donuts" checked> I like donuts<br>
-            <paper-checkbox name="food" value="pizza" checked>foo</paper-checkbox>
-            <br><br>
-
-            <input type="reset" name="reset1" value="reset"></input>
-            <input type="submit" name="submit1" value="submit"></input>
-            <button name="button1" value="button">text</button>
-
-            <input type="submit" value="Submit">
-
-            <paper-button raised
-                onclick="submitHandler(event)">Submit</paper-button>
-            <paper-button raised
-                onclick="resetHandler(event)">Reset</paper-button>
-          </form>
-        </iron-form>
-
-        <h1>no validate</h1>
+    <h3>Iron-form respects the novalidate form attribute</h3>
+    <demo-snippet>
+      <template>
         <iron-form>
           <form method="get" action="http://localhost:3000/foo" novalidate>
-            <input name="name" label="Name" required></paper-input>
+            <paper-input name="name" label="Name" required></paper-input>
+            <cats-only name="cats"></cats-only>
+            <input name="animal" placeholder="animal" required value="meerkat"><br>
             <paper-checkbox name="cheese" required>Cheese</paper-checkbox>
-            <br>
+            <br><br>
             <input type="submit" value="Submit">
 
-            <paper-button raised
-                onclick="submitHandler(event)">Submit</paper-button>
-            <paper-button raised
-                onclick="resetHandler(event)">Reset</paper-button>
+            <paper-button raised onclick="submitHandler(event)">Submit</paper-button>
+            <paper-button raised onclick="resetHandler(event)">Reset</paper-button>
           </form>
         </iron-form>
+      </template>
+    </demo-snippet>
 
-        <h4> complicated form </h4>
+    <h3>Iron-form respects nested elements</h3>
+    <demo-snippet>
+      <template>
         <iron-form>
           <form method="get" action="http://localhost:3000/foo">
             <p>
-              <input name="name" label="Name" required></paper-input>
+              <input name="name" label="Name" required>
+              <cats-only name="cats"></cats-only>
               <paper-checkbox name="cheese" required>Cheese</paper-checkbox>
             </p>
 
             <input type="submit" value="Submit">
 
-            <paper-button raised
-                onclick="submitHandler(event)">Submit</paper-button>
-            <paper-button raised
-                onclick="resetHandler(event)">Reset</paper-button>
+            <paper-button raised onclick="submitHandler(event)">Submit</paper-button>
+            <paper-button raised onclick="resetHandler(event)">Reset</paper-button>
           </form>
         </iron-form>
+      </template>
+    </demo-snippet>
+  </div>
 
-        <h4> send a file </h4>
-        <iron-form>
-          <form action="http://localhost:3000/foo" method="post" enctype="multipart/form-data">
-            <input type="file" name="fileToUpload" id="fileToUpload">
-            <input type="submit" value="Submit">
-
-            <paper-button raised
-                onclick="submitHandler(event)">Submit</paper-button>
-            <paper-button raised
-                onclick="resetHandler(event)">Reset</paper-button>
-          </form>
-        </iron-form>
-        </div>
-      </div>
-    </div>
-    <br><br>
-    <div class="horizontal-section-container">
-      <div>
-        <h4>Submitted form data</h4>
-        <div class="horizontal-section wide">
-          <div id="output"></div>
-        </div>
-      </div>
-    </div>
-
-    <script>
-      function display(event) {
-        var output = document.getElementById('output');
-        output.innerHTML = JSON.stringify(event.detail);
-      }
-      function submitHandler(event) {
-        // lol, get to the parent iron-form.
-        Polymer.dom(event).localTarget.parentElement.parentElement.submit();
-      }
-      function resetHandler(event) {
-        Polymer.dom(event).localTarget.parentElement.parentElement.reset();
-      }
-    </script>
-  </body>
-
-
+  <script>
+    function submitHandler(event) {
+      // lol, get to the parent iron-form.
+      Polymer.dom(event).localTarget.parentElement.parentElement.submit();
+    }
+    function resetHandler(event) {
+      Polymer.dom(event).localTarget.parentElement.parentElement.reset();
+    }
+  </script>
+</body>
 </html>
