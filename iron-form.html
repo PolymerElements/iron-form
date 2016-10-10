@@ -190,8 +190,6 @@ attach it to the `<iron-form>`:
         if (event)
           event.preventDefault();
 
-        // Only elements that have a `name` and are not disabled are submittable.
-        var elements = this._getSubmittableElements();
         if (!this.validate()) {
           return;
         }
@@ -201,24 +199,15 @@ attach it to the `<iron-form>`:
           this.$.helper.removeChild(this.$.helper.children[0]);
         }
 
-        var json = {};
-        for (var i = 0; i < elements.length; i++) {
-          var values = this._serializeElementValues(elements[i]);
-          for (var v = 0; v < values.length; v++) {
-            // If we're submitting the form, then create a hidden element for
-            // each of the values. Otherwise, if we're using an ajax request,
-            // populate the json object.
-            if (this.allowRedirect) {
-              this.$.helper.appendChild(this._createHiddenElement(elements[i].name, values[v]));
-            }
-            else {
-              this._addSerializedElement(json, elements[i].name, values[v]);
-            }
-          }
-        }
+        var json = this.serializeForm();
 
         // If we want a redirect, submit the form natively.
         if (this.allowRedirect) {
+          // If we're submitting the form natively, then create a hidden element for
+          // each of the values.
+          for (element in json) {
+            this.$.helper.appendChild(this._createHiddenElement(element, json[element]));
+          }
           this.$.helper.submit();
           this.fire('iron-form-submit');
         } else {
@@ -234,15 +223,31 @@ attach it to the `<iron-form>`:
         if (event)
           event.preventDefault();
 
-        // // Remove all the existing form children, and re-add the default ones.
-        // var nodes = Polymer.dom(this._form).querySelectorAll('*');
-        // debugger
-        // for (var i = 0; i < nodes.length; i++) {
-        //   this._form.removeChild(nodes);
-        // }
-        // // for (var i = 0; i < this._initialElements.length; i++) {
-        // //   this._form.appendChild(this._initialElements[i]);
-        // // }
+        var nodes = Polymer.dom(this._form).querySelectorAll('*');
+
+        for (var i = 0; i < nodes.length; i++) {
+          if (nodes[i].defaultValue) {
+            nodes[i].value = nodes[i].defaultValue;
+          }
+        }
+      },
+
+      /**
+       * Serializes the form as will be used in submission.
+       * @return {Object} An object containing name-value pairs for elements that
+       *                  would be submitted.
+       */
+      serializeForm: function() {
+        // Only elements that have a `name` and are not disabled are submittable.
+        var elements = this._getSubmittableElements();
+        var json = {};
+        for (var i = 0; i < elements.length; i++) {
+          var values = this._serializeElementValues(elements[i]);
+          for (var v = 0; v < values.length; v++) {
+            this._addSerializedElement(json, elements[i].name, values[v]);
+          }
+        }
+        return json;
       },
 
       _handleFormResponse: function (event) {

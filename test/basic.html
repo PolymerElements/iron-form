@@ -146,6 +146,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </template>
   </test-fixture>
 
+  <test-fixture id="resetting">
+    <template>
+      <iron-form>
+        <form action="/get" method="get">
+          <input type="input" name="input1" value="input1">
+          <input type="input" name="input2">
+          <input type="checkbox" name="check1" checked>
+          <input type="checkbox" name="check2">
+          <input type="radio" name="radio1" checked>
+          <input type="radio" name="radio2">
+          <paper-checkbox name="papercheck1" checked></paper-checkbox>
+          <paper-checkbox name="papercheck2"></paper-checkbox>
+          <paper-input name="paper1" value="paper1"></paper-input>
+          <paper-input name="paper2" value=""></paper-input>
+          <input type="reset">
+        </form>
+      </iron-form>
+    </template>
+  </test-fixture>
+
   <script>
     suite('serialization', function() {
       var f;
@@ -492,7 +512,35 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     });
 
     suite('resetting', function() {
-      test('todo', function() {
+      test('can reset a form', function(done) {
+        var form = fixture('resetting');
+
+        // Wait one tick for observeNodes.
+        Polymer.Base.async(function() {
+          var initial = form.serializeForm();
+          expect(JSON.stringify(initial)).to.be.equal('{"input1":"input1","input2":"","check1":"on","radio1":"on","papercheck1":"on","paper1":"paper1","paper2":""}');
+
+          // Modify all the values, flip all the inputs.
+          form.querySelector('[name=input1').value = 'input1++';
+          form.querySelector('[name=input2').value = 'input2++';
+          form.querySelector('[name=check1').checked = false;
+          form.querySelector('[name=check2').checked = true;
+          form.querySelector('[name=radio1').checked = false;
+          form.querySelector('[name=radio2').checked = true;
+          form.querySelector('[name=papercheck1').checked = false;
+          form.querySelector('[name=papercheck2').checked = true;
+          form.querySelector('[name=paper1').value = 'paper1++';
+          form.querySelector('[name=paper2').value = 'paper2++';
+
+          var updated = form.serializeForm();
+          expect(JSON.stringify(updated)).to.not.be.equal(initial);
+
+          form.reset();
+
+          var final = form.serializeForm();
+          expect(JSON.stringify(initial)).to.be.equal(JSON.stringify(final));
+          done();
+        }, 1);
       });
     });
 
