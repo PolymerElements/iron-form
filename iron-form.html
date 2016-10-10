@@ -140,7 +140,7 @@ attach it to the `<iron-form>`:
             for (var i = 0; i < mutations.addedNodes.length; i++) {
               if (mutations.addedNodes[i].tagName === 'FORM') {
                 this._form = mutations.addedNodes[i];
-                this.init();
+                this._init();
               }
             }
           }.bind(this));
@@ -153,17 +153,15 @@ attach it to the `<iron-form>`:
         }
       },
 
-      init: function() {
+      _init: function() {
         this._form.addEventListener('submit', this.submit.bind(this));
         this._form.addEventListener('reset', this.reset.bind(this));
-
-        if (!this.allowRedirect) {
-          this.ajax = document.createElement('iron-ajax');
-          this.ajax.addEventListener('response', this._handleFormResponse.bind(this));
-          this.ajax.addEventListener('error', this._handleFormError.bind(this));
-        }
       },
 
+      /**
+       * Validates all the required elements (custom and native) in the form.
+       * @return {boolean} True if all the elements are valid.
+       */
       validate: function() {
         if (this._form.getAttribute('novalidate') === '')
           return true;
@@ -184,6 +182,9 @@ attach it to the `<iron-form>`:
         return valid;
       },
 
+      /**
+       * Submits the form.
+       */
       submit: function(event) {
         // We are not using this form for submission, so always cancel its event.
         if (event)
@@ -225,6 +226,9 @@ attach it to the `<iron-form>`:
         }
       },
 
+      /**
+       * Resets the form to the default values.
+       */
       reset: function(event) {
         // We are not using this form for submission, so always cancel its event.
         if (event)
@@ -250,6 +254,13 @@ attach it to the `<iron-form>`:
       },
 
       _makeAjaxRequest: function(json) {
+        // Initialize the iron-ajax element if we haven't already.
+        if (!this.ajax) {
+          this.ajax = document.createElement('iron-ajax');
+          this.ajax.addEventListener('response', this._handleFormResponse.bind(this));
+          this.ajax.addEventListener('error', this._handleFormError.bind(this));
+        }
+
         // Native forms can also index elements magically by their name (can't make
         // this up if I tried) so we need to get the correct attributes, not the
         // elements with those names.
