@@ -497,11 +497,58 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     });
 
     suite('dynamically created', function() {
-      test('todo', function() {
+      var server;
+
+      setup(function() {
+        server = sinon.fakeServer.create();
+        server.respondWith(
+          'GET',
+          /\/get.*/,
+          [
+            200,
+            '{"Content-Type":"application/json"}',
+            '{"success":true}'
+          ]
+        );
+      });
+
+      teardown(function() {
+        server.restore();
+      });
+
+      test('submits a form', function(done) {
+        var form = document.createElement('iron-form');
+        var nativeForm = document.createElement('form');
+        nativeForm.action = '/get';
+        nativeForm.method = 'get';
+
+        var input = document.createElement('input');
+        nativeForm.appendChild(input);
+        input.required = true;
+        input.name = 'foo';
+        form.appendChild(nativeForm);
+
+        // Need to add to the document so observeNodes runs.
+        document.body.appendChild(form);
+
+        form.addEventListener('iron-form-response', function(event) {
+          expect(event.detail.url).to.equal('/get?foo=bar');
+          expect(event.detail.response.success).to.be.equal(true);
+          document.body.removeChild(form);
+          done();
+        });
+
+        // Wait one tick for observeNodes.
+        Polymer.Base.async(function() {
+          expect(form.validate()).to.be.equal(false);
+          input.value = 'bar';
+          expect(form.validate()).to.be.equal(true);
+          form.submit();
+          server.respond();
+        }, 1);
       });
     });
 
   </script>
-
 </body>
 </html>
