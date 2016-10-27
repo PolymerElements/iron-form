@@ -364,19 +364,35 @@ attach it to the `<iron-form>`:
         var nodes = Polymer.dom(this._form).children;
         var submittable = [];
 
-        for (var i = 0; i < nodes.length; i++) {
-          // This element might contain other potentially submittable elements
-          // which we need to look at. For example, this could be a <p> node
-          // containing a bunch of inputs.
-          var elements = Array.prototype.slice.call(Polymer.dom(nodes[i]).querySelectorAll('*')) || [];
+        // handle <iron-input><input /></iron-input> scenario
+        var duplicateIndex = function(name) {
+          var isArray = name[name.length - 1] === ']' && name.indexOf('[') > -1;
+          if (!isArray) {
+            for (var i = 0; i < submittable.length; i++) {
+              if (submittable[i].name === name) {
+                return i;
+              }
+            }
+          }
+        };
 
-          // We also want to check this element.
-          elements.push(nodes[i]);
+        for (var i = 0; i < nodes.length; i++) {
+          var el = nodes[i];
 
           // An element is submittable if it is not disabled, and if it has a
           // 'name' attribute.
-          for (var el, j = 0; el = elements[j], j < elements.length; j++) {
-            if (!el.disabled && el.name) {
+          if (!el.disabled && el.name) {
+            var duplicate = duplicateIndex(el.name);
+            if (duplicate) {
+              var duplicateEl = submittable[duplicate];
+              if (Array.isArray(duplicateEl)) {
+                duplicateEl.push(el);
+              } else {
+                var duplicates = [duplicateEl, el];
+                duplicates.name = el.name;
+                submittable.splice(duplicate, 1, duplicates);
+              }
+            } else {
               submittable.push(el);
             }
           }
@@ -402,6 +418,19 @@ attach it to the `<iron-form>`:
         // 4. <input> can have a whole bunch of behaviours, so it's handled separately.
         // 5. Buttons are hard. The button that was clicked to submit the form
         //    is the one who's name/value gets sent to the server.
+
+        if (Array.isArray(element)) {
+          // Got duplicate elements (with the same name).
+          // Use first non-empty value.
+          for (var i = 0; i < element.length; i++) {
+            var result = this._serializeElementValues(element[i]);
+            if (result && result.length > 0) {
+              return result;
+            }
+          }
+          return [];
+        }
+
         var tag = element.tagName.toLowerCase();
         if (tag === 'button' || (tag === 'input' && (element.type === 'submit' || element.type === 'reset'))) {
           return [];
