@@ -124,6 +124,13 @@ attach it to the `<iron-form>`:
           type: Boolean,
           value: false
         },
+        /**
+         * Setting to true skips validation before submit
+         */
+        novalidate: {
+          type: Boolean,
+          value: false,
+        },
       },
 
       /**
@@ -197,7 +204,7 @@ attach it to the `<iron-form>`:
        * @return {boolean} True if all the elements are valid.
        */
       validate: function() {
-        if (this._form.getAttribute('novalidate') === '')
+        if (this.novalidate)
           return true;
 
         // Start by making the form check the native elements it knows about.

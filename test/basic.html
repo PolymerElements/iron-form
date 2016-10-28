@@ -116,6 +116,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </form>
         </iron-form>
 
+        <iron-form id="required-novalidate" novalidate>
+          <form action="/get" method="get">
+            <input required>
+          </form>
+        </iron-form>
+
         <iron-form id="native-invalid">
           <form action="/get" method="get">
             <input pattern="aa" value="b">
@@ -363,6 +369,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           expect(responses).to.be.equal(0);
           done();
         },  200);
+      });
+
+      test('novalidate skips the validation', function(done) {
+        var form = f.querySelector('#required-novalidate');
+
+        form.addEventListener('iron-form-response', function(event) {
+          expect(event.detail.response.success).to.be.equal(true);
+          done();
+        });
+
+        // Wait one tick for observeNodes.
+        Polymer.Base.async(function() {
+          expect(form.validate()).to.be.equal(true);
+          form.submit();
+          server.respond();
+        }, 1);
       });
 
       test('invalid <input> but not required is validated and does not submit the form', function(done) {
