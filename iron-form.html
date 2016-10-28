@@ -358,8 +358,8 @@ attach it to the `<iron-form>`:
           var el = nodes[i];
           if (el.tagName === "SLOT") {
             var distributed = Polymer.dom(el).getDistributedNodes();
-            for (var i = 0; i < distributed.length; i++) {
-              var additionalElements = this._getFormElements(distributed[i]);
+            for (var j = 0; j < distributed.length; j++) {
+              var additionalElements = this._getFormElements(distributed[j]);
               result.push.apply(result, additionalElements);
             }
           } else {
