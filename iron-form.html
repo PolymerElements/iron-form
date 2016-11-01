@@ -156,6 +156,10 @@ attach it to the `<iron-form>`:
         this._saveDefaultValues();
       },
 
+      detached: function() {
+        this._removeSlotListeners();
+      },
+
       _saveDefaultValues: function() {
         var nodes = this._getFormElements();
         this._defaults = this._defaults || new WeakMap();
@@ -329,15 +333,37 @@ attach it to the `<iron-form>`:
         return validatable;
       },
 
-      _getFormElements: function(rootSlot) {
-        if (!rootSlot) rootSlot = this.$.content;
-        if (!rootSlot.__formListener) {
-          rootSlot.__formListener = () => this._saveDefaultValues(rootSlot);
-          rootSlot.__formListener();
-          rootSlot.addEventListener('slotchange', rootSlot.__formListener);
+      _removeSlotListeners: function(slot) {
+        if (!slot) slot = this.$.content;
+        if (slot.tagName !== "SLOT") return;
+        if (slot.__formListener) {
+          slot.removeEventListener('slotchange', slot.__formListener);
+          delete slot.__formListener;
+        }
+        this._forEachDistributedElement(slot, this._removeSlotListeners.bind(this));
+      },
+
+      _forEachDistributedElement: function(slot, handler) {
+        var roots = slot.assignedNodes().filter(n => n.nodeType === Node.ELEMENT_NODE);
+        for (var rootNo = 0; rootNo < roots.length; rootNo++) {
+          var root = roots[rootNo];
+          handler(root);
+          var children = root.querySelectorAll('*');
+          for (var nodeNo = 0; nodeNo < children.length; nodeNo++) {
+            handler(children[nodeNo]);
+          }
+        }
+      },
+
+      _getFormElements: function(slot) {
+        if (!slot) slot = this.$.content;
+        if (!slot.__formListener) {
+          slot.__formListener = () => this._saveDefaultValues(slot);
+          slot.__formListener();
+          slot.addEventListener('slotchange', slot.__formListener);
         }
         var result = [];
-        var addElement = el => {
+        this._forEachDistributedElement(slot, el => {
           if (el !== this._form && el.tagName === "FORM") {
             this._form = el;
             this._form.addEventListener('submit', this.submit.bind(this));
@@ -348,17 +374,7 @@ attach it to the `<iron-form>`:
           } else {
             result.push(el);
           }
-        };
-        var roots = rootSlot.assignedNodes()
-                            .filter(n => n.nodeType === Node.ELEMENT_NODE);
-        for (var rootNo = 0; rootNo < roots.length; rootNo++) {
-          var root = roots[rootNo];
-          addElement(root);
-          var nodes = root.querySelectorAll('*');
-          for (var nodeNo = 0; nodeNo < nodes.length; nodeNo++) {
-            addElement(nodes[nodeNo]);
-          }
-        }
+        });
         return result;
       },
 
