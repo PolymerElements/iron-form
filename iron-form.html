@@ -88,7 +88,7 @@ attach it to the `<iron-form>`:
     </style>
 
     <!-- This form is used to collect the elements that should be submitted -->
-    <slot></slot>
+    <slot id="content"></slot>
 
     <!-- This form is used for submission -->
     <form id="helper" action$="[[action]]" method$="[[method]]" enctype$="[[enctype]]"></form>
@@ -124,13 +124,6 @@ attach it to the `<iron-form>`:
           type: Boolean,
           value: false
         },
-        /**
-         * Setting to true skips validation before submit
-         */
-        novalidate: {
-          type: Boolean,
-          value: false,
-        },
       },
 
       /**
@@ -160,32 +153,11 @@ attach it to the `<iron-form>`:
       */
 
       attached: function() {
-        this._nodeObserver = Polymer.dom(this).observeNodes(
-          function(mutations) {
-            for (var i = 0; i < mutations.addedNodes.length; i++) {
-              if (mutations.addedNodes[i].tagName === 'FORM') {
-                if (!this._alreadyCalledInit) {
-                  this._alreadyCalledInit = true;
-                  this._form = mutations.addedNodes[i];
-                  this._init();
-                }
-              }
-            }
-          }.bind(this));
+        this._saveDefaultValues();
       },
 
-      detached: function() {
-        if (this._nodeObserver) {
-          Polymer.dom(this).unobserveNodes(this._nodeObserver);
-          this._nodeObserver = null;
-        }
-      },
-
-      _init: function() {
-        this._form.addEventListener('submit', this.submit.bind(this));
-        this._form.addEventListener('reset', this.reset.bind(this));
-
-        // Save the initial values.
+      _saveDefaultValues: function() {
+        var nodes = this._getFormElements();
         this._defaults = this._defaults || new WeakMap();
         var nodes = this._getFormElements();
         for (var i = 0; i < nodes.length; i++) {
@@ -204,7 +176,7 @@ attach it to the `<iron-form>`:
        * @return {boolean} True if all the elements are valid.
        */
       validate: function() {
-        if (this.novalidate)
+        if (this._form.getAttribute('novalidate') === '')
           return true;
 
         // Start by making the form check the native elements it knows about.
@@ -357,20 +329,34 @@ attach it to the `<iron-form>`:
         return validatable;
       },
 
-      _getFormElements: function(root) {
-        if (!root) root = this._form;
-        var nodes = Polymer.dom(root).querySelectorAll('*');
+      _getFormElements: function(rootSlot) {
+        if (!rootSlot) rootSlot = this.$.content;
+        if (!rootSlot.__formListener) {
+          rootSlot.__formListener = () => this._saveDefaultValues(rootSlot);
+          rootSlot.__formListener();
+          rootSlot.addEventListener('slotchange', rootSlot.__formListener);
+        }
         var result = [];
-        for (var i = 0; i < nodes.length; i++) {
-          var el = nodes[i];
-          if (el.tagName === "SLOT") {
-            var distributed = Polymer.dom(el).getDistributedNodes();
-            for (var j = 0; j < distributed.length; j++) {
-              var additionalElements = this._getFormElements(distributed[j]);
-              result.push.apply(result, additionalElements);
-            }
+        var addElement = el => {
+          if (el !== this._form && el.tagName === "FORM") {
+            this._form = el;
+            this._form.addEventListener('submit', this.submit.bind(this));
+            this._form.addEventListener('reset', this.reset.bind(this));
+          } else if (el.tagName === "SLOT") {
+            var additionalElements = this._getFormElements(el);
+            result.push.apply(result, additionalElements);
           } else {
             result.push(el);
+          }
+        };
+        var roots = rootSlot.assignedNodes()
+                            .filter(n => n.nodeType === Node.ELEMENT_NODE);
+        for (var rootNo = 0; rootNo < roots.length; rootNo++) {
+          var root = roots[rootNo];
+          addElement(root);
+          var nodes = root.querySelectorAll('*');
+          for (var nodeNo = 0; nodeNo < nodes.length; nodeNo++) {
+            addElement(nodes[nodeNo]);
           }
         }
         return result;

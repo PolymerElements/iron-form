@@ -116,8 +116,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </form>
         </iron-form>
 
-        <iron-form id="required-novalidate" novalidate>
-          <form action="/get" method="get">
+        <iron-form id="required-novalidate">
+          <form action="/get" method="get" novalidate>
             <input required>
           </form>
         </iron-form>
@@ -545,6 +545,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           done();
         });
 
+         // enctype is set in template
          form.headers = {'x-some': 'header-value'};
          form.withCredentials = true;
 
