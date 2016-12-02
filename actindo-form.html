@@ -13,7 +13,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <script>
 /*
-`<iron-form>` is an HTML `<form>` element that can validate and submit any custom
+`<actindo-form>` is an HTML `<form>` element that can validate and submit any custom
 elements that implement `Polymer.IronFormElementBehavior`, as well as any
 native HTML elements. For more information on which attributes are
 available on the native form element, see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form
@@ -23,7 +23,7 @@ submit the form data to the action URL.
 
   Example:
 
-    <form is="iron-form" id="form" method="post" action="/form/handler">
+    <form is="actindo-form" id="form" method="post" action="/form/handler">
       <paper-input name="name" label="name"></paper-input>
       <input name="address">
       ...
@@ -41,21 +41,21 @@ call the form's `submit` method.
       document.getElementById('form').submit();
     }
 
-To customize the request sent to the server, you can listen to the `iron-form-presubmit`
+To customize the request sent to the server, you can listen to the `actindo-form-presubmit`
 event, and modify the form's[`iron-ajax`](https://elements.polymer-project.org/elements/iron-ajax)
 object. However, If you want to not use `iron-ajax` at all, you can cancel the
 event and do your own custom submission:
 
   Example of modifying the request, but still using the build-in form submission:
 
-    form.addEventListener('iron-form-presubmit', function() {
+    form.addEventListener('actindo-form-presubmit', function() {
       this.request.method = 'put';
       this.request.params = someCustomParams;
     });
 
   Example of bypassing the build-in form submission:
 
-    form.addEventListener('iron-form-presubmit', function(event) {
+    form.addEventListener('actindo-form-presubmit', function(event) {
       event.preventDefault();
       var firebase = new Firebase(form.getAttribute('action'));
       firebase.set(form.serialize());
@@ -65,7 +65,7 @@ event and do your own custom submission:
 */
   Polymer({
 
-    is: 'iron-form',
+    is: 'actindo-form',
 
     extends: 'form',
 
@@ -131,43 +131,43 @@ event and do your own custom submission:
     /**
      * Fired if the form cannot be submitted because it's invalid.
      *
-     * @event iron-form-invalid
+     * @event actindo-form-invalid
      */
 
     /**
      * Fired before the form is submitted.
      *
-     * @event iron-form-presubmit
+     * @event actindo-form-presubmit
      */
 
     /**
      * Fired after the form is submitted.
      *
-     * @event iron-form-submit
+     * @event actindo-form-submit
      */
 
      /**
       * Fired after the form is reset.
       *
-      * @event iron-form-reset
+      * @event actindo-form-reset
       */
 
     /**
     * Fired after the form is submitted and a response is received. An
     * IronRequestElement is included as the event.detail object.
     *
-    * @event iron-form-response
+    * @event actindo-form-response
     */
 
     /**
      * Fired after the form is submitted and an error is received. An
      * IronRequestElement is included as the event.detail object.
      *
-     * @event iron-form-error
+     * @event actindo-form-error
      */
     listeners: {
-      'iron-form-element-register': '_registerElement',
-      'iron-form-element-unregister': '_unregisterElement',
+      'actindo-form-element-register': '_registerElement',
+      'actindo-form-element-unregister': '_unregisterElement',
       'submit': '_onSubmit',
       'reset': '_onReset'
     },
@@ -224,7 +224,7 @@ event and do your own custom submission:
         if (Polymer.clientSupportsFormValidationUI && !this.disableNativeValidationUi) {
           this._doFakeSubmitForValidation();
         }
-        this.fire('iron-form-invalid');
+        this.fire('actindo-form-invalid');
         return;
       }
 
@@ -246,10 +246,10 @@ event and do your own custom submission:
       }
 
       // Allow for a presubmit hook
-      var event = this.fire('iron-form-presubmit', {}, {cancelable: true});
+      var event = this.fire('actindo-form-presubmit', {}, {cancelable: true});
       if(!event.defaultPrevented) {
         this.request.generateRequest();
-        this.fire('iron-form-submit', json);
+        this.fire('actindo-form-submit', json);
       }
     },
 
@@ -335,11 +335,11 @@ event and do your own custom submission:
     },
 
     _handleFormResponse: function (event) {
-      this.fire('iron-form-response', event.detail);
+      this.fire('actindo-form-response', event.detail);
     },
 
     _handleFormError: function (event) {
-      this.fire('iron-form-error', event.detail);
+      this.fire('actindo-form-error', event.detail);
     },
 
     _registerElement: function(e) {
@@ -480,7 +480,7 @@ event and do your own custom submission:
           el.invalid = false;
         }
 
-        this.fire('iron-form-reset');
+        this.fire('actindo-form-reset');
       }, 1);
     },
 

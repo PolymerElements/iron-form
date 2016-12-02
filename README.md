@@ -2,7 +2,7 @@
 <!---
 
 This README is automatically generated from the comments in these files:
-iron-form.html
+actindo-form.html
 
 Edit those files, and our readme bot will duplicate them over here!
 Edit this file, and the bot will squash your changes :)
@@ -12,14 +12,14 @@ thing! https://github.com/PolymerLabs/tedium/issues
 
 -->
 
-[![Build status](https://travis-ci.org/PolymerElements/iron-form.svg?branch=master)](https://travis-ci.org/PolymerElements/iron-form)
+[![Build status](https://travis-ci.org/ActindoElements/actindo-form.svg?branch=master)](https://travis-ci.org/ActindoElements/actindo-form)
 
-_[Demo and API docs](https://elements.polymer-project.org/elements/iron-form)_
+_[Demo and API docs](https://elements.polymer-project.org/elements/actindo-form)_
 
 
-##&lt;iron-form&gt;
+##&lt;actindo-form&gt;
 
-`<iron-form>` is an HTML `<form>` element that can validate and submit any custom
+`<actindo-form>` is an HTML `<form>` element that can validate and submit any custom
 elements that implement `Polymer.IronFormElementBehavior`, as well as any
 native HTML elements. For more information on which attributes are
 available on the native form element, see [https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form)
@@ -30,7 +30,7 @@ submit the form data to the action URL.
   Example:
 
 ```html
-<form is="iron-form" id="form" method="post" action="/form/handler">
+<form is="actindo-form" id="form" method="post" action="/form/handler">
   <paper-input name="name" label="name"></paper-input>
   <input name="address">
   ...
@@ -51,7 +51,7 @@ function submitForm() {
 }
 ```
 
-To customize the request sent to the server, you can listen to the `iron-form-presubmit`
+To customize the request sent to the server, you can listen to the `actindo-form-presubmit`
 event, and modify the form's[`iron-ajax`](https://elements.polymer-project.org/elements/iron-ajax)
 object. However, If you want to not use `iron-ajax` at all, you can cancel the
 event and do your own custom submission:
@@ -59,7 +59,7 @@ event and do your own custom submission:
   Example of modifying the request, but still using the build-in form submission:
 
 ```javascript
-form.addEventListener('iron-form-presubmit', function() {
+form.addEventListener('actindo-form-presubmit', function() {
   this.request.method = 'put';
   this.request.params = someCustomParams;
 });
@@ -68,7 +68,7 @@ form.addEventListener('iron-form-presubmit', function() {
   Example of bypassing the build-in form submission:
 
 ```javascript
-form.addEventListener('iron-form-presubmit', function(event) {
+form.addEventListener('actindo-form-presubmit', function(event) {
   event.preventDefault();
   var firebase = new Firebase(form.getAttribute('action'));
   firebase.set(form.serialize());

@@ -1,4 +1,4 @@
-<!-- Instructions: https://github.com/PolymerElements/iron-form/CONTRIBUTING.md#filing-issues -->
+<!-- Instructions: https://github.com/PolymerElements/actindo-form/CONTRIBUTING.md#filing-issues -->
 ### Description
 <!-- Example: The `paper-foo` element causes the page to turn pink when clicked. -->
 

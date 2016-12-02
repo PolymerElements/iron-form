@@ -10,7 +10,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 <html>
 <head>
-  <title>iron-form demo</title>
+  <title>actindo-form demo</title>
 
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
   <meta name="mobile-web-app-capable" content="yes">
@@ -28,7 +28,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <link rel="import" href="../../paper-spinner/paper-spinner.html">
   <link rel="import" href="../../paper-styles/color.html">
   <link rel="import" href="../../paper-styles/typography.html">
-  <link rel="import" href="../iron-form.html">
+  <link rel="import" href="../actindo-form.html">
   <link rel="import" href="simple-element.html">
 
   <style is="custom-style" include="demo-pages-shared-styles">
@@ -66,10 +66,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <body unresolved>
 
   <div class="vertical-section-container centered">
-    <h3>An <code>iron-form</code> can submit both custom and native elements.</h3>
+    <h3>An <code>actindo-form</code> can submit both custom and native elements.</h3>
     <demo-snippet>
       <template>
-        <form is="iron-form" method="get" action="/" id="basic">
+        <form is="actindo-form" method="get" action="/" id="basic">
           <paper-input name="name" label="Name" required></paper-input>
           <br>
           <input type="checkbox" name="food" value="donuts" checked> I like donuts<br>
@@ -96,7 +96,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             form.reset();
             form.querySelector('.output').innerHTML = '';
           }
-          basic.addEventListener('iron-form-submit', function(event) {
+          basic.addEventListener('actindo-form-submit', function(event) {
             this.querySelector('.output').innerHTML = JSON.stringify(event.detail);
           });
         </script>
@@ -116,7 +116,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           }
         </style>
         <p>You can also submit this form by pressing "Enter" in the input</p>
-        <form is="iron-form" method="get" action="/" id="submitOptions">
+        <form is="actindo-form" method="get" action="/" id="submitOptions">
           <paper-input name="name" label="Name" value="Batman" required></paper-input>
           <button type="submit">Submit</button>
           <button type="submit" class="no-style"><paper-button raised>Submit</paper-button></button>
@@ -135,17 +135,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             form.reset();
             form.querySelector('.output').innerHTML = '';
           }
-          submitOptions.addEventListener('iron-form-submit', function(event) {
+          submitOptions.addEventListener('actindo-form-submit', function(event) {
             this.querySelector('.output').innerHTML = JSON.stringify(event.detail);
           });
         </script>
       </template>
     </demo-snippet>
 
-    <h3>To customize the request sent to the server, you can listen to the `iron-form-presubmit` event</h3>
+    <h3>To customize the request sent to the server, you can listen to the `actindo-form-presubmit` event</h3>
     <demo-snippet>
       <template>
-        <form is="iron-form" method="get" action="/" id="presubmit">
+        <form is="actindo-form" method="get" action="/" id="presubmit">
           <paper-input name="name" label="Name" value="Batman" required></paper-input>
           <paper-button raised onclick="_submit(event)">Submit</paper-button>
           <paper-button raised onclick="_reset(event)">Reset</paper-button>
@@ -160,24 +160,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             form.reset();
             form.querySelector('.output').innerHTML = '';
           }
-          presubmit.addEventListener('iron-form-presubmit', function(event) {
+          presubmit.addEventListener('actindo-form-presubmit', function(event) {
             this.request.params['sidekick'] = 'Robin';
           });
-          presubmit.addEventListener('iron-form-submit', function(event) {
+          presubmit.addEventListener('actindo-form-submit', function(event) {
             this.querySelector('.output').innerHTML = JSON.stringify(event.detail);
           });
         </script>
       </template>
     </demo-snippet>
 
-    <h3>Example of an <code>iron-form</code> reacting to state changes.</h3>
+    <h3>Example of an <code>actindo-form</code> reacting to state changes.</h3>
     <p>This form will have the "Submit" button disabled until all fields
       are valid, and then show a spinner during submission.</p>
 
     <demo-snippet>
       <template>
 
-        <form is="iron-form" method="get" action="/" id="eventsDemo">
+        <form is="actindo-form" method="get" action="/" id="eventsDemo">
           <paper-input name="name" label="Name" required auto-validate></paper-input>
           <paper-input name="password" label="Password" type="password" required auto-validate></paper-input>
           <paper-checkbox name="read" required>You must check this box</paper-checkbox><br>
@@ -205,7 +205,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             form.reset();
             form.querySelector('.output').innerHTML = '';
           }
-          document.getElementById('eventsDemo').addEventListener('iron-form-submit', function(event) {
+          document.getElementById('eventsDemo').addEventListener('actindo-form-submit', function(event) {
             spinner.active = false;
             spinner.hidden = true;
             eventsDemoSubmit.disabled = false;
@@ -217,14 +217,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <h3>Example of using a native <code>form</code> to do a page redirect.</h3>
 
-    <p>Since an <code>iron-form</code> submits its elements with an XHR,
+    <p>Since an <code>actindo-form</code> submits its elements with an XHR,
     it cannot do a page redirect after submission. If you need one, you
     can use a native <code>form</code> element and submit all the custom
     elements using <code>hidden</code> inputs.</p>
     <demo-snippet>
       <template>
         <!-- This form is only used to display the elements -->
-        <form is="iron-form" id="redirectDemo">
+        <form is="actindo-form" id="redirectDemo">
           <paper-input name="name" label="Name" required></paper-input>
           <paper-input name="password" label="Password" type="password" required></paper-input>
           <paper-checkbox name="read" required>You must check this box</paper-checkbox><br>
@@ -238,7 +238,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <script>
           function _nativeSubmit(event) {
             if (redirectDemo.validate()) {
-              // For each element the iron-form wants to submit, create a hidden
+              // For each element the actindo-form wants to submit, create a hidden
               // input in the submission form.
               var serializedItems = redirectDemo.serialize();
               for (var name in serializedItems) {

@@ -10,7 +10,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 <html>
 <head>
-  <title>iron-form</title>
+  <title>actindo-form</title>
 
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
   <script src="../../web-component-tester/browser.js"></script>
@@ -18,7 +18,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <link rel="import" href="../../polymer/polymer.html">
   <link rel="import" href="../../paper-input/paper-input.html">
   <link rel="import" href="../../paper-input/paper-textarea.html">
-  <link rel="import" href="../iron-form.html">
+  <link rel="import" href="../actindo-form.html">
   <link rel="import" href="simple-element.html">
   <link rel="import" href="element-with-nested-form-element.html">
   <link rel="import" href="element-with-nested-input.html">
@@ -29,7 +29,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <test-fixture id="Basic">
     <template>
-      <form is="iron-form">
+      <form is="actindo-form">
         <simple-element name="zig" value="zag"></simple-element>
         <input name="foo" value="bar">
       </form>
@@ -38,7 +38,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <test-fixture id="Dupes">
     <template>
-      <form is="iron-form">
+      <form is="actindo-form">
         <input name="foo" value="bar">
         <input name="foo" value="barbar">
         <simple-element name="zig" value="zig"></simple-element>
@@ -50,7 +50,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <test-fixture id="NestedDupes">
     <template>
-      <form is="iron-form">
+      <form is="actindo-form">
         <element-with-nested-form-element name="foo" value="bar"></element-with-nested-form-element>
         <element-with-nested-input name="zig" value="zag"></element-with-nested-input>
       </form>
@@ -59,7 +59,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <test-fixture id="NestedSubmittable">
     <template>
-      <form is="iron-form">
+      <form is="actindo-form">
         <element-with-nested-form-element>
           <simple-element name="foo" value="bar"></simple-element>
         </element-with-nested-form-element>
@@ -69,7 +69,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <test-fixture id="CheckedStates">
     <template>
-      <form is="iron-form">
+      <form is="actindo-form">
         <input type="checkbox" name="foo" value="bar1" checked>
         <input type="checkbox" name="foo" value="bar2">
         <input type="checkbox" name="foo" value="bar3" checked>
@@ -80,7 +80,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <test-fixture id="Disabled">
     <template>
-      <form is="iron-form">
+      <form is="actindo-form">
         <input name="foo" value="bar1">
         <input name="foo" value="bar2" disabled>
         <input type="checkbox" name="zig" value="zag" disabled checked>
@@ -90,7 +90,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <test-fixture id="FormGet">
     <template>
-      <form is="iron-form" action="/responds_with_json" method="get">
+      <form is="actindo-form" action="/responds_with_json" method="get">
         <simple-element name="zig" value="zag"></simple-element>
       </form>
     </template>
@@ -98,7 +98,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <test-fixture id="FormPost">
     <template>
-      <form is="iron-form" action="/responds_with_json" method="post">
+      <form is="actindo-form" action="/responds_with_json" method="post">
         <simple-element name="zig" value="zag"></simple-element>
       </form>
     </template>
@@ -106,7 +106,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <test-fixture id="InvalidForm">
     <template>
-      <form is="iron-form" action="/responds_with_json" method="post">
+      <form is="actindo-form" action="/responds_with_json" method="post">
         <simple-element name="zig"></simple-element>
         <input name="foo" required>
       </form>
@@ -115,7 +115,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <test-fixture id="FormWithRequiredCustomElements">
     <template>
-      <form is="iron-form" action="/responds_with_json" method="post">
+      <form is="actindo-form" action="/responds_with_json" method="post">
         <simple-element required></simple-element>
       </form>
     </template>
@@ -123,7 +123,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <test-fixture id="FormWithRequiredElements">
     <template>
-      <form is="iron-form" action="/responds_with_json" method="post">
+      <form is="actindo-form" action="/responds_with_json" method="post">
         <input required>
       </form>
     </template>
@@ -131,7 +131,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <test-fixture id="FormValidateNonRequiredCustomElements">
     <template>
-      <form is="iron-form" action="/responds_with_json" method="post">
+      <form is="actindo-form" action="/responds_with_json" method="post">
         <paper-input label="numbers" pattern="^[0-9]$" ></paper-input>
       </form>
     </template>
@@ -139,7 +139,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <test-fixture id="FormValidateNonRequiredElements">
     <template>
-      <form is="iron-form" action="/responds_with_json" method="post">
+      <form is="actindo-form" action="/responds_with_json" method="post">
         <input type="text" name="letters" pattern="^[a-z]$" >
       </form>
     </template>
@@ -147,7 +147,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <test-fixture id="FormValidateNestedElements">
     <template>
-      <form is="iron-form">
+      <form is="actindo-form">
         <validatable-element-with-nested-elements>
           <simple-element required></simple-element>
           <input required>
@@ -158,7 +158,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <test-fixture id="FormForResetting">
     <template>
-      <form is="iron-form">
+      <form is="actindo-form">
         <simple-element name="zig" value="zag"></simple-element>
         <paper-input name="zig" value="zug"></paper-input>
         <paper-input name="blank" value=""></paper-input>
@@ -175,7 +175,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <test-fixture id="NativeSelect">
     <template>
-      <form is="iron-form">
+      <form is="actindo-form">
         <select name="numbers" multiple>
           <option value="one" selected>one</option>
           <option value="two">two</option>
@@ -498,7 +498,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       assert.equal(paperTextareaBlank.value, 'not blank');
       assert.equal(paperTextareaBlank.inputElement.textarea.value, 'not blank');
 
-      form.addEventListener('iron-form-reset', function(event) {
+      form.addEventListener('actindo-form-reset', function(event) {
         // Restored initial values.
         assert.equal(customElement.value, 'zag');
         assert.equal(input.value, 'bar');
@@ -547,7 +547,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       assert.equal(paperTextareaBlank.value, '');
       assert.equal(paperTextareaBlank.inputElement.textarea.value, '');
 
-      form.addEventListener('iron-form-reset', function(event) {
+      form.addEventListener('actindo-form-reset', function(event) {
         // Restored initial values.
         assert.equal(customElement.value, 'zag');
         assert.equal(input.value, 'bar');
@@ -572,10 +572,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       var form = fixture('FormForResetting');
       var paperTextarea = form.querySelector('paper-textarea[name="undef"]');
 
-      form.addEventListener('iron-form-reset', function(event) {
+      form.addEventListener('actindo-form-reset', function(event) {
         // Setting the native textarea's value to undefined causes it to
         // display literal "undefined", and paper-textarea.value is indirectly
-        // bound to the textarea's value, so iron-form resets any undefined
+        // bound to the textarea's value, so actindo-form resets any undefined
         // initial values to null in order to avoid this problem.
         assert.equal(paperTextarea.value, null);
         assert.equal(paperTextarea.inputElement.textarea.value, '');
@@ -594,7 +594,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       assert.isFalse(form.validate());
       assert.isTrue(customElement.invalid);
 
-      form.addEventListener('iron-form-reset', function(event) {
+      form.addEventListener('actindo-form-reset', function(event) {
         // Cleared validation messages.
         assert.isFalse(customElement.invalid);
         done();
@@ -654,11 +654,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       customElement.value = "foo";
 
       var submitted = false;
-      form.addEventListener('iron-form-submit', function() {
+      form.addEventListener('actindo-form-submit', function() {
         submitted = true;
       });
 
-      form.addEventListener('iron-form-invalid', function() {
+      form.addEventListener('actindo-form-invalid', function() {
         expect(submitted).to.be.equal(false);
         expect(nativeElement.validity.valid).to.be.equal(false);
         expect(customElement.invalid).to.be.equal(false);
@@ -675,16 +675,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       var submitted = false;
       var presubmitted = false;
 
-      form.addEventListener('iron-form-submit', function() {
+      form.addEventListener('actindo-form-submit', function() {
         submitted = true;
       });
 
-      form.addEventListener('iron-form-presubmit', function() {
+      form.addEventListener('actindo-form-presubmit', function() {
         presubmitted = true;
         this.request.params = {batman: true};
       });
 
-      form.addEventListener('iron-form-response', function(event) {
+      form.addEventListener('actindo-form-response', function(event) {
         expect(submitted).to.be.equal(true);
         expect(presubmitted).to.be.equal(true);
 
@@ -711,11 +711,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       // Since we are not using the normal form submission, these events should
       // never be called.
       var formResponseHandler = sinon.spy();
-      form.addEventListener('iron-form-response', formResponseHandler);
+      form.addEventListener('actindo-form-response', formResponseHandler);
       var formSubmitHandler = sinon.spy();
-      form.addEventListener('iron-form-submit', formSubmitHandler);
+      form.addEventListener('actindo-form-submit', formSubmitHandler);
 
-      form.addEventListener('iron-form-presubmit', function(event) {
+      form.addEventListener('actindo-form-presubmit', function(event) {
         presubmitted = true;
         event.preventDefault();
 
@@ -738,11 +738,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       form = fixture('FormGet');
 
       var submitted = false;
-      form.addEventListener('iron-form-submit', function() {
+      form.addEventListener('actindo-form-submit', function() {
         submitted = true;
       });
 
-      form.addEventListener('iron-form-response', function(event) {
+      form.addEventListener('actindo-form-response', function(event) {
         expect(submitted).to.be.equal(true);
         expect(event.detail.url).to.contain('zig=zag');
 
@@ -761,11 +761,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       form = fixture('FormPost');
 
       var submitted = false;
-      form.addEventListener('iron-form-submit', function() {
+      form.addEventListener('actindo-form-submit', function() {
         submitted = true;
       });
 
-      form.addEventListener('iron-form-response', function(event) {
+      form.addEventListener('actindo-form-response', function(event) {
         expect(submitted).to.be.equal(true);
 
         var response = event.detail.response;
@@ -783,7 +783,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       form = fixture('FormPost');
       form.action = "/responds_with_error";
 
-      form.addEventListener('iron-form-error', function(event) {
+      form.addEventListener('actindo-form-error', function(event) {
         var error = event.detail;
 
         expect(error).to.be.ok;
