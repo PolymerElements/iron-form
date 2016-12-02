@@ -91,6 +91,15 @@ event and do your own custom submission:
       },
 
       /**
+       * Load action url
+       */
+      loadAction: {
+        type: String,
+        value: ""
+      },
+
+
+      /**
        * Content type to use when sending data. If the `contentType` property
        * is set and a `Content-Type` header is specified in the `headers`
        * property, the `headers` property value will take precedence.
@@ -125,6 +134,17 @@ event and do your own custom submission:
       */
       request: {
         type: Object,
+      },
+
+      /**
+       * last loaded form data
+       */
+      formData: {
+        type: Object,
+        notify: true,
+        value: function() {
+          return {};
+        }
       }
     },
 
@@ -166,8 +186,8 @@ event and do your own custom submission:
      * @event actindo-form-error
      */
     listeners: {
-      'actindo-form-element-register': '_registerElement',
-      'actindo-form-element-unregister': '_unregisterElement',
+      'iron-form-element-register': '_registerElement',
+      'iron-form-element-unregister': '_unregisterElement',
       'submit': '_onSubmit',
       'reset': '_onReset'
     },
@@ -214,6 +234,9 @@ event and do your own custom submission:
       this._customElementsInitialValues = [];
     },
 
+    inSubmit: false,
+    inLoad: false,
+
     /**
      * Submits the form.
      */
@@ -227,6 +250,13 @@ event and do your own custom submission:
         this.fire('actindo-form-invalid');
         return;
       }
+
+      if( this.inSubmit || this.inLoad )
+      {
+        return;
+      }
+      this.inSubmit = true;
+      this.inLoad = false;
 
       var json = this.serialize();
 
@@ -251,6 +281,9 @@ event and do your own custom submission:
         this.request.generateRequest();
         this.fire('actindo-form-submit', json);
       }
+      else {
+        this.inSubmit = false;
+      }
     },
 
     /**
@@ -268,6 +301,123 @@ event and do your own custom submission:
 
       return false;
     },
+
+
+
+    /**
+     * Loads the form.
+     */
+    load: function(json) {
+      if( this.inSubmit || this.inLoad )
+      {
+        return;
+      }
+      this.inSubmit = false;
+      this.inLoad = true;
+
+
+      this.request.url = this.loadAction;
+      this.request.method = this.getAttribute('method');
+      this.request.contentType = this.contentType;
+      this.request.withCredentials = this.withCredentials;
+      this.request.headers = this.headers;
+
+      if( json ) {
+        if (this.method.toUpperCase() === 'POST') {
+          this.request.body = json;
+        } else {
+          this.request.params = json;
+        }
+      }
+
+      // Allow for a presubmit hook
+      var event = this.fire('actindo-form-preload', {}, {cancelable: true});
+      if(!event.defaultPrevented) {
+        this.request.generateRequest();
+        this.fire('actindo-form-load', json);
+      }
+      else {
+        this.inLoad = false;
+      }
+    },
+
+    _fillForm: function( resp ) {
+      var data = {};
+      var recurse = function(r, pfx) {
+        if( typeof r == 'object' ) {
+          for( var i in r )
+          {
+            if( !pfx.length ) {
+              recurse( r[i], i );
+            }
+            else {
+              recurse(r[i], pfx + '[' + i + ']');
+            }
+          }
+        }
+        else {
+          data[pfx] = r;
+        }
+      }
+
+      if( typeof(resp) != 'object' || !('data' in resp) )
+      {
+        throw new Error('resp is not an object');
+      }
+      // todo: success handling
+
+      resp = resp.data;
+      if( typeof resp == 'array' || resp instanceof Array )
+      {
+        resp = resp[0];
+      }
+
+      this.formData = resp;
+
+      recurse( resp, '' );
+
+      for( var fieldName in data )
+      {
+        var value = data[fieldName];
+        for (var el, i = 0; el = this._customElements[i], i < this._customElements.length; i++) {
+          // If this custom element is inside a custom element that has already
+          // registered to this form, skip it.
+          if (!this._isChildOfRegisteredParent(el,true) && el.name && el.name == fieldName) {
+            el.value = value;
+          }
+        }
+
+        // Also go through the form's native elements.
+        for (var el, i = 0; el = this.elements[i], i < this.elements.length; i++) {
+          // If this native element is inside a custom element that has already
+          // registered to this form, skip it.
+          if (this._isChildOfRegisteredParent(el,true) || !el.name || el.name != fieldName) {
+            continue;
+          }
+
+          // A <select multiple> has an array of values.
+          if (el.tagName.toLowerCase() === 'select' && el.multiple) {
+            if( !(value instanceof Array) && !(typeof value == 'array') ) {
+              value = [value];
+            }
+            for (var o = 0; o < el.options.length; o++) {
+              el.options[o].selected = false;
+            }
+            for( var j = 0; j < value.length; j++ ) {
+              for (var o = 0; o < el.options.length; o++) {
+                if( el.options[o].value == value[j] )
+                  el.options[o].selected = true;
+              }
+            }
+          } else {
+            el.value = value;
+          }
+        }
+      }
+
+
+    },
+
 
     /**
      * Handler that is called when the native form fires a `reset` event
@@ -335,10 +485,18 @@ event and do your own custom submission:
     },
 
     _handleFormResponse: function (event) {
+      if( this.inLoad )
+      {
+        this.inLoad = this.inSubmit = false;
+        this._fillForm( this.request.lastResponse );
+        return;
+      }
+      this.inLoad = this.inSubmit = false;
       this.fire('actindo-form-response', event.detail);
     },
 
     _handleFormError: function (event) {
+      this.inLoad = this.inSubmit = false;
       this.fire('actindo-form-error', event.detail);
     },
 
