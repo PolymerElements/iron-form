@@ -154,19 +154,40 @@ event and do your own custom submission:
      * @event actindo-form-invalid
      */
 
-    /**
+      /**
+       * Fired before the form is loaded.
+       *
+       * @event actindo-form-preload
+       */
+
+      /**
+       * Fired after the form is loaded.
+       * The request has not yet finished when this event is fired
+       *
+       * @event actindo-form-load
+       */
+
+      /**
+       * Fired after the form is loaded and a response is received. An
+       * IronRequestElement is included as the event.detail object.
+       *
+       * @event actindo-form-load-response
+       */
+
+      /**
      * Fired before the form is submitted.
      *
      * @event actindo-form-presubmit
      */
 
-    /**
-     * Fired after the form is submitted.
-     *
-     * @event actindo-form-submit
-     */
+      /**
+       * Fired after the form is submitted.
+       * The request has not yet finished when this event is fired
+       *
+       * @event actindo-form-submit
+       */
 
-     /**
+      /**
       * Fired after the form is reset.
       *
       * @event actindo-form-reset
@@ -360,10 +381,15 @@ event and do your own custom submission:
         }
       }
 
-      if( typeof(resp) != 'object' || !('data' in resp) )
+      if( typeof(resp) != 'object' )
       {
         throw new Error('resp is not an object');
       }
+        if( !('data' in resp) )
+        {
+            console.log( 'no data element in resp' );
+            return;
+        }
       // todo: success handling
 
       resp = resp.data;
@@ -489,6 +515,7 @@ event and do your own custom submission:
       {
         this.inLoad = this.inSubmit = false;
         this._fillForm( this.request.lastResponse );
+        this.fire('actindo-form-load-response', event.detail);
         return;
       }
       this.inLoad = this.inSubmit = false;
