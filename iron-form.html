@@ -239,7 +239,8 @@ event and do your own custom submission:
       this.request.withCredentials = this.withCredentials;
       this.request.headers = this.headers;
 
-      if (this.method.toUpperCase() === 'POST') {
+      var method = this.request.method.toUpperCase();
+      if (method === 'POST' || method === 'PUT') {
         this.request.body = json;
       } else {
         this.request.params = json;

@@ -103,6 +103,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </form>
     </template>
   </test-fixture>
+  
+  <test-fixture id="FormPut">
+    <template>
+      <form is="iron-form" action="/responds_with_json" method="put">
+        <simple-element name="zig" value="zag"></simple-element>
+      </form>
+    </template>
+  </test-fixture>
+  
 
   <test-fixture id="InvalidForm">
     <template>
@@ -631,6 +640,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           '{"success":true}'
         ]
       );
+      
+      server.respondWith(
+        'PUT',
+        /\/responds_with_json.*/,
+        [
+          200,
+          '{"Content-Type":"application/json"}',
+          '{"success":true}'
+        ]
+      );      
 
       server.respondWith(
         'GET',
@@ -795,6 +814,46 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       form.submit();
       server.respond();
     });
+    
+    test('can submit with method=put', function(done) {
+        form = fixture('FormPut');
+
+        var submitted = false;
+        form.addEventListener('iron-form-submit', function() {
+          submitted = true;
+        });
+
+        form.addEventListener('iron-form-response', function(event) {
+          expect(submitted).to.be.equal(true);
+
+          var response = event.detail.response;
+          expect(response).to.be.ok;
+          expect(response).to.be.an('object');
+          expect(response.success).to.be.equal(true);
+          done();
+        });
+
+        form.submit();
+        server.respond();
+      });
+
+      test('can relay errors for put', function(done) {
+        form = fixture('FormPut');
+        form.action = "/responds_with_error";
+
+        form.addEventListener('iron-form-error', function(event) {
+          var error = event.detail;
+
+          expect(error).to.be.ok;
+          expect(error).to.be.an('object');
+          expect(error.error).to.be.ok;
+          done();
+        });
+
+        form.submit();
+        server.respond();
+      });    
+    
 
   });
 
