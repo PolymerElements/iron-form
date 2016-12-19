@@ -11,7 +11,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../iron-ajax/iron-ajax.html">
 
-<script>
+<dom-module id="actindo-form">
+
+    <template>
+        <content></content>
+        <paper-dialog id="dialog">
+            <h2>Error</h2>
+            <paper-dialog-scrollable>
+
+            </paper-dialog-scrollable>
+            <div class="buttons">
+                <paper-button dialog-dismiss>Close</paper-button>
+            </div>
+        </paper-dialog>
+    </template>
+
+    <script>
 /*
 `<actindo-form>` is an HTML `<form>` element that can validate and submit any custom
 elements that implement `Polymer.IronFormElementBehavior`, as well as any
@@ -63,7 +78,7 @@ event and do your own custom submission:
 
 @demo demo/index.html
 */
-  Polymer({
+Polymer({
 
     is: 'actindo-form',
 
@@ -100,6 +115,15 @@ event and do your own custom submission:
 
 
       /**
+       * If an error occurs, show a paper-dialog with error & stack trace
+       */
+      showErrors: {
+          type: Boolean,
+          value: true
+      },
+
+
+        /**
        * Content type to use when sending data. If the `contentType` property
        * is set and a `Content-Type` header is specified in the `headers`
        * property, the `headers` property value will take precedence.
@@ -525,6 +549,17 @@ event and do your own custom submission:
     _handleFormError: function (event) {
       this.inLoad = this.inSubmit = false;
       this.fire('actindo-form-error', event.detail);
+      if( this.showErrors ) {
+          var resp = event.detail.request.response;
+          if( resp && typeof resp == 'object' ) {
+              if (resp.fieldValidationMessages && Array.isArray(resp.fieldValidationMessages)) {
+
+              }
+              this.$.dialog.querySelector('h2').innerHTML = resp.error;
+              this.$.dialog.querySelector('paper-dialog-scrollable').innerHTML = resp.trace;
+              this.$.dialog.open();
+          }
+      }
     },
 
     _registerElement: function(e) {
@@ -693,6 +728,7 @@ event and do your own custom submission:
       return false;
     }
 
-  });
+});
 
 </script>
+</dom-module>
