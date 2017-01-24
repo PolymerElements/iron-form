@@ -292,7 +292,7 @@ event and do your own custom submission:
       function addSerializedElement(name, value) {
         // If the name doesn't exist, add it. Otherwise, serialize it to
         // an array,
-        if (!json[name]) {
+        if (json[name] === undefined) {
           json[name] = value;
         } else {
           if (!Array.isArray(json[name])) {
