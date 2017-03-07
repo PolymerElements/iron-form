@@ -20,7 +20,7 @@
   "homepage": "https://github.com/PolymerElements/iron-form",
   "ignore": [],
   "dependencies": {
-    "polymer": "Polymer/polymer#2.0-preview",
+    "polymer": "Polymer/polymer#^2.0.0-rc.1",
     "iron-ajax": "PolymerElements/iron-ajax#2.0-preview"
   },
   "devDependencies": {
