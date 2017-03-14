@@ -166,6 +166,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </template>
   </test-fixture>
 
+  <test-fixture id="content-type">
+    <template>
+      <div>
+        <iron-form id="simple-form">
+          <form action="/valid/url" method="post">
+            <paper-input name="paper1" value="value1"></paper-input>
+            <paper-input name="paper2" value="value2"></paper-input>
+          </form>
+        </iron-form>
+        <iron-form id="json-form">
+          <form action="/valid/url" method="post" content-type="application/json">
+            <paper-input name="paper1" value="value1"></paper-input>
+            <paper-input name="paper2" value="value2"></paper-input>
+          </form>
+        </iron-form>
+        </div>
+    </template>
+  </test-fixture>
+
   <script>
     suite('serialization', function() {
       var f;
@@ -597,6 +616,73 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       });
     });
 
+    suite('content type', function() {
+        var server;
+        var f;
+
+        setup(function() {
+            server = sinon.fakeServer.create();
+            f = fixture('content-type');
+        });
+
+        teardown(function() {
+            server.restore();
+        });
+
+        test('submits a form', function(done) {
+          var form = f.querySelector('#simple-form');
+
+          server.respondWith(
+            'POST',
+            /\/valid\/url.*/,
+            function (request){
+              expect(request.requestHeaders)
+                .to.deep.equal(
+                  {
+                    "Content-Type": "text/plain;charset=utf-8",
+                    "accept": "application/json"
+              });
+              expect(request.requestBody)
+                .to.deep.equal(
+                  {
+                    "paper1": "value1",
+                    "paper2": "value2"
+              });
+              done();
+                });
+            // Wait one tick for observeNodes.
+            Polymer.Base.async(function() {
+                form.submit();
+                server.respond();
+            }, 1);
+        });
+        test('submits a form', function(done) {
+            var form = f.querySelector('#json-form');
+
+            server.respondWith(
+                'POST',
+                /\/valid\/url.*/,
+                function (request){
+                    expect(request.requestHeaders)
+                        .to.deep.equal(
+                        {
+                            "content-type":
+                                "application/json;charset=utf-8",
+                            "accept": "application/json"
+                        });
+                    expect(request.requestBody)
+                        .to.equal(
+                            '{"paper1":"value1","paper2":"value2"}'
+                    );
+                    done();
+                });
+            // Wait one tick for observeNodes.
+            Polymer.Base.async(function() {
+                form.submit();
+                server.respond();
+            }, 1);
+        });
+    });
   </script>
 </body>
 </html>
