@@ -72,7 +72,7 @@ form.addEventListener('iron-form-presubmit', function() {
 ```javascript
 form.addEventListener('iron-form-presubmit', function(event) {
   event.preventDefault();
-  var firebase = new Firebase(form.getAttribute('action'));
-  firebase.set(form.serialize());
+  var firebase = new Firebase(form.ajax.url);
+  firebase.set(form.serializeForm());
 });
 ```
