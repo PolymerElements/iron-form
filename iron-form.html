@@ -50,16 +50,16 @@ event and do your own custom submission:
   Example of modifying the request, but still using the build-in form submission:
 
     form.addEventListener('iron-form-presubmit', function() {
-      this.request.method = 'put';
-      this.request.params['extraParam'] = 'someValue';
+      this.ajax.method = 'put';
+      this.ajax.params['extraParam'] = 'someValue';
     });
 
   Example of bypassing the build-in form submission:
 
     form.addEventListener('iron-form-presubmit', function(event) {
       event.preventDefault();
-      var firebase = new Firebase(form.getAttribute('action'));
-      firebase.set(form.serialize());
+      var firebase = new Firebase(form.ajax.url);
+      firebase.set(form.serializeForm());
     });
 
 Note that if you're dynamically creating this element, it's mandatory that you
@@ -110,6 +110,7 @@ attach it to the `<iron-form>`:
 
       /**
        * Fired after the form is submitted.
+       * event.detail object contains submitted data.
        *
        * @event iron-form-submit
        */

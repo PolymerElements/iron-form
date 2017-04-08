@@ -30,16 +30,18 @@ submit the form data to the action URL.
   Example:
 
 ```html
-<form is="iron-form" id="form" method="post" action="/form/handler">
-  <paper-input name="name" label="name"></paper-input>
-  <input name="address">
-  ...
-</form>
+<iron-form id="form">
+  <form method="post" action="/form/handler">
+    <paper-input name="name" label="name"></paper-input>
+    <input name="address">
+    ...
+  </form>
+</iron-form>
 ```
 
 By default, a native `<button>` element will submit this form. However, if you
 want to submit it from a custom element's click handler, you need to explicitly
-call the form's `submit` method.
+call the form's `submit` method (note, that `submit` event won't fire in this case).
 
   Example:
 
@@ -60,8 +62,8 @@ event and do your own custom submission:
 
 ```javascript
 form.addEventListener('iron-form-presubmit', function() {
-  this.request.method = 'put';
-  this.request.params = someCustomParams;
+  this.ajax.method = 'put';
+  this.ajax.params = someCustomParams;
 });
 ```
 
@@ -70,9 +72,7 @@ form.addEventListener('iron-form-presubmit', function() {
 ```javascript
 form.addEventListener('iron-form-presubmit', function(event) {
   event.preventDefault();
-  var firebase = new Firebase(form.getAttribute('action'));
-  firebase.set(form.serialize());
+  var firebase = new Firebase(form.ajax.url);
+  firebase.set(form.serializeForm());
 });
 ```
-
-
