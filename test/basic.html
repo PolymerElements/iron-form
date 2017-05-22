@@ -88,6 +88,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </template>
   </test-fixture>
 
+  <test-fixture id="FormUnsetMethod">
+    <template>
+      <form is="iron-form" action="/responds_with_json">
+        <simple-element name="zig" value="zag"></simple-element>
+      </form>
+    </template>
+  </test-fixture>
+
   <test-fixture id="FormGet">
     <template>
       <form is="iron-form" action="/responds_with_json" method="get">
@@ -732,6 +740,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       });
 
       form.submit();
+    });
+
+    test('can submit with method unset, defaults to method=get', function(done) {
+      form = fixture('FormUnsetMethod');
+
+      var submitted = false;
+      form.addEventListener('iron-form-submit', function() {
+        submitted = true;
+      });
+
+      form.addEventListener('iron-form-response', function(event) {
+        expect(this.request.method).to.be.equal('GET');
+        expect(submitted).to.be.equal(true);
+        expect(event.detail.url).to.contain('zig=zag');
+
+        var response = event.detail.response;
+        expect(response).to.be.ok;
+        expect(response).to.be.an('object');
+        expect(response.success).to.be.equal(true);
+        done();
+      });
+
+      form.submit();
+      server.respond();
     });
 
     test('can submit with method=get', function(done) {
