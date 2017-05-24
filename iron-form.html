@@ -293,7 +293,7 @@ attach it to the `<iron-form>`:
       },
 
       _getValidatableElements: function() {
-        var nodes = Polymer.dom(this._form).querySelectorAll('*');
+        var nodes = Polymer.dom(this._form).children;
         var validatable = [];
 
         for (var i = 0; i < nodes.length; i++) {
@@ -316,7 +316,7 @@ attach it to the `<iron-form>`:
       },
 
       _getSubmittableElements: function() {
-        var nodes = Polymer.dom(this._form).querySelectorAll('*');
+        var nodes = Polymer.dom(this._form).children;
         var submittable = [];
 
         for (var i = 0; i < nodes.length; i++) {
