@@ -461,13 +461,31 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             '{"success":true}'
           ]
         );
+        server.respondWith(
+          'POST',
+          /\/post.*/,
+          [
+            200,
+            '{"Content-Type":"application/json"}',
+            '{"success":true}'
+          ]
+        );
+        server.respondWith(
+          'GET',
+          /\/error.*/,
+          [
+            404,
+            '{"Content-Type":"application/text"}',
+            '{"success":false}'
+          ]
+        );
       });
 
       teardown(function() {
         server.restore();
       });
 
-      test('calling submit() on the wrapper submits the form', function(done) {
+      test('calling submit() on a form with method=get', function(done) {
         form.addEventListener('iron-form-response', function(event) {
           expect(event.detail.response.success).to.be.equal(true);
           done();
@@ -475,6 +493,35 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         // Wait one tick for observeNodes.
         Polymer.Base.async(function() {
+          form.submit();
+          server.respond();
+        }, 1);
+      });
+
+      test('calling submit() on a form with method=post', function(done) {
+        form.addEventListener('iron-form-response', function(event) {
+          expect(event.detail.response.success).to.be.equal(true);
+          done();
+        });
+
+        // Wait one tick for observeNodes.
+        Polymer.Base.async(function() {
+          form._form.setAttribute('method', 'POST');
+          form._form.setAttribute('action', '/post');
+          form.submit();
+          server.respond();
+        }, 1);
+      });
+
+      test('calling submit() on a form with method unset', function(done) {
+        form.addEventListener('iron-form-response', function(event) {
+          expect(event.detail.response.success).to.be.equal(true);
+          done();
+        });
+
+        // Wait one tick for observeNodes.
+        Polymer.Base.async(function() {
+          form._form.removeAttribute('method');
           form.submit();
           server.respond();
         }, 1);
@@ -528,40 +575,118 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           server.respond();
         }, 1);
       });
-    });
 
-    suite('resetting', function() {
-      test('can reset a form', function(done) {
-        var form = fixture('resetting');
+      test('can modify the request in the presubmit', function(done) {
+        var submitted = false;
+        var presubmitted = false;
+
+        form.addEventListener('iron-form-submit', function() {
+          submitted = true;
+        });
+        form.addEventListener('iron-form-presubmit', function() {
+          presubmitted = true;
+          this.request.params = {batman: true};
+        });
+
+        form.addEventListener('iron-form-response', function(event) {
+          expect(submitted).to.be.equal(true);
+          expect(presubmitted).to.be.equal(true);
+
+          // We have changed the json parameters
+          expect(event.detail.url).to.contain('batman=true');
+
+          var response = event.detail.response;
+          expect(response).to.be.ok;
+          expect(response).to.be.an('object');
+          expect(response.success).to.be.equal(true);
+          done();
+        });
 
         // Wait one tick for observeNodes.
         Polymer.Base.async(function() {
-          var initial = form.serializeForm();
-          expect(JSON.stringify(initial)).to.be.equal('{"input1":"input1","input2":"","check1":"on","radio1":"on","papercheck1":"on","paper1":"paper1","paper2":""}');
+          form.submit();
+          server.respond();
+        }, 1);
+      });
 
-          // Modify all the values, flip all the inputs.
-          form.querySelector('[name=input1').value = 'input1++';
-          form.querySelector('[name=input2').value = 'input2++';
-          form.querySelector('[name=check1').checked = false;
-          form.querySelector('[name=check2').checked = true;
-          form.querySelector('[name=radio1').checked = false;
-          form.querySelector('[name=radio2').checked = true;
-          form.querySelector('[name=papercheck1').checked = false;
-          form.querySelector('[name=papercheck2').checked = true;
-          form.querySelector('[name=paper1').value = 'paper1++';
-          form.querySelector('[name=paper2').value = 'paper2++';
+      test('can do a custom submission in the presubmit', function(done) {
+        var presubmitted = false;
+        // Since we are not using the normal form submission, these events should
+        // never be called.
+        var formResponseHandler = sinon.spy();
+        form.addEventListener('iron-form-response', formResponseHandler);
+        var formSubmitHandler = sinon.spy();
+        form.addEventListener('iron-form-submit', formSubmitHandler);
 
-          var updated = form.serializeForm();
-          expect(JSON.stringify(updated)).to.not.be.equal(initial);
-
-          form.reset();
-
-          var final = form.serializeForm();
-          expect(JSON.stringify(initial)).to.be.equal(JSON.stringify(final));
+        form.addEventListener('iron-form-presubmit', function(event) {
+          presubmitted = true;
+          event.preventDefault();
+          // Your custom submission logic could go here (like using Firebase).
+          // In this case, fire a custom event as a an example.
+          this.fire('custom-form-submit');
+        });
+        form.addEventListener('custom-form-submit', function(event) {
+          expect(presubmitted).to.be.equal(true);
+          expect(formResponseHandler.callCount).to.be.equal(0);
+          expect(formSubmitHandler.callCount).to.be.equal(0);
           done();
+        });
+        // Wait one tick for observeNodes.
+        Polymer.Base.async(function() {
+          form.submit();
+        }, 1);
+      });
+
+      test('can relay errors', function(done) {
+        form.addEventListener('iron-form-error', function(event) {
+          var error = event.detail;
+          expect(error).to.be.ok;
+          expect(error).to.be.an('object');
+          expect(error.error).to.be.ok;
+          done();
+        });
+
+        // Wait one tick for observeNodes.
+        Polymer.Base.async(function() {
+          form._form.setAttribute('action', '/error');
+          form.submit();
+          server.respond();
         }, 1);
       });
     });
+
+    // suite('resetting', function() {
+    //   test('can reset a form', function(done) {
+    //     var form = fixture('resetting');
+    //
+    //     // Wait one tick for observeNodes.
+    //     Polymer.Base.async(function() {
+    //       var initial = form.serializeForm();
+    //       expect(JSON.stringify(initial)).to.be.equal('{"input1":"input1","input2":"","check1":"on","radio1":"on","papercheck1":"on","paper1":"paper1","paper2":""}');
+    //
+    //       // Modify all the values, flip all the inputs.
+    //       form.querySelector('[name=input1').value = 'input1++';
+    //       form.querySelector('[name=input2').value = 'input2++';
+    //       form.querySelector('[name=check1').checked = false;
+    //       form.querySelector('[name=check2').checked = true;
+    //       form.querySelector('[name=radio1').checked = false;
+    //       form.querySelector('[name=radio2').checked = true;
+    //       form.querySelector('[name=papercheck1').checked = false;
+    //       form.querySelector('[name=papercheck2').checked = true;
+    //       form.querySelector('[name=paper1').value = 'paper1++';
+    //       form.querySelector('[name=paper2').value = 'paper2++';
+    //
+    //       var updated = form.serializeForm();
+    //       expect(JSON.stringify(updated)).to.not.be.equal(initial);
+    //
+    //       form.reset();
+    //
+    //       var final = form.serializeForm();
+    //       expect(JSON.stringify(initial)).to.be.equal(JSON.stringify(final));
+    //       done();
+    //     }, 1);
+    //   });
+    // });
 
     suite('dynamically created', function() {
       var server;
