@@ -60,7 +60,7 @@ event and do your own custom submission:
     form.addEventListener('iron-form-presubmit', function(event) {
       event.preventDefault();
       var firebase = new Firebase(form.getAttribute('action'));
-      firebase.set(form.serialize());
+      firebase.set(form.serializeForm());
     });
 
 Note that if you're dynamically creating this element, it's mandatory that you
