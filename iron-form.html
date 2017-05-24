@@ -106,7 +106,23 @@ attach it to the `<iron-form>`:
         allowRedirect: {
           type: Boolean,
           value: false
-        }
+        },
+        /**
+        * HTTP request headers to send. See PolymerElements/iron-ajax for
+        * more details. Only works when `allowRedirect` is false.
+        */
+        headers: {
+          type: Object,
+          value: function() { return {}; }
+        },
+        /**
+        * Set the `withCredentials` flag on the request. See PolymerElements/iron-ajax for
+        * more details. Only works when `allowRedirect` is false.
+        */
+        withCredentials: {
+          type: Boolean,
+          value: false
+        },
       },
 
       /**
@@ -274,9 +290,9 @@ attach it to the `<iron-form>`:
         // elements with those names.
         this.request.url = this._form.getAttribute('action');
         this.request.method = this._form.getAttribute('method') || 'GET';
-        this.request.contentType = this._form.contentType;
-        //this.request.withCredentials = this.withCredentials;
-        //this.request.headers = this.headers;
+        this.request.contentType = this._form.getAttribute('enctype');
+        this.request.withCredentials = this.withCredentials;
+        this.request.headers = this.headers;
 
         if (this._form.method.toUpperCase() === 'POST') {
           this.request.body = json;
