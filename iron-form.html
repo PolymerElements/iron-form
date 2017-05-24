@@ -13,7 +13,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <!--
 `<iron-form>` is a wrapper around the HTML `<form>` element, that can
-validate and submit both custom and native HTML elements.
+validate and submit both custom and native HTML elements. Note that this
+is a breaking change from iron-form 1.0, which was a type extension.
 
 It has two modes: if `redirect` is true, then after the form submission you
 will be redirected to the server response. Otherwise, if it is false, it will
@@ -43,7 +44,7 @@ call the `iron-form`'s `submit` method.
 
 If you are not using the `redirect` mode, then you also have the option of
 customizing the request sent to the server. To do so, you can listen to the `iron-form-presubmit`
-event, and modify the form's[`iron-ajax`](https://elements.polymer-project.org/elements/iron-ajax)
+event, and modify the form's [`iron-ajax`](https://elements.polymer-project.org/elements/iron-ajax)
 object. However, If you want to not use `iron-ajax` at all, you can cancel the
 event and do your own custom submission:
 
@@ -233,7 +234,9 @@ attach it to the `<iron-form>`:
       },
 
       /**
-       * Serializes the form as will be used in submission.
+       * Serializes the form as will be used in submission. Note that `serialize`
+       * is a Polymer reserved keyword, so calling `someIronForm`.serialize()`
+       * will give you unexpected results.
        * @return {Object} An object containing name-value pairs for elements that
        *                  would be submitted.
        */
@@ -260,31 +263,31 @@ attach it to the `<iron-form>`:
 
       _makeAjaxRequest: function(json) {
         // Initialize the iron-ajax element if we haven't already.
-        if (!this.ajax) {
-          this.ajax = document.createElement('iron-ajax');
-          this.ajax.addEventListener('response', this._handleFormResponse.bind(this));
-          this.ajax.addEventListener('error', this._handleFormError.bind(this));
+        if (!this.request) {
+          this.request = document.createElement('iron-ajax');
+          this.request.addEventListener('response', this._handleFormResponse.bind(this));
+          this.request.addEventListener('error', this._handleFormError.bind(this));
         }
 
         // Native forms can also index elements magically by their name (can't make
         // this up if I tried) so we need to get the correct attributes, not the
         // elements with those names.
-        this.ajax.url = this._form.getAttribute('action');
-        this.ajax.method = this._form.getAttribute('method');
-        this.ajax.contentType = this._form.contentType;
-        //this.ajax.withCredentials = this.withCredentials;
-        //this.ajax.headers = this.headers;
+        this.request.url = this._form.getAttribute('action');
+        this.request.method = this._form.getAttribute('method');
+        this.request.contentType = this._form.contentType;
+        //this.request.withCredentials = this.withCredentials;
+        //this.request.headers = this.headers;
 
         if (this._form.method.toUpperCase() === 'POST') {
-          this.ajax.body = json;
+          this.request.body = json;
         } else {
-          this.ajax.params = json;
+          this.request.params = json;
         }
 
         // Allow for a presubmit hook
         var event = this.fire('iron-form-presubmit', {}, {cancelable: true});
         if(!event.defaultPrevented) {
-          this.ajax.generateRequest();
+          this.request.generateRequest();
           this.fire('iron-form-submit', json);
         }
       },
