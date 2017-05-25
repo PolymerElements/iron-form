@@ -17,7 +17,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <link rel="import" href="../../polymer/polymer.html">
   <link rel="import" href="../../paper-checkbox/paper-checkbox.html">
-  <link rel="import" href="../../iron-input/iron-input.html">
+  <link rel="import" href="../../paper-input/paper-input.html">
   <link rel="import" href="../iron-form.html">
 
 </head>
@@ -71,8 +71,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <input type="radio" name="radio2">
           <paper-checkbox name="papercheck1" checked></paper-checkbox>
           <paper-checkbox name="papercheck2"></paper-checkbox>
-          <iron-input bind-value="paper1"><input name="paper1" /></iron-input>
-          <iron-input bind-value=""><input name="paper2" /></iron-input>
+          <paper-input name="paper1" value="paper1"></paper-input>
+          <paper-input name="paper2" value=""></paper-input>
           <input type="reset">
         </div>
       </slotted-form>
@@ -179,7 +179,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           form.reset();
 
           var final = form.serializeForm();
-          expect(JSON.stringify(initial)).to.be.equal(JSON.stringify(final));
+          expect(JSON.stringify(final)).to.be.equal(JSON.stringify(initial));
           done();
         }, 1);
       });

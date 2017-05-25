@@ -29,9 +29,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div>
         <iron-form id="native-checkboxes">
           <form action="/get" method="get">
-            <input type="checkbox" name="check1[]" checked> <!-- default value is "on" -->
-            <input type="checkbox" name="check1[]" value="1">
-            <input type="checkbox" name="check1[]" value="2" checked>
+            <input type="checkbox" name="check1" checked> <!-- default value is "on" -->
+            <input type="checkbox" name="check1" value="1">
+            <input type="checkbox" name="check1" value="2" checked>
             <input type="checkbox" name="check2" value="3" checked>
             <input type="checkbox" name="check3" value="4">
           </form>
@@ -93,9 +93,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </iron-form>
         <iron-form id="custom-inputs">
           <form action="/get" method="get">
-            <paper-input name="input1[]" value=""></paper-input>
-            <paper-input name="input1[]" value="foo"></paper-input>
-            <paper-input name="input1[]" value="zag"></paper-input>
+            <paper-input name="input1" value=""></paper-input>
+            <paper-input name="input1" value="foo"></paper-input>
+            <paper-input name="input1" value="zag"></paper-input>
             <paper-input name="input2" value="bar"></paper-input>
             <paper-input type="password" name="pass1" value="pass"></paper-input>
             <paper-input type="number" name="number1" value="35"></paper-input>
@@ -203,7 +203,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       test('serializes native checkboxes', function(done) {
         var form = f.querySelector('#native-checkboxes');
         form.addEventListener('iron-form-response', function(event) {
-          var expectedUrl = encodeURI('/get?check1[]=on&check1[]=2&check2=3');
+          var expectedUrl = encodeURI('/get?check1=on&check1=2&check2=3');
           expect(event.detail.url).to.equal(expectedUrl);
           expect(event.detail.response.success).to.be.equal(true);
           done();
@@ -266,8 +266,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var form = f.querySelector('#native-inputs');
 
         form.addEventListener('iron-form-response', function(event) {
-          // TODO(noms): figure out if we should submit empty text.
-          expect(event.detail.url).to.equal('/get?input1=foo&input1=zag&input2=bar&pass1=pass&number1=35');
+          expect(event.detail.url).to.equal('/get?input1=&input1=foo&input1=zag&input2=bar&pass1=pass&number1=35&empty=&empty=');
           expect(event.detail.response.success).to.be.equal(true);
           done();
         });
@@ -312,7 +311,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       test('serializes custom inputs', function(done) {
         var form = f.querySelector('#custom-inputs');
         form.addEventListener('iron-form-response', function(event) {
-          var expected = '/get?input1[]=foo&input1[]=zag&input2=bar&pass1=pass&number1=35';
+          var expected = '/get?input1=&input1=foo&input1=zag&input2=bar&pass1=pass&number1=35&empty=&empty=';
           expect(event.detail.url).to.equal(encodeURI(expected));
           expect(event.detail.response.success).to.be.equal(true);
           done();

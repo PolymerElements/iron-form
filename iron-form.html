@@ -382,37 +382,13 @@ attach it to the `<iron-form>`:
         var nodes = this._getFormElements();
         var submittable = [];
 
-        // handle <iron-input><input /></iron-input> scenario
-        var duplicateIndex = function(name) {
-          var isArray = name[name.length - 1] === ']' && name.indexOf('[') > -1;
-          if (!isArray) {
-            for (var i = 0; i < submittable.length; i++) {
-              if (submittable[i].name === name) {
-                return i;
-              }
-            }
-          }
-        };
-
         for (var i = 0; i < nodes.length; i++) {
           var el = nodes[i];
 
           // An element is submittable if it is not disabled, and if it has a
           // 'name' attribute.
           if (!el.disabled && el.name) {
-            var duplicate = duplicateIndex(el.name);
-            if (duplicate) {
-              var duplicateEl = submittable[duplicate];
-              if (Array.isArray(duplicateEl)) {
-                duplicateEl.push(el);
-              } else {
-                var duplicates = [duplicateEl, el];
-                duplicates.name = el.name;
-                submittable.splice(duplicate, 1, duplicates);
-              }
-            } else {
-              submittable.push(el);
-            }
+            submittable.push(el);
           }
         }
         return submittable;
