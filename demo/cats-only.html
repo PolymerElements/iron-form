@@ -13,11 +13,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <dom-module id="cats-only">
   <template>
     <style>
+      :host {
+        display: inline-block;
+      }
+      input {
+        width: 250px;
+      }
       :host([invalid]) input {
         border-color: red;
       }
     </style>
-    <input value="{{value}}" id="input" placeholder="cats only">
+    <input value="{{value}}" id="input" placeholder="Type 'cats' to prove you like cats">
   </template>
 </dom-module>
 
@@ -30,7 +36,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       value: {
         type: String
       },
-      
+
       name: {
         type: String
       }
