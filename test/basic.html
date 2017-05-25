@@ -647,16 +647,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           expect(JSON.stringify(initial)).to.be.equal('{"input1":"input1","input2":"","check1":"on","radio1":"on","papercheck1":"on","paper1":"paper1","paper2":""}');
 
           // Modify all the values, flip all the inputs.
-          input1.value = 'input1++';
-          input2.value = 'input2++';
-          check1.checked = false;
-          check2.checked = true;
-          radio1.checked = false;
-          radio2.checked = true;
-          papercheck1.checked = false;
-          papercheck2.checked = true;
-          paper1.value = 'paper1++';
-          paper2.value = 'paper2++';
+          document.getElementById('input1').value = 'input1++';
+          document.getElementById('input2').value = 'input2++';
+          document.getElementById('check1').checked = false;
+          document.getElementById('check2').checked = true;
+          document.getElementById('radio1').checked = false;
+          document.getElementById('radio2').checked = true;
+          document.getElementById('papercheck1').checked = false;
+          document.getElementById('papercheck2').checked = true;
+          document.getElementById('paper1').value = 'paper1++';
+          document.getElementById('paper2').value = 'paper2++';
 
           var updated = form.serializeForm();
           expect(JSON.stringify(updated)).to.not.be.equal(initial);
