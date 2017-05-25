@@ -1,7 +1,7 @@
 {
   "name": "iron-form",
   "version": "2.0.0",
-  "description": "Makes it easier to manage forms",
+  "description": "Wrapper around native form that submits native and custom elements",
   "keywords": [
     "web-components",
     "polymer",
