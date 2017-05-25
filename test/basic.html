@@ -18,6 +18,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <link rel="import" href="../../polymer/polymer.html">
   <link rel="import" href="../../paper-input/paper-input.html">
   <link rel="import" href="../../paper-input/paper-textarea.html">
+  <link rel="import" href="../../iron-input/iron-input.html">
   <link rel="import" href="../iron-form.html">
   <link rel="import" href="simple-element.html">
   <link rel="import" href="element-with-nested-form-element.html">
@@ -32,6 +33,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <form is="iron-form">
         <simple-element name="zig" value="zag"></simple-element>
         <input name="foo" value="bar">
+      </form>
+    </template>
+  </test-fixture>
+
+  <test-fixture id="ExtendedElement">
+    <template>
+      <form is="iron-form">
+        <input is="iron-input" name="foo" required>
       </form>
     </template>
   </test-fixture>
@@ -356,6 +365,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       assert.equal(f.elements.length, 1);
       assert.isFalse(f.$$('simple-element').validate());
       assert.isFalse(f.$$('input').checkValidity());
+    });
+
+    test('extended native elements that do not implement iron-form-element-behavior are validated', function() {
+      var f = fixture('ExtendedElement');
+
+      assert.isFalse(f.validate());
     });
   });
 

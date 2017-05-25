@@ -393,7 +393,7 @@ event and do your own custom submission:
 
         // Custom elements that extend a native element will also appear in
         // this list, but they've already been validated.
-        if (!el.hasAttribute('is') && el.willValidate && el.checkValidity) {
+        if (this._customElements.indexOf(el) === -1 && el.willValidate && el.checkValidity) {
           valid = el.checkValidity() && valid;
         }
       }
