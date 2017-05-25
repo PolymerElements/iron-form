@@ -93,12 +93,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </iron-form>
         <iron-form id="custom-inputs">
           <form action="/get" method="get">
-            <paper-input name="input1"></paper-input>
+            <paper-input name="input1" value=""></paper-input>
             <paper-input name="input1" value="foo"></paper-input>
             <paper-input name="input1" value="zag"></paper-input>
             <paper-input name="input2" value="bar"></paper-input>
             <paper-input type="password" name="pass1" value="pass"></paper-input>
             <paper-input type="number" name="number1" value="35"></paper-input>
+            <paper-input name="empty" value=""></paper-input>
+            <paper-input name="empty" value=""></paper-input>
           </form>
         </iron-form>
       </div>
@@ -301,7 +303,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       test('serializes custom inputs', function(done) {
         var form = f.querySelector('#custom-inputs');
         form.addEventListener('iron-form-response', function(event) {
-          expect(event.detail.url).to.equal('/get?input1=foo&input1=zag&input2=bar&pass1=pass&number1=35');
+          expect(event.detail.url).to.equal('/get?input1=&input1=foo&input1=zag&input2=bar&pass1=pass&number1=35&empty=&empty=');
           expect(event.detail.response.success).to.be.equal(true);
           done();
         });
