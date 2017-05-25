@@ -41,6 +41,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <form is="iron-form">
         <input name="foo" value="bar">
         <input name="foo" value="barbar">
+        <input name="empty" value="">
+        <input name="empty" value="">
         <simple-element name="zig" value="zig"></simple-element>
         <simple-element name="zig" value="zag"></simple-element>
         <simple-element name="zig" value="zug"></simple-element>
@@ -375,13 +377,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       f = fixture('Dupes');
 
       assert.equal(f._customElements.length, 3);
-      assert.equal(f.elements.length, 2);
+      assert.equal(f.elements.length, 4);
 
       var json = f.serialize();
-      assert.equal(Object.keys(json).length, 2);
+      assert.equal(Object.keys(json).length, 3);
       assert.equal(json['foo'].length, 2);
       assert.equal(json['foo'][0], 'bar');
       assert.equal(json['foo'][1], 'barbar');
+      assert.equal(json['empty'].length, 2);
+      assert.equal(json['empty'][0], '');
+      assert.equal(json['empty'][1], '');
       assert.equal(json['zig'].length, 3);
       assert.equal(json['zig'][0], 'zig');
       assert.equal(json['zig'][1], 'zag');
