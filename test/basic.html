@@ -47,8 +47,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </iron-form>
         <iron-form id="native-buttons">
           <form action="/get" method="get">
-            <input type="reset" name="reset1" value="reset"></input>
-            <input type="submit" name="submit1" value="submit"></input>
+            <input type="reset" name="reset1" value="reset">
+            <input type="submit" name="submit1" value="submit">
             <button name="button1" value="button">text</button>
           </form>
         </iron-form>
@@ -73,6 +73,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <input type="text" name="input2" value="bar">
             <input type="password" name="pass1" value="pass">
             <input type="number" name="number1" value="35">
+            <input name="empty" value="">
+            <input name="empty" value="">
           </form>
         </iron-form>
         <iron-form id="native-inputs-empty">
@@ -91,12 +93,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </iron-form>
         <iron-form id="custom-inputs">
           <form action="/get" method="get">
-            <paper-input name="input1"></paper-input>
+            <paper-input name="input1" value=""></paper-input>
             <paper-input name="input1" value="foo"></paper-input>
             <paper-input name="input1" value="zag"></paper-input>
             <paper-input name="input2" value="bar"></paper-input>
             <paper-input type="password" name="pass1" value="pass"></paper-input>
             <paper-input type="number" name="number1" value="35"></paper-input>
+            <paper-input name="empty" value=""></paper-input>
+            <paper-input name="empty" value=""></paper-input>
           </form>
         </iron-form>
       </div>
@@ -273,8 +277,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var form = f.querySelector('#native-inputs');
 
         form.addEventListener('iron-form-response', function(event) {
-          // TODO(noms): figure out if we should submit empty text.
-          expect(event.detail.url).to.equal('/get?input1=foo&input1=zag&input2=bar&pass1=pass&number1=35');
+          expect(event.detail.url).to.equal('/get?input1=&input1=foo&input1=zag&input2=bar&pass1=pass&number1=35&empty=&empty=');
           expect(event.detail.response.success).to.be.equal(true);
           done();
         });
@@ -289,7 +292,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       test('serializes empty native inputs', function(done) {
         var form = f.querySelector('#native-inputs-empty');
         form.addEventListener('iron-form-response', function(event) {
-          // TODO(noms): figure out if we should submit empty text.
           expect(event.detail.url).to.equal('/get?input1=');
           expect(event.detail.response.success).to.be.equal(true);
           done();
@@ -320,8 +322,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       test('serializes custom inputs', function(done) {
         var form = f.querySelector('#custom-inputs');
         form.addEventListener('iron-form-response', function(event) {
-          // TODO(noms): figure out if we should submit empty text.
-          expect(event.detail.url).to.equal('/get?input1=foo&input1=zag&input2=bar&pass1=pass&number1=35');
+          expect(event.detail.url).to.equal('/get?input1=&input1=foo&input1=zag&input2=bar&pass1=pass&number1=35&empty=&empty=');
           expect(event.detail.response.success).to.be.equal(true);
           done();
         });
@@ -655,38 +656,36 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       });
     });
 
-    // suite('resetting', function() {
-    //   test('can reset a form', function(done) {
-    //     var form = fixture('resetting');
-    //
-    //     // Wait one tick for observeNodes.
-    //     Polymer.Base.async(function() {
-    //       var initial = form.serializeForm();
-    //       expect(JSON.stringify(initial)).to.be.equal('{"input1":"input1","input2":"","check1":"on","radio1":"on","papercheck1":"on","paper1":"paper1","paper2":""}');
-    //
-    //       // Modify all the values, flip all the inputs.
-    //       form.querySelector('[name=input1').value = 'input1++';
-    //       form.querySelector('[name=input2').value = 'input2++';
-    //       form.querySelector('[name=check1').checked = false;
-    //       form.querySelector('[name=check2').checked = true;
-    //       form.querySelector('[name=radio1').checked = false;
-    //       form.querySelector('[name=radio2').checked = true;
-    //       form.querySelector('[name=papercheck1').checked = false;
-    //       form.querySelector('[name=papercheck2').checked = true;
-    //       form.querySelector('[name=paper1').value = 'paper1++';
-    //       form.querySelector('[name=paper2').value = 'paper2++';
-    //
-    //       var updated = form.serializeForm();
-    //       expect(JSON.stringify(updated)).to.not.be.equal(initial);
-    //
-    //       form.reset();
-    //
-    //       var final = form.serializeForm();
-    //       expect(JSON.stringify(initial)).to.be.equal(JSON.stringify(final));
-    //       done();
-    //     }, 1);
-    //   });
-    // });
+    suite('resetting', function() {
+      test('can reset a form', function(done) {
+        var form = fixture('resetting');
+
+        // Wait one tick for observeNodes.
+        Polymer.Base.async(function() {
+          var initial = form.serializeForm();
+          expect(JSON.stringify(initial)).to.be.equal('{"input1":"input1","input2":"","check1":"on","radio1":"on","papercheck1":"on","paper1":"paper1","paper2":""}');
+
+          // Modify all the values, flip all the inputs.
+          form.querySelector('[name=input1').value = 'input1++';
+          form.querySelector('[name=input2').value = 'input2++';
+          form.querySelector('[name=check1').checked = false;
+          form.querySelector('[name=check2').checked = true;
+          form.querySelector('[name=radio1').checked = false;
+          form.querySelector('[name=radio2').checked = true;
+          form.querySelector('[name=papercheck1').checked = false;
+          form.querySelector('[name=papercheck2').checked = true;
+          form.querySelector('[name=paper1').value = 'paper1++';
+          form.querySelector('[name=paper2').value = 'paper2++';
+
+          var updated = form.serializeForm();
+          expect(JSON.stringify(updated)).to.not.be.equal(initial);
+          form.reset();
+          var final = form.serializeForm();
+          expect(JSON.stringify(initial)).to.be.equal(JSON.stringify(final));
+          done();
+        }, 1);
+      });
+    });
 
     suite('dynamically created', function() {
       var server;

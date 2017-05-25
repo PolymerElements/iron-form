@@ -106,7 +106,23 @@ attach it to the `<iron-form>`:
         allowRedirect: {
           type: Boolean,
           value: false
-        }
+        },
+        /**
+        * HTTP request headers to send. See PolymerElements/iron-ajax for
+        * more details. Only works when `allowRedirect` is false.
+        */
+        headers: {
+          type: Object,
+          value: function() { return {}; }
+        },
+        /**
+        * Set the `withCredentials` flag on the request. See PolymerElements/iron-ajax for
+        * more details. Only works when `allowRedirect` is false.
+        */
+        withCredentials: {
+          type: Boolean,
+          value: false
+        },
       },
 
       /**
@@ -140,8 +156,11 @@ attach it to the `<iron-form>`:
           function(mutations) {
             for (var i = 0; i < mutations.addedNodes.length; i++) {
               if (mutations.addedNodes[i].tagName === 'FORM') {
-                this._form = mutations.addedNodes[i];
-                this._init();
+                if (!this._alreadyCalledInit) {
+                  this._alreadyCalledInit = true;
+                  this._form = mutations.addedNodes[i];
+                  this._init();
+                }
               }
             }
           }.bind(this));
@@ -157,6 +176,19 @@ attach it to the `<iron-form>`:
       _init: function() {
         this._form.addEventListener('submit', this.submit.bind(this));
         this._form.addEventListener('reset', this.reset.bind(this));
+
+        // Save the initial values.
+        this._defaults = this._defaults || new WeakMap();
+        var nodes = this._getSubmittableElements();
+        for (var i = 0; i < nodes.length; i++) {
+          var node = nodes[i];
+          if (!this._defaults.has(node)) {
+            this._defaults.set(node, {
+              checked: node.checked,
+              value: node.value,
+            });
+          }
+        }
       },
 
       /**
@@ -224,11 +256,18 @@ attach it to the `<iron-form>`:
         if (event)
           event.preventDefault();
 
-        var nodes = Polymer.dom(this._form).querySelectorAll('*');
-
+        // Load the initial values.
+        var nodes = this._getSubmittableElements();
         for (var i = 0; i < nodes.length; i++) {
-          if (nodes[i].defaultValue) {
-            nodes[i].value = nodes[i].defaultValue;
+          var node = nodes[i];
+          if (this._defaults.has(node)) {
+            var defaults = this._defaults.get(node);
+            if (node.value != null) {
+              node.value = defaults.value;
+            }
+            if (node.checked != null) {
+              node.checked = defaults.checked;
+            }
           }
         }
       },
@@ -273,10 +312,10 @@ attach it to the `<iron-form>`:
         // this up if I tried) so we need to get the correct attributes, not the
         // elements with those names.
         this.request.url = this._form.getAttribute('action');
-        this.request.method = this._form.getAttribute('method');
-        this.request.contentType = this._form.getAttribute('content-type');
-        //this.ajax.withCredentials = this.withCredentials;
-        //this.ajax.headers = this.headers;
+        this.request.method = this._form.getAttribute('method') || 'GET';
+        this.request.contentType = this._form.getAttribute('enctype');
+        this.request.withCredentials = this.withCredentials;
+        this.request.headers = this.headers;
 
         if (this._form.method.toUpperCase() === 'POST') {
           this.request.body = json;
@@ -293,7 +332,7 @@ attach it to the `<iron-form>`:
       },
 
       _getValidatableElements: function() {
-        var nodes = Polymer.dom(this._form).querySelectorAll('*');
+        var nodes = Polymer.dom(this._form).children;
         var validatable = [];
 
         for (var i = 0; i < nodes.length; i++) {
@@ -316,7 +355,7 @@ attach it to the `<iron-form>`:
       },
 
       _getSubmittableElements: function() {
-        var nodes = Polymer.dom(this._form).querySelectorAll('*');
+        var nodes = Polymer.dom(this._form).children;
         var submittable = [];
 
         for (var i = 0; i < nodes.length; i++) {
@@ -410,7 +449,7 @@ attach it to the `<iron-form>`:
       _addSerializedElement: function(json, name, value) {
         // If the name doesn't exist, add it. Otherwise, serialize it to
         // an array,
-        if (!json[name]) {
+        if (json[name] === undefined) {
           json[name] = value;
         } else {
           if (!Array.isArray(json[name])) {
