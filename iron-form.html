@@ -87,7 +87,7 @@ attach it to the `<iron-form>`:
     </style>
 
     <!-- This form is used to collect the elements that should be submitted -->
-    <slot id="content"></slot>
+    <slot></slot>
 
     <!-- This form is used for submission -->
     <form id="helper" action$="[[action]]" method$="[[method]]" enctype$="[[enctype]]"></form>
@@ -152,7 +152,7 @@ attach it to the `<iron-form>`:
       */
 
       attached: function() {
-        this._nodeObserver = Polymer.dom(this.$.content).observeNodes(
+        this._nodeObserver = Polymer.dom(this).observeNodes(
           function(mutations) {
             for (var i = 0; i < mutations.addedNodes.length; i++) {
               if (mutations.addedNodes[i].tagName === 'FORM') {
@@ -168,7 +168,7 @@ attach it to the `<iron-form>`:
 
       detached: function() {
         if (this._nodeObserver) {
-          Polymer.dom(this.$.content).unobserveNodes(this._nodeObserver);
+          Polymer.dom(this).unobserveNodes(this._nodeObserver);
           this._nodeObserver = null;
         }
       },

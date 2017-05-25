@@ -690,6 +690,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       test('submits a form', function(done) {
         var form = document.createElement('iron-form');
+        // Need to add to the document so observeNodes runs.
+        document.body.appendChild(form);
+
         var nativeForm = document.createElement('form');
         nativeForm.action = '/get';
         nativeForm.method = 'get';
@@ -698,10 +701,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         nativeForm.appendChild(input);
         input.required = true;
         input.name = 'foo';
-        form.appendChild(nativeForm);
-
-        // Need to add to the document so observeNodes runs.
-        document.body.appendChild(form);
+        Polymer.dom(form).appendChild(nativeForm);
 
         form.addEventListener('iron-form-response', function(event) {
           expect(event.detail.url).to.equal('/get?foo=bar');
