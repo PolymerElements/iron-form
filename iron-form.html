@@ -344,7 +344,9 @@ attach it to the `<iron-form>`:
       },
 
       _forEachDistributedElement: function(slot, handler) {
-        var roots = slot.assignedNodes().filter(n => n.nodeType === Node.ELEMENT_NODE);
+        var roots = slot.assignedNodes().filter(function(n) {
+          return n.nodeType === Node.ELEMENT_NODE;
+        });
         for (var rootNo = 0; rootNo < roots.length; rootNo++) {
           var root = roots[rootNo];
           handler(root);
@@ -358,12 +360,14 @@ attach it to the `<iron-form>`:
       _getFormElements: function(slot) {
         if (!slot) slot = this.$.content;
         if (!slot.__formListener) {
-          slot.__formListener = () => this._saveDefaultValues(slot);
+          slot.__formListener = (function() {
+            this._saveDefaultValues(slot);
+          }).bind(this);
           slot.__formListener();
           slot.addEventListener('slotchange', slot.__formListener);
         }
         var result = [];
-        this._forEachDistributedElement(slot, el => {
+        this._forEachDistributedElement(slot, (function(el) {
           if (el !== this._form && el.tagName === "FORM") {
             this._form = el;
             this._form.addEventListener('submit', this.submit.bind(this));
@@ -374,7 +378,7 @@ attach it to the `<iron-form>`:
           } else {
             result.push(el);
           }
-        });
+        }).bind(this));
         return result;
       },
 
