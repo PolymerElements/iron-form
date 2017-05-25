@@ -223,7 +223,8 @@ attach it to the `<iron-form>`:
         if (event)
           event.preventDefault();
 
-        if (!this.validate()) {
+        // If you've called this before distribution happened, bail out.
+        if (!this._form || !this.validate()) {
           return;
         }
 
@@ -255,6 +256,10 @@ attach it to the `<iron-form>`:
         // We are not using this form for submission, so always cancel its event.
         if (event)
           event.preventDefault();
+
+        // If you've called this before distribution happened, bail out.
+        if (!this._form)
+          return;
 
         // Load the initial values.
         var nodes = this._getSubmittableElements();
