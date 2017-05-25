@@ -636,38 +636,36 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       });
     });
 
-    // suite('resetting', function() {
-    //   test('can reset a form', function(done) {
-    //     var form = fixture('resetting');
-    //
-    //     // Wait one tick for observeNodes.
-    //     Polymer.Base.async(function() {
-    //       var initial = form.serializeForm();
-    //       expect(JSON.stringify(initial)).to.be.equal('{"input1":"input1","input2":"","check1":"on","radio1":"on","papercheck1":"on","paper1":"paper1","paper2":""}');
-    //
-    //       // Modify all the values, flip all the inputs.
-    //       form.querySelector('[name=input1').value = 'input1++';
-    //       form.querySelector('[name=input2').value = 'input2++';
-    //       form.querySelector('[name=check1').checked = false;
-    //       form.querySelector('[name=check2').checked = true;
-    //       form.querySelector('[name=radio1').checked = false;
-    //       form.querySelector('[name=radio2').checked = true;
-    //       form.querySelector('[name=papercheck1').checked = false;
-    //       form.querySelector('[name=papercheck2').checked = true;
-    //       form.querySelector('[name=paper1').value = 'paper1++';
-    //       form.querySelector('[name=paper2').value = 'paper2++';
-    //
-    //       var updated = form.serializeForm();
-    //       expect(JSON.stringify(updated)).to.not.be.equal(initial);
-    //
-    //       form.reset();
-    //
-    //       var final = form.serializeForm();
-    //       expect(JSON.stringify(initial)).to.be.equal(JSON.stringify(final));
-    //       done();
-    //     }, 1);
-    //   });
-    // });
+    suite('resetting', function() {
+      test('can reset a form', function(done) {
+        var form = fixture('resetting');
+
+        // Wait one tick for observeNodes.
+        Polymer.Base.async(function() {
+          var initial = form.serializeForm();
+          expect(JSON.stringify(initial)).to.be.equal('{"input1":"input1","input2":"","check1":"on","radio1":"on","papercheck1":"on","paper1":"paper1","paper2":""}');
+
+          // Modify all the values, flip all the inputs.
+          form.querySelector('[name=input1').value = 'input1++';
+          form.querySelector('[name=input2').value = 'input2++';
+          form.querySelector('[name=check1').checked = false;
+          form.querySelector('[name=check2').checked = true;
+          form.querySelector('[name=radio1').checked = false;
+          form.querySelector('[name=radio2').checked = true;
+          form.querySelector('[name=papercheck1').checked = false;
+          form.querySelector('[name=papercheck2').checked = true;
+          form.querySelector('[name=paper1').value = 'paper1++';
+          form.querySelector('[name=paper2').value = 'paper2++';
+
+          var updated = form.serializeForm();
+          expect(JSON.stringify(updated)).to.not.be.equal(initial);
+          form.reset();
+          var final = form.serializeForm();
+          expect(JSON.stringify(initial)).to.be.equal(JSON.stringify(final));
+          done();
+        }, 1);
+      });
+    });
 
     suite('dynamically created', function() {
       var server;
