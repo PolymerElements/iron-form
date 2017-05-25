@@ -73,6 +73,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <input type="text" name="input2" value="bar">
             <input type="password" name="pass1" value="pass">
             <input type="number" name="number1" value="35">
+            <input name="empty" value="">
+            <input name="empty" value="">
           </form>
         </iron-form>
         <iron-form id="native-inputs-empty">
@@ -254,8 +256,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var form = f.querySelector('#native-inputs');
 
         form.addEventListener('iron-form-response', function(event) {
-          // TODO(noms): figure out if we should submit empty text.
-          expect(event.detail.url).to.equal('/get?input1=foo&input1=zag&input2=bar&pass1=pass&number1=35');
+          expect(event.detail.url).to.equal('/get?input1=&input1=foo&input1=zag&input2=bar&pass1=pass&number1=35&empty=&empty=');
           expect(event.detail.response.success).to.be.equal(true);
           done();
         });
@@ -270,7 +271,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       test('serializes empty native inputs', function(done) {
         var form = f.querySelector('#native-inputs-empty');
         form.addEventListener('iron-form-response', function(event) {
-          // TODO(noms): figure out if we should submit empty text.
           expect(event.detail.url).to.equal('/get?input1=');
           expect(event.detail.response.success).to.be.equal(true);
           done();
@@ -301,7 +301,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       test('serializes custom inputs', function(done) {
         var form = f.querySelector('#custom-inputs');
         form.addEventListener('iron-form-response', function(event) {
-          // TODO(noms): figure out if we should submit empty text.
           expect(event.detail.url).to.equal('/get?input1=foo&input1=zag&input2=bar&pass1=pass&number1=35');
           expect(event.detail.response.success).to.be.equal(true);
           done();
