@@ -412,19 +412,6 @@ attach it to the `<iron-form>`:
         // 4. <input> can have a whole bunch of behaviours, so it's handled separately.
         // 5. Buttons are hard. The button that was clicked to submit the form
         //    is the one who's name/value gets sent to the server.
-
-        if (Array.isArray(element)) {
-          // Got duplicate elements (with the same name).
-          // Use first non-empty value.
-          for (var i = 0; i < element.length; i++) {
-            var result = this._serializeElementValues(element[i]);
-            if (result && result.length > 0) {
-              return result;
-            }
-          }
-          return [];
-        }
-
         var tag = element.tagName.toLowerCase();
         if (tag === 'button' || (tag === 'input' && (element.type === 'submit' || element.type === 'reset'))) {
           return [];
