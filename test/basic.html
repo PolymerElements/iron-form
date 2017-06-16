@@ -24,6 +24,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 </head>
 <body>
 
+  <dom-module id="x-input-wrapper">
+    <template>
+      <input name="check_wrapped" value="foo"/>
+    </template>
+  </dom-module>
+
   <test-fixture id="serialization">
     <template>
       <div>
@@ -101,6 +107,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <paper-input type="number" name="number1" value="35"></paper-input>
             <paper-input name="empty" value=""></paper-input>
             <paper-input name="empty" value=""></paper-input>
+            <x-input-wrapper></x-input-wrapper>
           </form>
         </iron-form>
         <iron-form id="nested-elements">
@@ -232,6 +239,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       var f;
       var server;
 
+      suiteSetup(function () {
+        Polymer({is: 'x-input-wrapper'});
+      });
+
       setup(function() {
         f = fixture('serialization');
 
@@ -360,7 +371,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       test('serializes custom inputs', function(done) {
         var form = f.querySelector('#custom-inputs');
         form.addEventListener('iron-form-response', function(event) {
-          expect(event.detail.url).to.equal('/get?input1=&input1=foo&input1=zag&input2=bar&pass1=pass&number1=35&empty=&empty=');
+          expect(event.detail.url).to.equal('/get?input1=&input1=foo&input1=zag&input2=bar&pass1=pass&number1=35&empty=&empty=&check_wrapped=foo');
           expect(event.detail.response.success).to.be.equal(true);
           done();
         });
