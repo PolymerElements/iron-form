@@ -380,20 +380,21 @@ attach it to the `<iron-form>`:
 
         for (var i = 0; i < nodes.length; i++) {
           var node = nodes[i];
-
-          // An element is submittable if it is not disabled, and if it has a
-          // 'name' attribute.
-          if(!node.disabled && node.name) {
-            submittable.push(node);
-          }
-          else {
-            // This element might contain other potentially submittable elements
-            // which we need to look at. For example, this could be a <p> node
-            // containing a bunch of inputs.
-            Array.prototype.push.apply(submittable, this._findElements(node));
-            if(node.root)
-            {
-              Array.prototype.push.apply(submittable, this._findElements(node.root));
+          // Only element nodes are submittable, or can contain submittable elements
+          if (node.nodeType === Node.ELEMENT_NODE) {
+            // An element is submittable if it is not disabled, and if it has a
+            // 'name' attribute.
+            if(!node.disabled && node.name) {
+              submittable.push(node);
+            }
+            else {
+              // This element might contain other potentially submittable elements
+              // which we need to look at. For example, this could be a <p> node
+              // containing a bunch of inputs.
+              Array.prototype.push.apply(submittable, this._findElements(node));
+              if(node.root) {
+                Array.prototype.push.apply(submittable, this._findElements(node.root));
+              }
             }
           }
         }
