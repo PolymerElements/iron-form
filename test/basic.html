@@ -103,6 +103,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <paper-input name="empty" value=""></paper-input>
           </form>
         </iron-form>
+        <iron-form id="nested-elements">
+          <form action="/get" method="get">
+            <div>
+              <input type="text" name="input1" value="i1">
+            </div>
+            <div>
+              <paper-input name="paper-input1" value="p1"></paper-input>
+            </div>
+            <div>
+              <p>
+                <div>
+                  <input type="text" name="input2" value="i2">
+                  <paper-input name="paper-input2" value="p2"></paper-input>
+                </div>
+              </p>
+            </div>
+          </form>
+        </iron-form>
       </div>
     </template>
   </test-fixture>
@@ -334,6 +352,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           done();
         });
 
+        // Wait one tick for observeNodes.
+        Polymer.Base.async(function() {
+          form.submit();
+          server.respond();
+        }, 1);
+      });
+
+      test('serializes elements deeply nested in divs', function(done) {
+        var form = f.querySelector('#nested-elements');
+        form.addEventListener('iron-form-response', function(event) {
+          expect(event.detail.url).to.equal('/get?input1=i1&paper-input1=p1&input2=i2&paper-input2=p2');
+          expect(event.detail.response.success).to.be.equal(true);
+          done();
+        });
         // Wait one tick for observeNodes.
         Polymer.Base.async(function() {
           form.submit();
