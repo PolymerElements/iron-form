@@ -816,7 +816,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           expect(form.validate()).to.be.equal(true);
           form.submit();
           server.respond();
-        });
+        }, 1);
       });
     });
 
