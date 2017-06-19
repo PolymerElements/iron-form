@@ -44,6 +44,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         width: 45%;
         text-align: center;
       }
+      #form1 paper-button {
+        width: 30%;
+      }
       paper-button:not([disabled]) {
         background: #03a9f4;
         color: white;
@@ -87,6 +90,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <br><br>
             <paper-button raised onclick="form1.submit()">Submit</paper-button>
             <paper-button raised onclick="form1.reset()">Reset</paper-button>
+            <paper-button raised onclick="form1.validate()">Validate</paper-button>
           </form>
           <br>
           <div class="output"></div>
