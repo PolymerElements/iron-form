@@ -125,6 +125,11 @@ attach it to the `<iron-form>`:
           value: false
         },
       },
+      /**
+       * Fired if the form cannot be submitted because it's invalid.
+       *
+       * @event iron-form-invalid
+       */
 
       /**
        * Fired after the form is submitted.
@@ -221,11 +226,17 @@ attach it to the `<iron-form>`:
        */
       submit: function(event) {
         // We are not using this form for submission, so always cancel its event.
-        if (event)
+        if (event) {
           event.preventDefault();
+        }
 
         // If you've called this before distribution happened, bail out.
-        if (!this._form || !this.validate()) {
+        if (!this._form) {
+          return;
+        }
+
+        if (!this.validate()) {
+          this.fire('iron-form-invalid');
           return;
         }
 
