@@ -243,6 +243,12 @@ attach it to the `<iron-form>`:
           for (element in json) {
             this.$.helper.appendChild(this._createHiddenElement(element, json[element]));
           }
+
+          // Copy the original form attributes.
+          this.$.helper.action = this._form.getAttribute('action');
+          this.$.helper.method = this._form.getAttribute('method') || 'GET';
+          this.$.helper.contentType = this._form.getAttribute('enctype');
+
           this.$.helper.submit();
           this.fire('iron-form-submit');
         } else {
