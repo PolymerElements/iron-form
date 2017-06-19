@@ -263,7 +263,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         Polymer.Base.async(function() {
           form.submit();
           server.respond();
-        }, 1);
+        });
       });
 
       test('serializes native radio buttons', function(done) {
@@ -278,7 +278,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         Polymer.Base.async(function() {
           form.submit();
           server.respond();
-        }, 1);
+        });
       });
 
       test('serializes native buttons', function(done) {
@@ -293,7 +293,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         Polymer.Base.async(function() {
           form.submit();
           server.respond();
-        }, 1);
+        });
       });
 
       test('serializes native selects', function(done) {
@@ -308,7 +308,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         Polymer.Base.async(function() {
           form.submit();
           server.respond();
-        }, 1);
+        });
       });
 
       test('serializes native inputs', function(done) {
@@ -324,7 +324,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         Polymer.Base.async(function() {
           form.submit();
           server.respond();
-        }, 1);
+        });
       });
 
       test('serializes empty native inputs', function(done) {
@@ -339,7 +339,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         Polymer.Base.async(function() {
           form.submit();
           server.respond();
-        }, 1);
+        });
       });
 
       test('serializes custom checkboxes', function(done) {
@@ -354,7 +354,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         Polymer.Base.async(function() {
           form.submit();
           server.respond();
-        }, 1);
+        });
       });
 
       test('serializes custom inputs', function(done) {
@@ -369,7 +369,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         Polymer.Base.async(function() {
           form.submit();
           server.respond();
-        }, 1);
+        });
       });
 
       test('serializes elements deeply nested in divs', function(done) {
@@ -383,7 +383,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         Polymer.Base.async(function() {
           form.submit();
           server.respond();
-        }, 1);
+        });
       });
 
       test('serializes elements with duplicate names', function(done) {
@@ -397,7 +397,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         Polymer.Base.async(function() {
           form.submit();
           server.respond();
-        }, 1);
+        });
       });
     });
 
@@ -436,7 +436,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           expect(form.validate()).to.be.equal(false);
           form.submit();
           server.respond();
-        }, 1);
+        });
       });
 
       test('<input required> is validated and does not submit the form', function(done) {
@@ -452,7 +452,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           expect(form.validate()).to.be.equal(false);
           form.submit();
           server.respond();
-        }, 1);
+        });
 
         setTimeout(function() {
           expect(responses).to.be.equal(0);
@@ -473,7 +473,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           expect(form.validate()).to.be.equal(false);
           form.submit();
           server.respond();
-        }, 1);
+        });
 
         setTimeout(function() {
           expect(responses).to.be.equal(0);
@@ -495,7 +495,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           expect(form.validate()).to.be.equal(false);
           form.submit();
           server.respond();
-        }, 1);
+        });
 
         setTimeout(function() {
           expect(responses).to.be.equal(0);
@@ -516,7 +516,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           expect(form.validate()).to.be.equal(false);
           form.submit();
           server.respond();
-        }, 1);
+        });
 
         setTimeout(function() {
           expect(responses).to.be.equal(0);
@@ -576,7 +576,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         Polymer.Base.async(function() {
           form.submit();
           server.respond();
-        }, 1);
+        });
       });
 
       test('calling submit() on a form with method=post', function(done) {
@@ -591,7 +591,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           form._form.setAttribute('action', '/post');
           form.submit();
           server.respond();
-        }, 1);
+        });
       });
 
       test('calling submit() on a form with method unset', function(done) {
@@ -605,7 +605,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           form._form.removeAttribute('method');
           form.submit();
           server.respond();
-        }, 1);
+        });
       });
 
       test('pressing an <input type=submit> submits the form', function(done) {
@@ -618,7 +618,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         Polymer.Base.async(function() {
           form._form.querySelector('input[type=submit]').click();
           server.respond();
-        }, 1);
+        });
       });
 
       test('pressing an <input type=button> with an event handler submits the form', function(done) {
@@ -636,7 +636,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           button.click();
 
           server.respond();
-        }, 1);
+        });
       });
 
       test('pressing a paper-button with an event handler submits the form', function(done) {
@@ -654,7 +654,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           button.click();
 
           server.respond();
-        }, 1);
+        });
       });
 
       test('can modify the request in the presubmit', function(done) {
@@ -687,7 +687,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         Polymer.Base.async(function() {
           form.submit();
           server.respond();
-        }, 1);
+        });
       });
 
       test('can do a custom submission in the presubmit', function(done) {
@@ -715,7 +715,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         // Wait one tick for observeNodes.
         Polymer.Base.async(function() {
           form.submit();
-        }, 1);
+        });
       });
 
       test('can relay errors', function(done) {
@@ -732,7 +732,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           form._form.setAttribute('action', '/error');
           form.submit();
           server.respond();
-        }, 1);
+        });
       });
     });
 
@@ -763,7 +763,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           var final = form.serializeForm();
           expect(JSON.stringify(initial)).to.be.equal(JSON.stringify(final));
           done();
-        }, 1);
+        });
       });
     });
 
@@ -816,7 +816,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           expect(form.validate()).to.be.equal(true);
           form.submit();
           server.respond();
-        }, 1);
+        });
       });
     });
 
@@ -854,7 +854,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           Polymer.Base.async(function() {
             form.submit();
             server.respond();
-          }, 1);
+          });
       });
       test('submits a form with application/json', function(done) {
           var form = f.querySelector('#json-form');
@@ -876,7 +876,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           Polymer.Base.async(function() {
             form.submit();
             server.respond();
-          }, 1);
+          });
       });
     });
   </script>
