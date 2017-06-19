@@ -355,47 +355,33 @@ attach it to the `<iron-form>`:
       },
 
       _getValidatableElements: function() {
-        var nodes = Polymer.dom(this._form).children;
+        // Each element might contain other potentially validatable elements
+        // which we need to look at. For example, this could be a <p> node
+        // containing a bunch of inputs.
+        var nodes = Polymer.dom(this._form).querySelectorAll('*');
         var validatable = [];
 
         for (var i = 0; i < nodes.length; i++) {
-          // This element might contain other potentially validatable elements
-          // which we need to look at. For example, this could be a <p> node
-          // containing a bunch of inputs.
-          var elements = Array.prototype.slice.call(Polymer.dom(nodes[i]).querySelectorAll('*')) || [];
-
-          // We also want to check this element.
-          elements.push(nodes[i]);
-
           // An element is validatable if it is not disabled
-          for (var el, j = 0; el = elements[j], j < elements.length; j++) {
-            if (!el.disabled) {
-              validatable.push(el);
-            }
+          if (!nodes[i].disabled) {
+            validatable.push(nodes[i]);
           }
         }
         return validatable;
       },
 
       _getSubmittableElements: function() {
-        var nodes = Polymer.dom(this._form).children;
+        // Each element might contain other potentially validatable elements
+        // which we need to look at. For example, this could be a <p> node
+        // containing a bunch of inputs.
+        var nodes = Polymer.dom(this._form).querySelectorAll('*');
         var submittable = [];
 
         for (var i = 0; i < nodes.length; i++) {
-          // This element might contain other potentially submittable elements
-          // which we need to look at. For example, this could be a <p> node
-          // containing a bunch of inputs.
-          var elements = Array.prototype.slice.call(Polymer.dom(nodes[i]).querySelectorAll('*')) || [];
-
-          // We also want to check this element.
-          elements.push(nodes[i]);
-
           // An element is submittable if it is not disabled, and if it has a
           // 'name' attribute.
-          for (var el, j = 0; el = elements[j], j < elements.length; j++) {
-            if (!el.disabled && el.name) {
-              submittable.push(el);
-            }
+          if (!nodes[i].disabled && nodes[i].name) {
+            submittable.push(nodes[i]);
           }
         }
         return submittable;
