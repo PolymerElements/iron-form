@@ -216,6 +216,9 @@ attach it to the `<iron-form>`:
           var validatable = /** @type {{validate: (function() : boolean)}} */ (el);
           if (validatable.validate) {
             valid = !!validatable.validate() && valid;
+            if (!valid) {
+              return false;
+            }
           }
         }
         return valid;
@@ -276,8 +279,9 @@ attach it to the `<iron-form>`:
           event.preventDefault();
 
         // If you've called this before distribution happened, bail out.
-        if (!this._form)
+        if (!this._form) {
           return;
+        }
 
         // Load the initial values.
         var nodes = this._getSubmittableElements();
@@ -285,12 +289,8 @@ attach it to the `<iron-form>`:
           var node = nodes[i];
           if (this._defaults.has(node)) {
             var defaults = this._defaults.get(node);
-            if (node.value != null) {
-              node.value = defaults.value;
-            }
-            if (node.checked != null) {
-              node.checked = defaults.checked;
-            }
+            node.value = defaults.value;
+            node.checked = defaults.checked;
           }
         }
       },
