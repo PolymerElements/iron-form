@@ -216,9 +216,6 @@ attach it to the `<iron-form>`:
           var validatable = /** @type {{validate: (function() : boolean)}} */ (el);
           if (validatable.validate) {
             valid = !!validatable.validate() && valid;
-            if (!valid) {
-              return false;
-            }
           }
         }
         return valid;
