@@ -241,9 +241,7 @@ attach it to the `<iron-form>`:
         }
 
         // Remove any existing children in the submission form (from a previous submit).
-        while (this.$.helper.children.length !== 0) {
-          this.$.helper.removeChild(this.$.helper.children[0]);
-        }
+        this.$.helper.textContent = '';
 
         var json = this.serializeForm();
 
