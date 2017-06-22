@@ -161,12 +161,10 @@ attach it to the `<iron-form>`:
         this._nodeObserver = Polymer.dom(this).observeNodes(
           function(mutations) {
             for (var i = 0; i < mutations.addedNodes.length; i++) {
-              if (mutations.addedNodes[i].tagName === 'FORM') {
-                if (!this._alreadyCalledInit) {
-                  this._alreadyCalledInit = true;
-                  this._form = mutations.addedNodes[i];
-                  this._init();
-                }
+              if (mutations.addedNodes[i].tagName === 'FORM' && !this._alreadyCalledInit) {
+                this._alreadyCalledInit = true;
+                this._form = mutations.addedNodes[i];
+                this._init();
               }
             }
           }.bind(this));
