@@ -374,9 +374,7 @@ attach it to the `<iron-form>`:
             submittable.push(node);
           }
           else {
-            // This element might contain other potentially submittable elements
-            // which we need to look at. For example, this could be a <p> node
-            // containing a bunch of inputs.
+            // This element has a root which could contain more submittable elements.
             if(node.root) {
               Array.prototype.push.apply(submittable, this._findElements(node.root, ignoreName));
             }
