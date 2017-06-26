@@ -348,33 +348,29 @@ attach it to the `<iron-form>`:
       },
 
       _getValidatableElements: function() {
-        // Each element might contain other potentially validatable elements
-        // which we need to look at. For example, this could be a <p> node
-        // containing a bunch of inputs.
-        var nodes = Polymer.dom(this._form).querySelectorAll('*');
-        var validatable = [];
-
-        for (var i = 0; i < nodes.length; i++) {
-          // An element is validatable if it is not disabled
-          if (!nodes[i].disabled) {
-            validatable.push(nodes[i]);
-          }
-        }
-        return validatable;
+        return this._findElements(this._form, true);
       },
 
       _getSubmittableElements: function() {
-        // Each element might contain other potentially validatable elements
-        // which we need to look at. For example, this could be a <p> node
-        // containing a bunch of inputs.
-        var nodes = Polymer.dom(this._form).querySelectorAll('*');
+        return this._findElements(this._form, false);
+      },
+
+      _findElements: function(parent, ignoreName) {
+        var nodes = Polymer.dom(parent).querySelectorAll('*');
         var submittable = [];
 
         for (var i = 0; i < nodes.length; i++) {
+          var node = nodes[i];
           // An element is submittable if it is not disabled, and if it has a
           // 'name' attribute.
-          if (!nodes[i].disabled && nodes[i].name) {
-            submittable.push(nodes[i]);
+          if(!node.disabled && (ignoreName || node.name)) {
+            submittable.push(node);
+          }
+          else {
+            // This element has a root which could contain more submittable elements.
+            if(node.root) {
+              Array.prototype.push.apply(submittable, this._findElements(node.root, ignoreName));
+            }
           }
         }
         return submittable;
