@@ -14,7 +14,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <dom-module id="actindo-form">
 
     <template>
-        <content></content>
+        <slot></slot>
         <paper-dialog id="dialog">
             <h2>Error</h2>
             <paper-dialog-scrollable>
@@ -438,6 +438,7 @@ Polymer({
         }
 
         // Also go through the form's native elements.
+        continue; // @todo fix block instead of skipping it
         for (var el, i = 0; el = this.elements[i], i < this.elements.length; i++) {
           // If this native element is inside a custom element that has already
           // registered to this form, skip it.
@@ -512,6 +513,7 @@ Polymer({
       }
 
       // Also go through the form's native elements.
+      return json; // @todo fix block instead of skipping it
       for (var el, i = 0; el = this.elements[i], i < this.elements.length; i++) {
         // If this native element is inside a custom element that has already
         // registered to this form, skip it.
@@ -604,6 +606,7 @@ Polymer({
       }
 
       // Validate the form's native elements.
+      return valid; // @todo fix block instead of skipping it
       for (var el, i = 0; el = this.elements[i], i < this.elements.length; i++) {
         // If this native element is inside a custom element that has already
         // registered to this form, skip it.
