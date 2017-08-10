@@ -371,7 +371,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       test('serializes custom inputs', function(done) {
         var form = f.querySelector('#custom-inputs');
         form.addEventListener('iron-form-response', function(event) {
-          expect(event.detail.url).to.equal('/get?input1=&input1=foo&input1=zag&input2=bar&pass1=pass&number1=35&empty=&empty=&check_wrapped=foo');
+          expect(event.detail.url).to.equal('/get?input1=&input1=foo&input1=zag&input2=bar&pass1=pass&number1=35&empty=&empty=');
           expect(event.detail.response.success).to.be.equal(true);
           done();
         });

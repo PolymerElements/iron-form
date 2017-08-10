@@ -366,12 +366,6 @@ attach it to the `<iron-form>`:
           if(!node.disabled && (ignoreName || node.name)) {
             submittable.push(node);
           }
-          else {
-            // This element has a root which could contain more submittable elements.
-            if(node.root) {
-              Array.prototype.push.apply(submittable, this._findElements(node.root, ignoreName));
-            }
-          }
         }
         return submittable;
       },
