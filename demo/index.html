@@ -17,20 +17,31 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <meta name="apple-mobile-web-app-capable" content="yes">
 
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-  <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
-  <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
-  <link rel="import" href="../../paper-input/paper-input.html">
-  <link rel="import" href="../../paper-button/paper-button.html">
-  <link rel="import" href="../../paper-checkbox/paper-checkbox.html">
-  <link rel="import" href="../../paper-dropdown-menu/paper-dropdown-menu.html">
-  <link rel="import" href="../../paper-item/paper-item.html">
-  <link rel="import" href="../../paper-listbox/paper-listbox.html">
-  <link rel="import" href="../../paper-spinner/paper-spinner.html">
-  <link rel="import" href="../../paper-styles/shadow.html">
-  <link rel="import" href="../iron-form.html">
-  <link rel="import" href="cats-only.html">
+  <script type="module" src="../../iron-demo-helpers/demo-snippet.js"></script>
+  <script type="module" src="../../iron-demo-helpers/demo-pages-shared-styles.js"></script>
+  <script type="module" src="../../paper-input/paper-input.js"></script>
+  <script type="module" src="../../paper-button/paper-button.js"></script>
+  <script type="module" src="../../paper-checkbox/paper-checkbox.js"></script>
+  <script type="module" src="../../paper-dropdown-menu/paper-dropdown-menu.js"></script>
+  <script type="module" src="../../paper-item/paper-item.js"></script>
+  <script type="module" src="../../paper-listbox/paper-listbox.js"></script>
+  <script type="module" src="../../paper-spinner/paper-spinner.js"></script>
+  <script type="module" src="../../paper-styles/shadow.js"></script>
+  <script type="module" src="../iron-form.js"></script>
+  <script type="module" src="./cats-only.js"></script>
 
-  <custom-style>
+  <!-- FIXME(polymer-modulizer):
+        These imperative modules that innerHTML your HTML are
+        a hacky way to be sure that any mixins in included style
+        modules are ready before any elements that reference them are
+        instantiated, otherwise the CSS @apply mixin polyfill won't be
+        able to expand the underlying CSS custom properties.
+        See: https://github.com/Polymer/polymer-modulizer/issues/154
+        -->
+    <script type="module">
+const $_documentContainer = document.createElement('div');
+
+$_documentContainer.innerHTML = `<custom-style>
     <style is="custom-style" include="demo-pages-shared-styles">
       input, paper-input, paper-checkbox {
         margin-bottom: 8px;
@@ -62,24 +73,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         font-family: monospace;
       }
     </style>
-  </custom-style>
+  </custom-style>`;
+
+document.body.appendChild($_documentContainer);
+</script>
 </head>
 <body unresolved>
-  <div class="vertical-section-container centered">
+  <script type="module">
+const $_documentContainer = document.createElement('div');
+
+$_documentContainer.innerHTML = `<div class="vertical-section-container centered">
     <h3>Iron-form works with native and custom elements, and can prevent automatic redirection</h3>
     <demo-snippet>
       <template>
-        <input type="checkbox" checked onchange="form1.allowRedirect = !this.checked;"> Prevent automatic form redirection<br><br>
+        <input type="checkbox" checked="" onchange="form1.allowRedirect = !this.checked;"> Prevent automatic form redirection<br><br>
 
         <iron-form id="form1">
           <form action="/foo" method="get">
-            <paper-input type="text" name="name" required label="Name" value="Batman"></paper-input>
-            <input name="foo" required>
-            <input type="checkbox" name="donuts" checked>I like donuts<br>
-            <paper-checkbox name="food" value="pizza" checked>pizza</paper-checkbox><br>
-            <paper-checkbox name="food" value="cheese" required>cheese</paper-checkbox>
+            <paper-input type="text" name="name" required="" label="Name" value="Batman"></paper-input>
+            <input name="foo" required="">
+            <input type="checkbox" name="donuts" checked="">I like donuts<br>
+            <paper-checkbox name="food" value="pizza" checked="">pizza</paper-checkbox><br>
+            <paper-checkbox name="food" value="cheese" required="">cheese</paper-checkbox>
             <br>
-            <paper-dropdown-menu label="Cars" name="cars" required>
+            <paper-dropdown-menu label="Cars" name="cars" required="">
               <paper-listbox class="dropdown-content" slot="dropdown-content">
                 <paper-item value="volvo">Volvo</paper-item>
                 <paper-item value="saab">Saab</paper-item>
@@ -88,9 +105,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               </paper-listbox>
             </paper-dropdown-menu>
             <br><br>
-            <paper-button raised onclick="form1.submit()">Submit</paper-button>
-            <paper-button raised onclick="form1.reset()">Reset</paper-button>
-            <paper-button raised onclick="form1.validate()">Validate</paper-button>
+            <paper-button raised="" onclick="form1.submit()">Submit</paper-button>
+            <paper-button raised="" onclick="form1.reset()">Reset</paper-button>
+            <paper-button raised="" onclick="form1.validate()">Validate</paper-button>
           </form>
           <br>
           <div class="output"></div>
@@ -99,7 +116,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           form1.addEventListener('iron-form-submit', function(event) {
             this.querySelector('.output').innerHTML = JSON.stringify(event.detail);
           });
-        </script>
+        &lt;/script>
       </template>
     </demo-snippet>
 
@@ -110,7 +127,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <iron-form id="form2">
           <form action="/foo" method="get">
             <paper-input label="Name" value="Batman" name="name"></paper-input>
-            <input type="checkbox" required> You must check this box.
+            <input type="checkbox" required=""> You must check this box.
             <p>Using a native button to submit the form will display
             the native browser validation UI for native elements: </p>
             <button type="submit">Submit</button>
@@ -118,8 +135,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             <p>Using a custom element to submit the form will not display
             the native browser validation UI:</p>
-            <paper-button raised onclick="form2.submit()">Submit</paper-button>
-            <paper-button raised onclick="form2.reset()">Reset</paper-button>
+            <paper-button raised="" onclick="form2.submit()">Submit</paper-button>
+            <paper-button raised="" onclick="form2.reset()">Reset</paper-button>
           </form>
           <br>
           <div class="output"></div>
@@ -128,18 +145,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           form2.addEventListener('iron-form-submit', function(event) {
             this.querySelector('.output').innerHTML = JSON.stringify(event.detail);
           });
-        </script>
+        &lt;/script>
       </template>
     </demo-snippet>
 
-    <h3>To customize the request sent to the server, you can listen to the `iron-form-presubmit` event</h3>
+    <h3>To customize the request sent to the server, you can listen to the \`iron-form-presubmit\` event</h3>
     <demo-snippet>
       <template>
         <iron-form id="form3">
           <form action="/foo" method="get">
-            <paper-input name="name" label="Name" value="Batman" required></paper-input>
-            <paper-button raised onclick="form3.submit()">Submit</paper-button>
-            <paper-button raised onclick="form3.reset()">Reset</paper-button>
+            <paper-input name="name" label="Name" value="Batman" required=""></paper-input>
+            <paper-button raised="" onclick="form3.submit()">Submit</paper-button>
+            <paper-button raised="" onclick="form3.reset()">Reset</paper-button>
           </form>
           <div class="output"></div>
         </iron-form>
@@ -150,7 +167,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           form3.addEventListener('iron-form-submit', function(event) {
             this.querySelector('.output').innerHTML = JSON.stringify(event.detail);
           });
-        </script>
+        &lt;/script>
       </template>
     </demo-snippet>
 
@@ -162,12 +179,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <template>
         <iron-form id="form4">
           <form action="/foo" method="get">
-            <paper-input name="name" label="Name" required auto-validate></paper-input>
-            <paper-checkbox name="read" required>You must check this box</paper-checkbox><br>
+            <paper-input name="name" label="Name" required="" auto-validate=""></paper-input>
+            <paper-checkbox name="read" required="">You must check this box</paper-checkbox><br>
 
-            <paper-button raised onclick="_delayedSubmit(event)" disabled id="form4Submit">
-              <paper-spinner id="spinner" hidden></paper-spinner>Submit</paper-button>
-            <paper-button raised onclick="form4.reset()">Reset</paper-button>
+            <paper-button raised="" onclick="_delayedSubmit(event)" disabled="" id="form4Submit">
+              <paper-spinner id="spinner" hidden=""></paper-spinner>Submit</paper-button>
+            <paper-button raised="" onclick="form4.reset()">Reset</paper-button>
           </form>
           <div class="output"></div>
         </iron-form>
@@ -179,7 +196,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             form4Submit.disabled = false;
           });
           form4.addEventListener('change', function(event) {
-            // Validate the entire form to see if we should enable the `Submit` button.
+            // Validate the entire form to see if we should enable the \`Submit\` button.
             form4Submit.disabled = !form4.validate();
           });
           function _delayedSubmit(event) {
@@ -191,12 +208,63 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               form4.submit()
             }, 1000);
           }
-        </script>
+        &lt;/script>
       </template>
     </demo-snippet>
 
 
     <h3>Iron-form respects the novalidate form attribute</h3>
+    <demo-snippet>
+      <template>
+        <iron-form id="form5">
+          <form method="get" action="/foo" novalidate="">
+            <paper-input name="name" label="Name" required=""></paper-input>
+            <cats-only name="cats"></cats-only>
+            <input name="animal" placeholder="animal" required="" value="meerkat"><br>
+            <paper-checkbox name="cheese" required="">Cheese</paper-checkbox>
+            <br>
+            <paper-button raised="" onclick="form5.submit()">Submit</paper-button>
+            <paper-button raised="" onclick="form5.reset()">Reset</paper-button>
+          </form>
+          <div class="output"></div>
+        </iron-form>
+        <script>
+          form5.addEventListener('iron-form-submit', function(event) {
+            this.querySelector('.output').innerHTML = JSON.stringify(event.detail);
+          });
+        &lt;/script>
+      </template>
+    </demo-snippet>
+
+    <h3>Iron-form respects nested elements</h3>
+    <demo-snippet>
+      <template>
+        <iron-form id="form6">
+          <form method="get" action="/foo">
+            <p>
+              <input name="name" label="Name" required="">
+              <cats-only name="cats"></cats-only>
+              <paper-checkbox name="cheese" required="">Cheese</paper-checkbox>
+            </p>
+
+            <input type="submit" value="Submit">
+            <br>
+            <paper-button raised="" onclick="form6.submit()">Submit</paper-button>
+            <paper-button raised="" onclick="form6.reset()">Reset</paper-button>
+          </form>
+          <div class="output"></div>
+        </iron-form>
+        <script>
+          form6.addEventListener('iron-form-submit', function(event) {
+            this.querySelector('.output').innerHTML = JSON.stringify(event.detail);
+          });
+        &lt;/script>
+      </template>
+    </demo-snippet>
+  </div>`;
+
+document.body.appendChild($_documentContainer);
+</script>te form attribute</h3>
     <demo-snippet>
       <template>
         <iron-form id="form5">
@@ -211,11 +279,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </form>
           <div class="output"></div>
         </iron-form>
-        <script>
-          form5.addEventListener('iron-form-submit', function(event) {
-            this.querySelector('.output').innerHTML = JSON.stringify(event.detail);
-          });
-        </script>
+        <script type="module">
+import '../../iron-demo-helpers/demo-snippet.js';
+import '../../iron-demo-helpers/demo-pages-shared-styles.js';
+import '../../paper-input/paper-input.js';
+import '../../paper-button/paper-button.js';
+import '../../paper-checkbox/paper-checkbox.js';
+import '../../paper-dropdown-menu/paper-dropdown-menu.js';
+import '../../paper-item/paper-item.js';
+import '../../paper-listbox/paper-listbox.js';
+import '../../paper-spinner/paper-spinner.js';
+import '../../paper-styles/shadow.js';
+import '../iron-form.js';
+import './cats-only.js';
+form5.addEventListener('iron-form-submit', function(event) {
+  this.querySelector('.output').innerHTML = JSON.stringify(event.detail);
+});
+</script>
       </template>
     </demo-snippet>
 
@@ -237,11 +317,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </form>
           <div class="output"></div>
         </iron-form>
-        <script>
-          form6.addEventListener('iron-form-submit', function(event) {
-            this.querySelector('.output').innerHTML = JSON.stringify(event.detail);
-          });
-        </script>
+        <script type="module">
+import '../../iron-demo-helpers/demo-snippet.js';
+import '../../iron-demo-helpers/demo-pages-shared-styles.js';
+import '../../paper-input/paper-input.js';
+import '../../paper-button/paper-button.js';
+import '../../paper-checkbox/paper-checkbox.js';
+import '../../paper-dropdown-menu/paper-dropdown-menu.js';
+import '../../paper-item/paper-item.js';
+import '../../paper-listbox/paper-listbox.js';
+import '../../paper-spinner/paper-spinner.js';
+import '../../paper-styles/shadow.js';
+import '../iron-form.js';
+import './cats-only.js';
+form6.addEventListener('iron-form-submit', function(event) {
+  this.querySelector('.output').innerHTML = JSON.stringify(event.detail);
+});
+</script>
       </template>
     </demo-snippet>
   </div>
