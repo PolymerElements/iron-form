@@ -230,6 +230,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <paper-input name="paper2" value="value2"></paper-input>
           </form>
         </iron-form>
+          <iron-form id="plain-form">
+              <form action="/valid/url" method="post" enctype="text/plain">
+                  <paper-input name="paper1" value="value1"></paper-input>
+                  <paper-input name="paper2" value="value2"></paper-input>
+              </form>
+          </iron-form>
         </div>
     </template>
   </test-fixture>
@@ -845,14 +851,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       });
 
       test('submits a form with text/plain', function(done) {
-        var form = f.querySelector('#simple-form');
+        var form = f.querySelector('#plain-form');
 
         server.respondWith(
           'POST',
           /\/valid\/url.*/,
           function (request) {
             expect(request.requestHeaders).to.deep.equal({
-                "Content-Type": "text/plain;charset=utf-8",
+                "content-type": "text/plain;charset=utf-8",
                 "accept": "application/json"});
             expect(request.requestBody).to.deep.equal({
                 "paper1": "value1",
@@ -889,6 +895,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             server.respond();
           });
       });
+        test('submits a form with application/x-www-form-urlencoded', function(done) {
+            var form = f.querySelector('#simple-form');
+
+            server.respondWith(
+                'POST',
+                /\/valid\/url.*/,
+                function (request) {
+                    expect(request.requestHeaders).to.deep.equal({
+                        "content-type": "application/x-www-form-urlencoded;charset=utf-8",
+                        "accept": "application/json"});
+                    expect(request.requestBody).to.equal(
+                        'paper1=value1&paper2=value2');
+                    done();
+                }
+            );
+
+            // Wait one tick for observeNodes.
+            Polymer.Base.async(function() {
+                form.submit();
+                server.respond();
+            });
+        });
     });
   </script>
 </body>

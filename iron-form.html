@@ -152,7 +152,7 @@ attach it to the `<iron-form>`:
 
       /**
        * Fired after the form is submitted and an error is received. An
-       * error message is included in event.detail.error and an 
+       * error message is included in event.detail.error and an
        * IronRequestElement is included in event.detail.request.
        *
        * @event iron-form-error
@@ -255,7 +255,7 @@ attach it to the `<iron-form>`:
           // Copy the original form attributes.
           this.$.helper.action = this._form.getAttribute('action');
           this.$.helper.method = this._form.getAttribute('method') || 'GET';
-          this.$.helper.contentType = this._form.getAttribute('enctype');
+          this.$.helper.contentType = this._form.getAttribute('enctype') || 'application/x-www-form-urlencoded';
 
           this.$.helper.submit();
           this.fire('iron-form-submit');
@@ -330,7 +330,7 @@ attach it to the `<iron-form>`:
         // elements with those names.
         this.request.url = this._form.getAttribute('action');
         this.request.method = this._form.getAttribute('method') || 'GET';
-        this.request.contentType = this._form.getAttribute('enctype');
+        this.request.contentType = this._form.getAttribute('enctype') || 'application/x-www-form-urlencoded';
         this.request.withCredentials = this.withCredentials;
         this.request.headers = this.headers;
 
