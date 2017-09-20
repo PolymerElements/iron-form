@@ -23,12 +23,14 @@ use an `iron-ajax` element to submit the form contents to the server.
   Example:
 
     <iron-form>
-      <form method="get" action="/form/handler">
+      <form method="get" action="/form/handler" enctype="application/json">
         <input type="text" name="name" value="Batman">
         <input type="checkbox" name="donuts" checked> I like donuts<br>
         <paper-checkbox name="cheese" value="yes" checked></paper-checkbox>
       </form>
     </iron-form>
+
+The `enctype` property will be used to set the `Content-Type` header on the request object.
 
 By default, a native `<button>` element will submit this form. However, if you
 want to submit it from a custom element's click handler, you need to explicitly
