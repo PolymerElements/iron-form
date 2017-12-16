@@ -24,6 +24,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 </head>
 <body>
 
+  <dom-module id="x-input-wrapper">
+    <template>
+      <input name="check_wrapped" value="foo"/>
+    </template>
+  </dom-module>
+
   <test-fixture id="serialization">
     <template>
       <div>
@@ -101,8 +107,40 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <paper-input type="number" name="number1" value="35"></paper-input>
             <paper-input name="empty" value=""></paper-input>
             <paper-input name="empty" value=""></paper-input>
+            <x-input-wrapper></x-input-wrapper>
           </form>
         </iron-form>
+        <iron-form id="nested-elements">
+          <form action="/get" method="get">
+            <div>
+              <input type="text" name="input1" value="i1">
+            </div>
+            <div>
+              <paper-input name="paper-input1" value="p1"></paper-input>
+            </div>
+            <div>
+              <p>
+                <div>
+                  <input type="text" name="input2" value="i2">
+                  <paper-input name="paper-input2" value="p2"></paper-input>
+                </div>
+              </p>
+            </div>
+          </form>
+        </iron-form>
+        <iron-form id="duplicate-names">
+          <form action="/get" method="get">
+            <input name="input1" value="">
+            <input name="input1" value="foo">
+            <paper-input name="input1" value=""></paper-input>
+            <paper-input name="input1" value="bar"></paper-input>
+            <input name="empty" value="">
+            <input name="empty" value="">
+            <paper-input name="empty" value=""></paper-input>
+            <paper-input name="empty" value=""></paper-input>
+          </form>
+        </iron-form>
+
       </div>
     </template>
   </test-fixture>
@@ -136,6 +174,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         <iron-form id="custom-invalid">
           <form action="/get" method="get">
+            <paper-input pattern="aa" value="b"></paper-input>
+          </form>
+        </iron-form>
+
+        <iron-form id="mixed-invalid">
+          <form action="/get" method="get">
+            <input pattern="aa" value="b">
             <paper-input pattern="aa" value="b"></paper-input>
           </form>
         </iron-form>
@@ -176,10 +221,39 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </template>
   </test-fixture>
 
+  <test-fixture id="content-type">
+    <template>
+      <div>
+        <iron-form id="simple-form">
+          <form action="/valid/url" method="post">
+            <paper-input name="paper1" value="value1"></paper-input>
+            <paper-input name="paper2" value="value2"></paper-input>
+          </form>
+        </iron-form>
+        <iron-form id="json-form">
+          <form action="/valid/url" method="post" enctype="application/json">
+            <paper-input name="paper1" value="value1"></paper-input>
+            <paper-input name="paper2" value="value2"></paper-input>
+          </form>
+        </iron-form>
+          <iron-form id="plain-form">
+              <form action="/valid/url" method="post" enctype="text/plain">
+                  <paper-input name="paper1" value="value1"></paper-input>
+                  <paper-input name="paper2" value="value2"></paper-input>
+              </form>
+          </iron-form>
+        </div>
+    </template>
+  </test-fixture>
+
   <script>
     suite('serialization', function() {
       var f;
       var server;
+
+      suiteSetup(function () {
+        Polymer({is: 'x-input-wrapper'});
+      });
 
       setup(function() {
         f = fixture('serialization');
@@ -212,7 +286,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         Polymer.Base.async(function() {
           form.submit();
           server.respond();
-        }, 1);
+        });
       });
 
       test('serializes native radio buttons', function(done) {
@@ -227,7 +301,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         Polymer.Base.async(function() {
           form.submit();
           server.respond();
-        }, 1);
+        });
       });
 
       test('serializes native buttons', function(done) {
@@ -242,7 +316,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         Polymer.Base.async(function() {
           form.submit();
           server.respond();
-        }, 1);
+        });
       });
 
       test('serializes native selects', function(done) {
@@ -257,7 +331,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         Polymer.Base.async(function() {
           form.submit();
           server.respond();
-        }, 1);
+        });
       });
 
       test('serializes native inputs', function(done) {
@@ -273,7 +347,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         Polymer.Base.async(function() {
           form.submit();
           server.respond();
-        }, 1);
+        });
       });
 
       test('serializes empty native inputs', function(done) {
@@ -288,7 +362,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         Polymer.Base.async(function() {
           form.submit();
           server.respond();
-        }, 1);
+        });
       });
 
       test('serializes custom checkboxes', function(done) {
@@ -303,13 +377,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         Polymer.Base.async(function() {
           form.submit();
           server.respond();
-        }, 1);
+        });
       });
 
       test('serializes custom inputs', function(done) {
         var form = f.querySelector('#custom-inputs');
         form.addEventListener('iron-form-response', function(event) {
-          expect(event.detail.url).to.equal('/get?input1=&input1=foo&input1=zag&input2=bar&pass1=pass&number1=35&empty=&empty=');
+          expect(event.detail.url).to.equal('/get?input1=&input1=foo&input1=zag&input2=bar&pass1=pass&number1=35&empty=&empty=&check_wrapped=foo');
           expect(event.detail.response.success).to.be.equal(true);
           done();
         });
@@ -318,7 +392,35 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         Polymer.Base.async(function() {
           form.submit();
           server.respond();
-        }, 1);
+        });
+      });
+
+      test('serializes elements deeply nested in divs', function(done) {
+        var form = f.querySelector('#nested-elements');
+        form.addEventListener('iron-form-response', function(event) {
+          expect(event.detail.url).to.equal('/get?input1=i1&paper-input1=p1&input2=i2&paper-input2=p2');
+          expect(event.detail.response.success).to.be.equal(true);
+          done();
+        });
+        // Wait one tick for observeNodes.
+        Polymer.Base.async(function() {
+          form.submit();
+          server.respond();
+        });
+      });
+
+      test('serializes elements with duplicate names', function(done) {
+        var form = f.querySelector('#duplicate-names');
+        form.addEventListener('iron-form-response', function(event) {
+          expect(event.detail.url).to.equal('/get?input1=&input1=foo&input1=&input1=bar&empty=&empty=&empty=&empty=');
+          expect(event.detail.response.success).to.be.equal(true);
+          done();
+        });
+        // Wait one tick for observeNodes.
+        Polymer.Base.async(function() {
+          form.submit();
+          server.respond();
+        });
       });
     });
 
@@ -346,6 +448,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         server.restore();
       });
 
+      test('fires iron-form-invalid if it can\'t submit', function(done) {
+        var form = f.querySelector('#mixed-invalid');
+        form.addEventListener('iron-form-invalid', function(event) {
+          expect(form.validate()).to.be.equal(false);
+          done();
+        });
+        // Wait one tick for observeNodes.
+        Polymer.Base.async(function() {
+          expect(form.validate()).to.be.equal(false);
+          form.submit();
+          server.respond();
+        });
+      });
+
       test('<input required> is validated and does not submit the form', function(done) {
         var form = f.querySelector('#native-required');
 
@@ -359,7 +475,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           expect(form.validate()).to.be.equal(false);
           form.submit();
           server.respond();
-        }, 1);
+        });
 
         setTimeout(function() {
           expect(responses).to.be.equal(0);
@@ -396,7 +512,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           expect(form.validate()).to.be.equal(false);
           form.submit();
           server.respond();
-        }, 1);
+        });
 
         setTimeout(function() {
           expect(responses).to.be.equal(0);
@@ -418,7 +534,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           expect(form.validate()).to.be.equal(false);
           form.submit();
           server.respond();
-        }, 1);
+        });
 
         setTimeout(function() {
           expect(responses).to.be.equal(0);
@@ -439,7 +555,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           expect(form.validate()).to.be.equal(false);
           form.submit();
           server.respond();
-        }, 1);
+        });
 
         setTimeout(function() {
           expect(responses).to.be.equal(0);
@@ -499,7 +615,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         Polymer.Base.async(function() {
           form.submit();
           server.respond();
-        }, 1);
+        });
       });
 
       test('calling submit() on a form with method=post', function(done) {
@@ -514,7 +630,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           form._form.setAttribute('action', '/post');
           form.submit();
           server.respond();
-        }, 1);
+        });
       });
 
       test('calling submit() on a form with method unset', function(done) {
@@ -528,7 +644,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           form._form.removeAttribute('method');
           form.submit();
           server.respond();
-        }, 1);
+        });
       });
 
       test('enctype, headers and withCredentials works', function(done) {
@@ -562,7 +678,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         Polymer.Base.async(function() {
           form._form.querySelector('input[type=submit]').click();
           server.respond();
-        }, 1);
+        });
       });
 
       test('pressing an <input type=button> with an event handler submits the form', function(done) {
@@ -580,7 +696,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           button.click();
 
           server.respond();
-        }, 1);
+        });
       });
 
       test('pressing a paper-button with an event handler submits the form', function(done) {
@@ -598,7 +714,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           button.click();
 
           server.respond();
-        }, 1);
+        });
       });
 
       test('can modify the request in the presubmit', function(done) {
@@ -631,7 +747,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         Polymer.Base.async(function() {
           form.submit();
           server.respond();
-        }, 1);
+        });
       });
 
       test('can do a custom submission in the presubmit', function(done) {
@@ -659,7 +775,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         // Wait one tick for observeNodes.
         Polymer.Base.async(function() {
           form.submit();
-        }, 1);
+        });
       });
 
       test('can relay errors', function(done) {
@@ -676,7 +792,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           form._form.setAttribute('action', '/error');
           form.submit();
           server.respond();
-        }, 1);
+        });
       });
     });
 
@@ -707,7 +823,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           var final = form.serializeForm();
           expect(JSON.stringify(initial)).to.be.equal(JSON.stringify(final));
           done();
-        }, 1);
+        });
       });
     });
 
@@ -764,6 +880,87 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       });
     });
 
+    suite('content type', function() {
+      var server;
+      var f;
+
+      setup(function() {
+        server = sinon.fakeServer.create();
+        f = fixture('content-type');
+      });
+
+      teardown(function() {
+        server.restore();
+      });
+
+      test('submits a form with text/plain', function(done) {
+        var form = f.querySelector('#plain-form');
+
+        server.respondWith(
+          'POST',
+          /\/valid\/url.*/,
+          function (request) {
+            expect(request.requestHeaders).to.deep.equal({
+                "content-type": "text/plain;charset=utf-8",
+                "accept": "application/json"});
+            expect(request.requestBody).to.deep.equal({
+                "paper1": "value1",
+                "paper2": "value2"});
+            done();
+          }
+        );
+
+          // Wait one tick for observeNodes.
+          Polymer.Base.async(function() {
+            form.submit();
+            server.respond();
+          });
+      });
+      test('submits a form with application/json', function(done) {
+          var form = f.querySelector('#json-form');
+
+          server.respondWith(
+            'POST',
+            /\/valid\/url.*/,
+            function (request) {
+              expect(request.requestHeaders).to.deep.equal({
+                  "content-type": "application/json;charset=utf-8",
+                  "accept": "application/json"});
+              expect(request.requestBody).to.equal(
+                  '{"paper1":"value1","paper2":"value2"}');
+              done();
+            }
+          );
+
+          // Wait one tick for observeNodes.
+          Polymer.Base.async(function() {
+            form.submit();
+            server.respond();
+          });
+      });
+        test('submits a form with application/x-www-form-urlencoded', function(done) {
+            var form = f.querySelector('#simple-form');
+
+            server.respondWith(
+                'POST',
+                /\/valid\/url.*/,
+                function (request) {
+                    expect(request.requestHeaders).to.deep.equal({
+                        "content-type": "application/x-www-form-urlencoded;charset=utf-8",
+                        "accept": "application/json"});
+                    expect(request.requestBody).to.equal(
+                        'paper1=value1&paper2=value2');
+                    done();
+                }
+            );
+
+            // Wait one tick for observeNodes.
+            Polymer.Base.async(function() {
+                form.submit();
+                server.respond();
+            });
+        });
+    });
   </script>
 </body>
 </html>

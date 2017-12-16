@@ -88,13 +88,36 @@ attach it to the `<iron-form>`:
     </style>
 
     <!-- This form is used to collect the elements that should be submitted -->
-    <slot id="content"></slot>
+    <slot></slot>
 
     <!-- This form is used for submission -->
     <form id="helper" action$="[[action]]" method$="[[method]]" enctype$="[[enctype]]"></form>
   </template>
 
   <script>
+  (function() {
+    function isSubmittable(node, ignoreName) {
+      return  (!node.disabled && (ignoreName || node.name));
+    }
+
+    function handleSubmittableInSlot(submittable, node, ignoreName) {
+      var assignedNodes = node.assignedNodes({flatten: true});
+
+      for (var i = 0; i < assignedNodes.length; i++) {
+        if (assignedNodes[i].nodeType === Node.TEXT_NODE) {
+          continue;
+        }
+
+        var nestedAssignedNodes = assignedNodes[i].querySelectorAll('*');
+
+        for (var j = 0; j < nestedAssignedNodes.length; j++) {
+          if (isSubmittable(nestedAssignedNodes[j], ignoreName)) {
+            submittable.push(nestedAssignedNodes[j]);
+          }
+        }
+      }
+    }
+
     Polymer({
       is: 'iron-form',
 
@@ -125,6 +148,11 @@ attach it to the `<iron-form>`:
           value: false
         },
       },
+      /**
+       * Fired if the form cannot be submitted because it's invalid.
+       *
+       * @event iron-form-invalid
+       */
 
       /**
        * Fired after the form is submitted.
@@ -147,23 +175,39 @@ attach it to the `<iron-form>`:
 
       /**
        * Fired after the form is submitted and an error is received. An
-       * IronRequestElement is included as the event.detail object.
+       * error message is included in event.detail.error and an
+       * IronRequestElement is included in event.detail.request.
        *
        * @event iron-form-error
       */
 
       attached: function() {
-        this._saveDefaultValues();
+        this._nodeObserver = Polymer.dom(this).observeNodes(
+          function(mutations) {
+            for (var i = 0; i < mutations.addedNodes.length; i++) {
+              if (mutations.addedNodes[i].tagName === 'FORM' && !this._alreadyCalledInit) {
+                this._alreadyCalledInit = true;
+                this._form = mutations.addedNodes[i];
+                this._init();
+              }
+            }
+          }.bind(this));
       },
 
       detached: function() {
-        this._removeSlotListeners();
+        if (this._nodeObserver) {
+          Polymer.dom(this).unobserveNodes(this._nodeObserver);
+          this._nodeObserver = null;
+        }
       },
 
-      _saveDefaultValues: function() {
-        var nodes = this._getFormElements();
+      _init: function() {
+        this._form.addEventListener('submit', this.submit.bind(this));
+        this._form.addEventListener('reset', this.reset.bind(this));
+
+        // Save the initial values.
         this._defaults = this._defaults || new WeakMap();
-        var nodes = this._getFormElements();
+        var nodes = this._getSubmittableElements();
         for (var i = 0; i < nodes.length; i++) {
           var node = nodes[i];
           if (!this._defaults.has(node)) {
@@ -204,18 +248,22 @@ attach it to the `<iron-form>`:
        */
       submit: function(event) {
         // We are not using this form for submission, so always cancel its event.
-        if (event)
+        if (event) {
           event.preventDefault();
+        }
 
         // If you've called this before distribution happened, bail out.
-        if (!this._form || !this.validate()) {
+        if (!this._form) {
+          return;
+        }
+
+        if (!this.validate()) {
+          this.fire('iron-form-invalid');
           return;
         }
 
         // Remove any existing children in the submission form (from a previous submit).
-        while (this.$.helper.children.length !== 0) {
-          this.$.helper.removeChild(this.$.helper.children[0]);
-        }
+        this.$.helper.textContent = '';
 
         var json = this.serializeForm();
 
@@ -223,9 +271,15 @@ attach it to the `<iron-form>`:
         if (this.allowRedirect) {
           // If we're submitting the form natively, then create a hidden element for
           // each of the values.
-          for (element in json) {
+          for (var element in json) {
             this.$.helper.appendChild(this._createHiddenElement(element, json[element]));
           }
+
+          // Copy the original form attributes.
+          this.$.helper.action = this._form.getAttribute('action');
+          this.$.helper.method = this._form.getAttribute('method') || 'GET';
+          this.$.helper.contentType = this._form.getAttribute('enctype') || 'application/x-www-form-urlencoded';
+
           this.$.helper.submit();
           this.fire('iron-form-submit');
         } else {
@@ -242,21 +296,18 @@ attach it to the `<iron-form>`:
           event.preventDefault();
 
         // If you've called this before distribution happened, bail out.
-        if (!this._form)
+        if (!this._form) {
           return;
+        }
 
         // Load the initial values.
-        var nodes = this._getFormElements();
+        var nodes = this._getSubmittableElements();
         for (var i = 0; i < nodes.length; i++) {
           var node = nodes[i];
           if (this._defaults.has(node)) {
             var defaults = this._defaults.get(node);
-            if (node.value != null) {
-              node.value = defaults.value;
-            }
-            if (node.checked != null) {
-              node.checked = defaults.checked;
-            }
+            node.value = defaults.value;
+            node.checked = defaults.checked;
           }
         }
       },
@@ -302,7 +353,7 @@ attach it to the `<iron-form>`:
         // elements with those names.
         this.request.url = this._form.getAttribute('action');
         this.request.method = this._form.getAttribute('method') || 'GET';
-        this.request.contentType = this._form.getAttribute('enctype');
+        this.request.contentType = this._form.getAttribute('enctype') || 'application/x-www-form-urlencoded';
         this.request.withCredentials = this.withCredentials;
         this.request.headers = this.headers;
 
@@ -321,78 +372,31 @@ attach it to the `<iron-form>`:
       },
 
       _getValidatableElements: function() {
-        var nodes = this._getFormElements();
-        var validatable = [];
-
-        for (var i = 0; i < nodes.length; i++) {
-          var el = nodes[i];
-          if (!el.disabled) {
-            validatable.push(el);
-          }
-        }
-        return validatable;
-      },
-
-      _removeSlotListeners: function(slot) {
-        if (!slot) slot = this.$.content;
-        if (slot.tagName !== "SLOT") return;
-        if (slot.__formListener) {
-          slot.removeEventListener('slotchange', slot.__formListener);
-          delete slot.__formListener;
-        }
-        this._forEachDistributedElement(slot, this._removeSlotListeners.bind(this));
-      },
-
-      _forEachDistributedElement: function(slot, handler) {
-        var roots = slot.assignedNodes().filter(function(n) {
-          return n.nodeType === Node.ELEMENT_NODE;
-        });
-        for (var rootNo = 0; rootNo < roots.length; rootNo++) {
-          var root = roots[rootNo];
-          handler(root);
-          var children = root.querySelectorAll('*');
-          for (var nodeNo = 0; nodeNo < children.length; nodeNo++) {
-            handler(children[nodeNo]);
-          }
-        }
-      },
-
-      _getFormElements: function(slot) {
-        if (!slot) slot = this.$.content;
-        if (!slot.__formListener) {
-          slot.__formListener = (function() {
-            this._saveDefaultValues(slot);
-          }).bind(this);
-          slot.__formListener();
-          slot.addEventListener('slotchange', slot.__formListener);
-        }
-        var result = [];
-        this._forEachDistributedElement(slot, (function(el) {
-          if (el !== this._form && el.tagName === "FORM") {
-            this._form = el;
-            this._form.addEventListener('submit', this.submit.bind(this));
-            this._form.addEventListener('reset', this.reset.bind(this));
-          } else if (el.tagName === "SLOT") {
-            var additionalElements = this._getFormElements(el);
-            result.push.apply(result, additionalElements);
-          } else {
-            result.push(el);
-          }
-        }).bind(this));
-        return result;
+        return this._findElements(this._form, true);
       },
 
       _getSubmittableElements: function() {
-        var nodes = this._getFormElements();
+        return this._findElements(this._form, false);
+      },
+
+      _findElements: function(parent, ignoreName) {
+        var nodes = Polymer.dom(parent).querySelectorAll('*');
         var submittable = [];
 
         for (var i = 0; i < nodes.length; i++) {
-          var el = nodes[i];
+          var additionalElements = [];
+          var node = nodes[i];
 
-          // An element is submittable if it is not disabled, and if it has a
-          // 'name' attribute.
-          if (!el.disabled && el.name) {
-            submittable.push(el);
+          if (node.localName === 'slot') {
+            handleSubmittableInSlot(submittable, node, ignoreName);
+          } else if (isSubmittable(node, ignoreName)) {
+            additionalElements = [node];
+          } else if (node.root) {
+            additionalElements = this._findElements(node.root, ignoreName)
+          }
+
+          if (additionalElements.length) {
+            Array.prototype.push.apply(submittable, additionalElements);
           }
         }
         return submittable;
@@ -479,5 +483,6 @@ attach it to the `<iron-form>`:
         }
       }
     });
+  })();
   </script>
 </dom-module>
