@@ -101,14 +101,14 @@ attach it to the `<iron-form>`:
     }
 
     function handleSubmittableInSlot(submittable, node, ignoreName) {
-      var assignedNodes = node.assignedNodes({flatten: true});
+      var assignedNodes = Polymer.dom(node).getDistributedNodes();
 
       for (var i = 0; i < assignedNodes.length; i++) {
         if (assignedNodes[i].nodeType === Node.TEXT_NODE) {
           continue;
         }
 
-        var nestedAssignedNodes = assignedNodes[i].querySelectorAll('*');
+        var nestedAssignedNodes = Polymer.dom(assignedNodes[i]).queryDistributedElements('*');
 
         for (var j = 0; j < nestedAssignedNodes.length; j++) {
           if (isSubmittable(nestedAssignedNodes[j], ignoreName)) {
@@ -387,7 +387,7 @@ attach it to the `<iron-form>`:
           var additionalElements = [];
           var node = nodes[i];
 
-          if (node.localName === 'slot') {
+          if (node.localName === 'slot' || node.localName === 'content') {
             handleSubmittableInSlot(submittable, node, ignoreName);
           } else if (isSubmittable(node, ignoreName)) {
             additionalElements = [node];

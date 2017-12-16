@@ -152,8 +152,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       var inputs;
       setup(function() {
         form = fixture('slotted-reset').$.form;
-        inputs = Polymer.dom(form.querySelector('slot')).getDistributedNodes()[0];
-      })
+        var slot = form.querySelector('slot');
+        if (slot) {
+          inputs = Polymer.dom(slot).getDistributedNodes()[0];
+        } else {
+          inputs = form.querySelector('[slot]');
+        }
+      });
+
       test('can reset a form', function(done) {
         // Wait one tick for observeNodes.
         Polymer.Base.async(function() {
