@@ -168,16 +168,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           // Modify all the values, flip all the inputs.
           form.querySelector('[name=original]').value = 'works++';
-          inputs.querySelector('[name=input1').value = 'input1++';
-          inputs.querySelector('[name=input2').value = 'input2++';
-          inputs.querySelector('[name=check1').checked = false;
-          inputs.querySelector('[name=check2').checked = true;
-          inputs.querySelector('[name=radio1').checked = false;
-          inputs.querySelector('[name=radio2').checked = true;
-          inputs.querySelector('[name=papercheck1').checked = false;
-          inputs.querySelector('[name=papercheck2').checked = true;
-          inputs.querySelector('[name=paper1').value = 'paper1++';
-          inputs.querySelector('[name=paper2').value = 'paper2++';
+          inputs.querySelector('[name=input1]').value = 'input1++';
+          inputs.querySelector('[name=input2]').value = 'input2++';
+          inputs.querySelector('[name=check1]').checked = false;
+          inputs.querySelector('[name=check2]').checked = true;
+          inputs.querySelector('[name=radio1]').checked = false;
+          inputs.querySelector('[name=radio2]').checked = true;
+          inputs.querySelector('[name=papercheck1]').checked = false;
+          inputs.querySelector('[name=papercheck2]').checked = true;
+          inputs.querySelector('[name=paper1]').value = 'paper1++';
+          inputs.querySelector('[name=paper2]').value = 'paper2++';
 
           var updated = form.serializeForm();
           expect(JSON.stringify(updated)).to.not.be.equal(initial);
