@@ -97,9 +97,19 @@ attach it to the `<iron-form>`:
   <script>
   (function() {
     function isSubmittable(node, ignoreName) {
+      // An element is submittable if it is not disabled, and if it has a
+      // 'name' attribute
       return  (!node.disabled && (ignoreName || node.name));
     }
 
+    /**
+     * Traverse the distributed nodes of a slot or content element
+     * and add all submittable nodes to `submittable`.
+     * @param  {Array<Node>} submittable Reference to the arrray of submittables
+     * @param  {Node} node        The slot or content node
+     * @param  {boolean} ignoreName  Whether the name of the submittable nodes should be disregarded
+     * @return {void}
+     */
     function handleSubmittableInSlot(submittable, node, ignoreName) {
       var assignedNodes = Polymer.dom(node).getDistributedNodes();
 
