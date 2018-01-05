@@ -198,8 +198,8 @@ event and do your own custom submission:
         // Oh good! We don't handle `required` correctly.
         Polymer.clientSupportsFormValidationUI = false;
         event.preventDefault();
+        button.click();
       });
-      button.click();
     },
 
     ready: function() {
