@@ -159,16 +159,25 @@ attach it to the `<iron-form>`:
       */
 
       attached: function() {
-        this._nodeObserver = Polymer.dom(this).observeNodes(
-          function(mutations) {
-            for (var i = 0; i < mutations.addedNodes.length; i++) {
-              if (mutations.addedNodes[i].tagName === 'FORM' && !this._alreadyCalledInit) {
-                this._alreadyCalledInit = true;
-                this._form = mutations.addedNodes[i];
-                this._init();
+        if (!this._form) {
+          var form = this.querySelector('form');
+          if (form) {
+            this._form = form;
+            this._init();
+          } else {
+            this._nodeObserver = Polymer.dom(this).observeNodes(function(mutations) {
+              for (var i = 0; i < mutations.addedNodes.length; i++) {
+                if (mutations.addedNodes[i].tagName === 'FORM') {
+                  this._form = mutations.addedNodes[i];
+                  this._init();
+                  Polymer.dom(this).unobserveNodes(this._nodeObserver);
+                  this._nodeObserver = null;
+                  break;
+                }
               }
-            }
-          }.bind(this));
+            }.bind(this));
+          }
+        }
       },
 
       detached: function() {
@@ -201,6 +210,11 @@ attach it to the `<iron-form>`:
        * @return {boolean} True if all the elements are valid.
        */
       validate: function() {
+        // If you've called this before distribution happened, bail out.
+        if (!this._form) {
+          return false;
+        }
+
         if (this._form.getAttribute('novalidate') === '')
           return true;
 
