@@ -51,3 +51,16 @@ call the `iron-form`'s `submit` method.
       document.getElementById('iron-form').submit();
     }
 ```
+
+### Changes in 2.0
+- Since type-extensions are not available in 2.0, `<iron-form>` is now a wrapper
+around a native `<form>`
+- the `serialize` method has been renamed to `serializeForm` (because Polymer 2.0
+  is already using a `serialize` method, and we can't stomp over it)
+- in `iron-form` 2.x, the `reset` and `submit` methods now accept and `event` as
+input, which will be prevented if it exists.
+- the `disableNativeValidationUi` property has been removed: because `iron-form`
+is no longer a type extension, it can't actually trigger any native UI, so
+this property is essentially always true.
+- the `iron-form-reset` event is no longer fired. Instead, you can listen to
+the `reset` event on either the native `form` or the `iron-form`.
