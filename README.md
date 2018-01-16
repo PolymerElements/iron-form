@@ -62,4 +62,5 @@ input, which will be prevented if it exists.
 - the `disableNativeValidationUi` property has been removed: because `iron-form`
 is no longer a type extension, it can't actually trigger any native UI, so
 this property is essentially always true.
-- the `iron-form-reset` event is no longer fired.
+- the `iron-form-reset` event is no longer fired. Instead, you can listen to
+the `reset` event on either the native `form` or the `iron-form`.
