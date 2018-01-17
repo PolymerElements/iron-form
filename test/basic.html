@@ -442,6 +442,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         server.restore();
       });
 
+      test('handle early calls to validate', function() {
+        var form = f.querySelector('#native-required');
+        expect(form.validate()).to.be.equal(false);
+      });
+
       test('fires iron-form-invalid if it can\'t submit', function(done) {
         var form = f.querySelector('#mixed-invalid');
         form.addEventListener('iron-form-invalid', function(event) {

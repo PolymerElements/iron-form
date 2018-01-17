@@ -201,6 +201,11 @@ attach it to the `<iron-form>`:
        * @return {boolean} True if all the elements are valid.
        */
       validate: function() {
+        // If you've called this before distribution happened, bail out.
+        if (!this._form) {
+          return false;
+        }
+
         if (this._form.getAttribute('novalidate') === '')
           return true;
 
