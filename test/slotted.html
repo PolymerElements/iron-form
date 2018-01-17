@@ -27,7 +27,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <iron-form id="form">
         <form action="/get" method="get">
           <input name="original" value="works" />
-          <slot name="inputs"></slot>
+          <slot></slot>
         </form>
       </iron-form>
     </template>
@@ -38,10 +38,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </script>
   </dom-module>
 
+  <dom-module id="slotted-slotted-form">
+    <template>
+      <slotted-form id="form">
+         <input name="slotted" value="works too" />
+         <slot></slot>
+      </slotted-form>
+    </template>
+    <script>
+    HTMLImports.whenReady(function() {
+      Polymer({is: 'slotted-slotted-form'});
+    });
+    </script>
+  </dom-module>
+
   <test-fixture id="slotted">
     <template>
       <slotted-form>
-        <div slot="inputs">
+        <div>
           <paper-checkbox name="checkbox" checked></paper-checkbox>
           <input name="input" value="some" />
         </div>
@@ -52,7 +66,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <test-fixture id="slotted-validation">
     <template>
       <slotted-form>
-        <div slot="inputs">
+        <div>
           <paper-checkbox required></paper-checkbox>
         </div>
       </slotted-form>
@@ -62,7 +76,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <test-fixture id="slotted-reset">
     <template>
       <slotted-form>
-        <div slot="inputs">
+        <div id="inputs">
           <input type="input" name="input1" value="input1">
           <input type="input" name="input2">
           <input type="checkbox" name="check1" checked>
@@ -79,7 +93,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </template>
   </test-fixture>
 
-
+  <test-fixture id="nested-slotted">
+    <template>
+      <slotted-slotted-form>
+         <input name="input" value="some" />
+      </slotted-slotted-form>
+    </template>
+  </test-fixture>
 
   <script>
     suite('slotted', function() {
@@ -121,6 +141,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             server.respond();
           }, 1);
         });
+
+        suite('can work with nested slots', function(done) {
+          setup(function() {
+            form = fixture('nested-slotted').$.form.$.form;
+          });
+          test('serializes both normal and distributed nodes', function(done) {
+            form.addEventListener('iron-form-response', function(event) {
+              var expectedUrl = encodeURI('/get?original=works&slotted=works too&input=some');
+              expect(event.detail.url).to.equal(expectedUrl);
+              expect(event.detail.response.success).to.be.equal(true);
+              done();
+            });
+
+            // Wait one tick for observeNodes.
+            Polymer.Base.async(function() {
+              form.submit();
+              server.respond();
+            }, 1);
+          });
+        });
       });
 
       suite('validation', function() {
@@ -154,9 +194,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         form = fixture('slotted-reset').$.form;
         var slot = form.querySelector('slot,content');
         if (slot) {
-          inputs = Polymer.dom(slot).getDistributedNodes()[0];
+          inputs = Polymer.dom(slot).getDistributedNodes()[1];
         } else {
-          inputs = form.querySelector('[slot]');
+          inputs = form.querySelector('[id="inputs"]');
         }
       });
 
