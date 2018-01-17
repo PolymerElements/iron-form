@@ -277,6 +277,12 @@ attach it to the `<iron-form>`:
           return;
         }
 
+        // Ensure the native form fired the `reset` event.
+        if (!event || event.type !== 'reset' || event.target !== this._form) {
+          this._form.reset();
+          return;
+        }
+
         // Load the initial values.
         var nodes = this._getSubmittableElements();
         for (var i = 0; i < nodes.length; i++) {
@@ -287,9 +293,6 @@ attach it to the `<iron-form>`:
             node.checked = defaults.checked;
           }
         }
-
-        // Causes `reset` event to be fired.
-        this._form.reset();
       },
 
       /**
