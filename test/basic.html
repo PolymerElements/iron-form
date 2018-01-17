@@ -776,10 +776,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           var updated = form.serializeForm();
           expect(JSON.stringify(updated)).to.not.be.equal(initial);
+          form.addEventListener('reset', function() {
+            var final = form.serializeForm();
+            expect(JSON.stringify(initial)).to.be.equal(JSON.stringify(final));
+            done();
+          });
           form.reset();
-          var final = form.serializeForm();
-          expect(JSON.stringify(initial)).to.be.equal(JSON.stringify(final));
-          done();
         });
       });
     });

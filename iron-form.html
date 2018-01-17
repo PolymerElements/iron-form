@@ -287,6 +287,9 @@ attach it to the `<iron-form>`:
             node.checked = defaults.checked;
           }
         }
+
+        // Causes `reset` event to be fired.
+        this._form.reset();
       },
 
       /**
