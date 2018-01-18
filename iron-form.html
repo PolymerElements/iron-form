@@ -144,11 +144,17 @@ attach it to the `<iron-form>`:
        */
 
       /**
+       * Fired after the form is reset.
+       *
+       * @event iron-form-reset
+       */
+
+      /**
        * Fired after the form is submitted and a response is received. An
        * IronRequestElement is included as the event.detail object.
        *
        * @event iron-form-response
-      */
+       */
 
       /**
        * Fired after the form is submitted and an error is received. An
@@ -156,7 +162,7 @@ attach it to the `<iron-form>`:
        * IronRequestElement is included in event.detail.request.
        *
        * @event iron-form-error
-      */
+       */
 
       attached: function() {
         this._nodeObserver = Polymer.dom(this).observeNodes(
@@ -278,6 +284,8 @@ attach it to the `<iron-form>`:
         }
 
         // Ensure the native form fired the `reset` event.
+        // User might have bound `<button on-click="_resetIronForm">`, or directly called
+        // `ironForm.reset()`. In these cases we want to first reset the native form.
         if (!event || event.type !== 'reset' || event.target !== this._form) {
           this._form.reset();
           return;
@@ -293,6 +301,8 @@ attach it to the `<iron-form>`:
             node.checked = defaults.checked;
           }
         }
+
+        this.fire('iron-form-reset');
       },
 
       /**

@@ -776,12 +776,68 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           var updated = form.serializeForm();
           expect(JSON.stringify(updated)).to.not.be.equal(initial);
-          form.addEventListener('reset', function() {
-            var final = form.serializeForm();
-            expect(JSON.stringify(initial)).to.be.equal(JSON.stringify(final));
-            done();
-          });
           form.reset();
+          var final = form.serializeForm();
+          expect(JSON.stringify(initial)).to.be.equal(JSON.stringify(final));
+          done();
+        });
+      });
+
+      test('fires reset and iron-form-reset events', function(done) {
+        var form = fixture('resetting');
+
+        // Wait one tick for observeNodes.
+        Polymer.Base.async(function() { 
+          var nativeResetSpy = sinon.stub();
+          var ironFormResetSpy = sinon.stub();
+          form.addEventListener('reset', nativeResetSpy);
+          form.addEventListener('iron-form-reset', ironFormResetSpy);
+
+          form.reset();
+          
+          expect(nativeResetSpy.callCount).to.be.equal(1);
+          expect(ironFormResetSpy.callCount).to.be.equal(1);
+          done();
+        });
+      });
+
+      test('handles <form> `reset` event', function(done) {
+        var form = fixture('resetting');
+
+        // Wait one tick for observeNodes.
+        Polymer.Base.async(function() {
+          var nativeResetSpy = sinon.stub();
+          var ironFormResetSpy = sinon.stub();
+          form.addEventListener('reset', nativeResetSpy);
+          form.addEventListener('iron-form-reset', ironFormResetSpy);
+
+          form.querySelector('[type=reset]').click();
+          
+          expect(nativeResetSpy.callCount).to.be.equal(1);
+          expect(ironFormResetSpy.callCount).to.be.equal(1);
+          done();
+        });
+      });
+
+      test('handles reset when triggered by other events', function(done) {
+        var form = fixture('resetting');
+
+        // Wait one tick for observeNodes.
+        Polymer.Base.async(function() {
+          var nativeResetSpy = sinon.stub();
+          var ironFormResetSpy = sinon.stub();
+          form.addEventListener('reset', nativeResetSpy);
+          form.addEventListener('iron-form-reset', ironFormResetSpy);
+
+          var input = document.getElementById('input1');
+          input.addEventListener('click', function(event) {
+            form.reset(event);
+          });
+          input.click();
+          
+          expect(nativeResetSpy.callCount).to.be.equal(1);
+          expect(ironFormResetSpy.callCount).to.be.equal(1);
+          done();
         });
       });
     });
