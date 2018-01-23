@@ -62,7 +62,7 @@ they are required to have a `name` and a `value` attribute (which the behaviour
   method.
 - the `serialize` method has been renamed to `serializeForm` (because Polymer 2.0
   is already using a `serialize` method, and we can't stomp over it)
-- in `iron-form` 2.x, the `reset` and `submit` methods now accept and `event` as
+- in `iron-form` 2.x, the `reset` and `submit` methods now accept an `event` as
 input, which will be prevented if it exists.
 - the `disableNativeValidationUi` property has been removed: because `iron-form`
 is no longer a type extension, it can't actually trigger any native UI, so
