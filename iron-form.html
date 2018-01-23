@@ -203,6 +203,9 @@ attach it to the `<iron-form>`:
        * @event iron-form-error
        */
 
+      /**
+       * @return {void}
+       */
       attached: function() {
         this._nodeObserver = Polymer.dom(this).observeNodes(
           function(mutations) {
@@ -216,6 +219,9 @@ attach it to the `<iron-form>`:
           }.bind(this));
       },
 
+      /**
+       * @return {void}
+       */
       detached: function() {
         if (this._nodeObserver) {
           Polymer.dom(this).unobserveNodes(this._nodeObserver);
@@ -272,6 +278,9 @@ attach it to the `<iron-form>`:
 
       /**
        * Submits the form.
+       *
+       * @param {!Event} event
+       * @return {void}
        */
       submit: function(event) {
         // We are not using this form for submission, so always cancel its event.
@@ -316,6 +325,9 @@ attach it to the `<iron-form>`:
 
       /**
        * Resets the form to the default values.
+       *
+       * @param {!Event} event
+       * @return {void}
        */
       reset: function(event) {
         // We are not using this form for submission, so always cancel its event.
@@ -353,7 +365,7 @@ attach it to the `<iron-form>`:
        * Serializes the form as will be used in submission. Note that `serialize`
        * is a Polymer reserved keyword, so calling `someIronForm`.serialize()`
        * will give you unexpected results.
-       * @return {Object} An object containing name-value pairs for elements that
+       * @return {!Object<string, *>} An object containing name-value pairs for elements that
        *                  would be submitted.
        */
       serializeForm: function() {
