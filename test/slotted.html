@@ -22,6 +22,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 </head>
 <body>
+  <dom-module id="container-slot">
+    <template>
+      <slot></slot>
+    </template>
+    <script>
+    HTMLImports.whenReady(function() {
+      Polymer({is: 'container-slot'});
+    });
+    </script>
+  </dom-module>
+
   <dom-module id="slotted-form">
     <template>
       <iron-form id="form">
@@ -101,6 +112,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </template>
   </test-fixture>
 
+  <test-fixture id="nested-slotted-with-container">
+    <template>
+      <iron-form>
+        <form>
+          <container-slot>
+            <paper-checkbox name="papercheck" checked></paper-checkbox>
+          </container-slot>
+        </form>
+      </iron-form>
+    </template>
+  </test-fixture>
+
   <script>
     suite('slotted', function() {
       var form;
@@ -160,6 +183,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               server.respond();
             }, 1);
           });
+
+          suite('with a non-participating container', function() {
+            setup(function() {
+              form = fixture('nested-slotted-with-container');
+            });
+            test('does not serialize components twice', function(done) {
+              // Wait one tick for observeNodes.
+              Polymer.Base.async(function() {
+                var serialized = form.serializeForm();
+                expect(form.serializeForm()).to.deep.equal({papercheck: 'on'});
+                done();
+              }, 1);
+            });
+          })
         });
       });
 
