@@ -835,14 +835,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var form = fixture('resetting');
 
         // Wait one tick for observeNodes.
-        Polymer.Base.async(function() { 
+        Polymer.Base.async(function() {
           var nativeResetSpy = sinon.stub();
           var ironFormResetSpy = sinon.stub();
           form.addEventListener('reset', nativeResetSpy);
           form.addEventListener('iron-form-reset', ironFormResetSpy);
 
           form.reset();
-          
+
           expect(nativeResetSpy.callCount).to.be.equal(1);
           expect(ironFormResetSpy.callCount).to.be.equal(1);
           done();
@@ -860,7 +860,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           form.addEventListener('iron-form-reset', ironFormResetSpy);
 
           form.querySelector('[type=reset]').click();
-          
+
           expect(nativeResetSpy.callCount).to.be.equal(1);
           expect(ironFormResetSpy.callCount).to.be.equal(1);
           done();
@@ -882,7 +882,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             form.reset(event);
           });
           input.click();
-          
+
           expect(nativeResetSpy.callCount).to.be.equal(1);
           expect(ironFormResetSpy.callCount).to.be.equal(1);
           done();
