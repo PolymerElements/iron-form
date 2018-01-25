@@ -416,52 +416,24 @@ attach it to the `<iron-form>`:
         return this._findElements(this._form, false);
       },
 
-      _findElements: function(parent, ignoreName) {
-        var node = parent.firstElementChild;
+      _findElements: function(parent, ignoreName, skipSlots) {
+        var selector = skipSlots ? ':not(slot):not(content)' : '*';
+        var nodes = Polymer.dom(parent).querySelectorAll(selector);
         var submittable = [];
 
-        // This algorithm is O(3n) in terms of nodes. It traverses depth-first
-        // downwards, but potentially skips subtrees if they have a shadowRoot.
-        // While this outer loop traverses down, at the end of this while loop
-        // we traverse up with another while-loop with stop-condition of our parent.
-        while (node) {
-          // If this note is not submittable itself, but it does have a shadowRoot,
-          // we have to traverse into the root, but not into its lightdom children.
-          // These lightdom children will be captured later in the slot assignedNodes
-          // in the shadowRoot
-          if (!isSubmittable(node, ignoreName) && node.root) {
-            Array.prototype.push.apply(submittable, this._findElements(node.root, ignoreName));
-          } else if (node.localName === 'slot' || node.localName === 'content') {
+        for (var i = 0; i < nodes.length; i++) {
+          var node = nodes[i];
+          // An element is submittable if it is not disabled, and if it has a
+          // name attribute.
+          if (node.localName === 'slot' || node.localName === 'content') {
             handleSubmittableInSlot(submittable, node, ignoreName);
-
-            // In this case we have to traverse down to the children,
-            // to see if we have more children in divs/submittables that we need
-            // to add and we know they are not in a projected shadowRoot
-          } else {
-            if (isSubmittable(node, ignoreName)) {
-              submittable.push(node);
-            }
-
-            // Check if we have children and if so traverse into it
-            if (node.firstElementChild) {
-              node = node.firstElementChild;
-              continue;
-            }
+          } else if (isSubmittable(node, ignoreName)) {
+            submittable.push(node);
+          } else if (node.root) {
+            Array.prototype.push.apply(submittable,
+              this._findElements(node.root, ignoreName, true /* skipSlots */));
           }
-
-          // At this point, we have no children, but maybe one of our parents has
-          // Therefore traverse up the parent tree and check if they have a sibling.
-          // Make sure not to traverse too far past our own parent.
-          while (node && !node.nextElementSibling) {
-            node = node.parentNode;
-
-            if (node === parent) {
-              return submittable;
-            }
-          }
-          node = node.nextElementSibling;
         }
-
         return submittable;
       },
 
