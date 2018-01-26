@@ -67,3 +67,11 @@ input, which will be prevented if it exists.
 - the `disableNativeValidationUi` property has been removed: because `iron-form`
 is no longer a type extension, it can't actually trigger any native UI, so
 this property is essentially always true.
+- the `contentType` property has been removed in favor of the native [`<form enctype>` 
+attribute](https://developer.mozilla.org/en-US/docs/Web/API/HTMLFormElement/enctype);
+you can still use the `application/json` value e.g.
+```html
+<iron-form>
+  <form enctype="application/json"> ... </form>
+</iron-form>
+```
