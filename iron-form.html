@@ -421,11 +421,11 @@ attach it to the `<iron-form>`:
       },
 
       _getValidatableElements: function() {
-        return this._findElements(this._form, true);
+        return this._findElements(this._form, true /* ignoreName */, false /* skipSlots */);
       },
 
       _getSubmittableElements: function() {
-        return this._findElements(this._form, false);
+        return this._findElements(this._form, false /* ignoreName */, false /* skipSlots */);
       },
 
       _findElements: function(parent, ignoreName, skipSlots) {
