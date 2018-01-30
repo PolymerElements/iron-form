@@ -207,16 +207,25 @@ attach it to the `<iron-form>`:
        * @return {void}
        */
       attached: function() {
-        this._nodeObserver = Polymer.dom(this).observeNodes(
-          function(mutations) {
-            for (var i = 0; i < mutations.addedNodes.length; i++) {
-              if (mutations.addedNodes[i].tagName === 'FORM' && !this._alreadyCalledInit) {
-                this._alreadyCalledInit = true;
-                this._form = mutations.addedNodes[i];
-                this._init();
+        if (this._form) {
+          return;
+        }
+        this._form = Polymer.dom(this).querySelector('form');
+        if (this._form) {
+          this._init();
+        } else {
+          this._nodeObserver = Polymer.dom(this).observeNodes(
+            function(mutations) {
+              for (var i = 0; i < mutations.addedNodes.length; i++) {
+                if (mutations.addedNodes[i].tagName === 'FORM') {
+                  this._form = mutations.addedNodes[i];
+                  this._init();
+                  Polymer.dom(this).unobserveNodes(this._nodeObserver);
+                  this._nodeObserver = null;
+                }
               }
-            }
-          }.bind(this));
+            }.bind(this));
+        }
       },
 
       /**
