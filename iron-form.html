@@ -98,8 +98,11 @@ attach it to the `<iron-form>`:
   (function() {
     function isSubmittable(node, ignoreName) {
       // An element is submittable if it is not disabled, and if it has a
-      // 'name' attribute
-      return  (!node.disabled && (ignoreName || node.name));
+      // 'name' attribute. If we ignore the name, check if is validatable.
+      // This allows `_findElements` to decide if to explore an element's shadowRoot or not:
+      // an element implementing `validate()` is considered validatable, and we don't
+      // search for validatables in its shadowRoot.
+      return  (!node.disabled && (ignoreName ? typeof node.validate === 'function' : node.name));
     }
 
     /**
