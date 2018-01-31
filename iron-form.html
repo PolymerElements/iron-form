@@ -207,16 +207,37 @@ attach it to the `<iron-form>`:
        * @return {void}
        */
       attached: function() {
-        this._nodeObserver = Polymer.dom(this).observeNodes(
-          function(mutations) {
-            for (var i = 0; i < mutations.addedNodes.length; i++) {
-              if (mutations.addedNodes[i].tagName === 'FORM' && !this._alreadyCalledInit) {
-                this._alreadyCalledInit = true;
-                this._form = mutations.addedNodes[i];
-                this._init();
+        // We might have been detached then re-attached.
+        // Avoid searching again for the <form> if we already found it.
+        if (this._form) {
+          return;
+        }
+        // Search for the `<form>`, if we don't find it, observe for
+        // mutations.
+        this._form = Polymer.dom(this).querySelector('form');
+        if (this._form) {
+          this._init();
+          // Since some elements might not be upgraded yet at this time,
+          // we won't be able to look into their shadowRoots for submittables.
+          // We wait a tick and check again for any missing submittable default
+          // values.
+          this.async(this._saveInitialValues.bind(this));
+        } else {
+          this._nodeObserver = Polymer.dom(this).observeNodes(
+            function(mutations) {
+              for (var i = 0; i < mutations.addedNodes.length; i++) {
+                if (mutations.addedNodes[i].tagName === 'FORM') {
+                  this._form = mutations.addedNodes[i];
+                  // At this point in time, all custom elements are expected
+                  // to be upgraded, hence we'll be able to traverse their
+                  // shadowRoots.
+                  this._init();
+                  Polymer.dom(this).unobserveNodes(this._nodeObserver);
+                  this._nodeObserver = null;
+                }
               }
-            }
-          }.bind(this));
+            }.bind(this));
+        }
       },
 
       /**
@@ -235,6 +256,10 @@ attach it to the `<iron-form>`:
 
         // Save the initial values.
         this._defaults = this._defaults || new WeakMap();
+        this._saveInitialValues();
+      },
+
+      _saveInitialValues: function() {
         var nodes = this._getSubmittableElements();
         for (var i = 0; i < nodes.length; i++) {
           var node = nodes[i];
