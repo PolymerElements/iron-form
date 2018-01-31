@@ -207,7 +207,8 @@ attach it to the `<iron-form>`:
        * @return {void}
        */
       attached: function() {
-        // We've already found the `<form>`, return.
+        // We might have been detached then re-attached.
+        // Avoid searching again for the <form> if we already found it.
         if (this._form) {
           return;
         }
