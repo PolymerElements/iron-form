@@ -1,0 +1,10 @@
+{
+  "name": "@polymer/iron-form",
+  "private": true,
+  "description": "Wrapper around native form that submits native and custom elements",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/PolymerElements/iron-form.git"
+  },
+  "license": "http://polymer.github.io/LICENSE.txt"
+}
