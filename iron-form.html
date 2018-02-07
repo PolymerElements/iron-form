@@ -264,14 +264,16 @@ attach it to the `<iron-form>`:
 
       _saveInitialValues: function() {
         var nodes = this._getSubmittableElements();
+        var props = ['value', 'checked', 'invalid'];
         for (var i = 0; i < nodes.length; i++) {
           var node = nodes[i];
           if (!this._defaults.has(node)) {
-            this._defaults.set(node, {
-              checked: node.checked,
-              value: node.value,
-              invalid: node.invalid,
-            });
+            this._defaults.set(node, props.reduce(function(defaults, prop) {
+              if (prop in node) {
+                defaults[prop] = node[prop];
+              }
+              return defaults;
+            }, {}));
           }
         }
       },
@@ -382,9 +384,9 @@ attach it to the `<iron-form>`:
           var node = nodes[i];
           if (this._defaults.has(node)) {
             var defaults = this._defaults.get(node);
-            node.value = defaults.value;
-            node.checked = defaults.checked;
-            node.invalid = defaults.invalid;
+            for (var propName in defaults) {
+              node[propName] = defaults[propName];
+            }
           }
         }
 
