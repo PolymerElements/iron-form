@@ -264,16 +264,23 @@ attach it to the `<iron-form>`:
 
       _saveInitialValues: function() {
         var nodes = this._getSubmittableElements();
-        var props = ['value', 'checked', 'invalid'];
         for (var i = 0; i < nodes.length; i++) {
           var node = nodes[i];
           if (!this._defaults.has(node)) {
-            this._defaults.set(node, props.reduce(function(defaults, prop) {
-              if (prop in node) {
-                defaults[prop] = node[prop];
-              }
-              return defaults;
-            }, {}));
+            // Submittables are expected to have `value` property,
+            // that's what gets serialized.
+            var defaults = {
+              value: node.value
+            };
+            if ('checked' in node) {
+              defaults.checked = node.checked;
+            }
+            // In 1.x iron-form would reset `invalid`, so 
+            // keep it here for backwards compat.
+            if ('invalid' in node) {
+              defaults.invalid = node.invalid;
+            }
+            this._defaults.set(node, defaults);
           }
         }
       },
