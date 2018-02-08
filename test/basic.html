@@ -226,7 +226,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <paper-checkbox name="papercheck1" id="papercheck1" checked></paper-checkbox>
           <paper-checkbox name="papercheck2" id="papercheck2"></paper-checkbox>
           <paper-input name="paper1" id="paper1" value="paper1"></paper-input>
-          <paper-input name="paper2" id="paper2" value=""></paper-input>
+          <paper-input name="paper2" id="paper2" value="" required auto-validate></paper-input>
           <input type="reset">
         </form>
       </iron-form>
@@ -919,6 +919,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           expect(nativeResetSpy.callCount).to.be.equal(1);
           expect(ironFormResetSpy.callCount).to.be.equal(1);
+          done();
+        });
+      });
+
+      test('restores invalid property', function(done) {
+        var form = fixture('resetting');
+        // Wait one tick for observeNodes.
+        Polymer.Base.async(function() {
+          var input = document.getElementById('paper2');
+          input.value = '123';
+          assert.isFalse(input.invalid, 'invalid updated after user input');
+          form.reset();
+          assert.equal(input.value, '', 'value restored');
+          assert.isFalse(input.invalid, 'invalid restored');
           done();
         });
       });
