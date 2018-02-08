@@ -125,13 +125,12 @@ attach it to the `<iron-form>`:
         // getDistributedNodes flattens the tree.
         if (isSubmittable(assignedNodes[i], ignoreName)) {
           submittable.push(assignedNodes[i]);
-        }
-
-        var nestedAssignedNodes = Polymer.dom(assignedNodes[i]).queryDistributedElements('*');
-
-        for (var j = 0; j < nestedAssignedNodes.length; j++) {
-          if (isSubmittable(nestedAssignedNodes[j], ignoreName)) {
-            submittable.push(nestedAssignedNodes[j]);
+        } else {
+          var nestedAssignedNodes = Polymer.dom(assignedNodes[i]).querySelectorAll('*');
+          for (var j = 0; j < nestedAssignedNodes.length; j++) {
+            if (isSubmittable(nestedAssignedNodes[j], ignoreName)) {
+              submittable.push(nestedAssignedNodes[j]);
+            }
           }
         }
       }
