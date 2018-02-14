@@ -139,6 +139,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </test-fixture>
 
   <script>
+    'use strict';
     suite('slotted', function() {
       var form;
       var server;
@@ -241,6 +242,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     suite('resetting', function() {
       var inputs;
+      var form;
       setup(function() {
         form = fixture('slotted-reset').$.form;
         var slot = form.querySelector('slot,content');
