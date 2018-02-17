@@ -130,7 +130,6 @@ interface IronFormElement extends Polymer.Element {
   _makeAjaxRequest(json: any): void;
   _getValidatableElements(): any;
   _getSubmittableElements(): any;
-  _findElements(parent: any, ignoreName: any, skipSlots: any): any;
   _serializeElementValues(element: any): any;
   _serializeSelectValues(element: any): any;
   _serializeInputValues(element: any): any;
