@@ -96,8 +96,8 @@ interface IronFormElement extends Polymer.Element {
   withCredentials: boolean|null|undefined;
   attached(): void;
   detached(): void;
-  _init(): any;
-  _saveInitialValues(): any;
+  _init(): void;
+  _saveInitialValues(): void;
 
   /**
    * Validates all the required elements (custom and native) in the form.
@@ -125,9 +125,9 @@ interface IronFormElement extends Polymer.Element {
    *                  would be submitted.
    */
   serializeForm(): {[key: string]: any};
-  _handleFormResponse(event: any): any;
-  _handleFormError(event: any): any;
-  _makeAjaxRequest(json: any): any;
+  _handleFormResponse(event: any): void;
+  _handleFormError(event: any): void;
+  _makeAjaxRequest(json: any): void;
   _getValidatableElements(): any;
   _getSubmittableElements(): any;
   _findElements(parent: any, ignoreName: any, skipSlots: any): any;
@@ -135,7 +135,7 @@ interface IronFormElement extends Polymer.Element {
   _serializeSelectValues(element: any): any;
   _serializeInputValues(element: any): any;
   _createHiddenElement(name: any, value: any): any;
-  _addSerializedElement(json: any, name: any, value: any): any;
+  _addSerializedElement(json: any, name: any, value: any): void;
 }
 
 interface HTMLElementTagNameMap {
