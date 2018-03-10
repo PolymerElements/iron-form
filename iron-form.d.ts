@@ -34,12 +34,21 @@
  * want to submit it from a custom element's click handler, you need to explicitly
  * call the `iron-form`'s `submit` method.
  *
- *   Example:
+ *   Example (using `<paper-button>` for the form `<iron-form id="myForm">`):
  *
- *     <paper-button raised onclick="submitForm()">Submit</paper-button>
+    <paper-button raised on-tap="submitForm">Submit</paper-button>
  *
  *     function submitForm() {
- *       document.getElementById('iron-form').submit();
+ *       this.$.myForm.submit();
+ *     }
+ *
+ *   or (using `<button>` for the same form):
+ *
+ *     <button raised onclick="submitForm()">Submit</button>
+ *
+ *     function submitForm() {
+ *       // `this.$.myForm.submit();`  or
+ *       document.getElementById('myForm').submit();
  *     }
  *
  * If you are not using the `allow-redirect` mode, then you also have the option of
