@@ -184,7 +184,7 @@ attach it to the `<iron-form>`:
           // we won't be able to look into their shadowRoots for submittables.
           // We wait a tick and check again for any missing submittable default
           // values.
-          this.async(this._saveInitialValues.bind(this));
+          this.async(this._saveInitialValues.bind(this), 1);
         } else {
           this._nodeObserver = Polymer.dom(this).observeNodes(
             function(mutations) {
