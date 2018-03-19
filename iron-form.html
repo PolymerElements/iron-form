@@ -42,12 +42,11 @@ call the `iron-form`'s `submit` method.
       this.$.myForm.submit();
     }
 
-  or (using `<button>` for the same form):
+  or (using `<button>` for a form in the same document):
 
     <button raised onclick="submitForm()">Submit</button>
 
     function submitForm() {
-      // `this.$.myForm.submit();`  or
       document.getElementById('myForm').submit();
     }
 
