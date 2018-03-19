@@ -219,6 +219,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <form action="/get" method="get">
           <input type="input" name="input1" id="input1" value="input1">
           <input type="input" name="input2" id="input2">
+          <paper-input id="inputNoName"></paper-input>
           <input type="checkbox" name="check1" id="check1" checked>
           <input type="checkbox" name="check2" id="check2">
           <input type="radio" name="radio1" id="radio1" checked>
@@ -843,6 +844,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         // Wait one tick for observeNodes.
         Polymer.Base.async(function() {
           var initial = form.serializeForm();
+          var initialEmptyInputValue =  document.getElementById('inputNoName').value;
           expect(JSON.stringify(initial)).to.be.equal('{"input1":"input1","input2":"","check1":"on","radio1":"on","papercheck1":"on","paper1":"paper1","paper2":""}');
 
           // Modify all the values, flip all the inputs.
@@ -856,12 +858,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           document.getElementById('papercheck2').checked = true;
           document.getElementById('paper1').value = 'paper1++';
           document.getElementById('paper2').value = 'paper2++';
+          document.getElementById('inputNoName').value = 'inputNoName';
+		 
 
           var updated = form.serializeForm();
           expect(JSON.stringify(updated)).to.not.be.equal(initial);
           form.reset();
           var final = form.serializeForm();
           expect(JSON.stringify(initial)).to.be.equal(JSON.stringify(final));
+          expect(document.getElementById('inputNoName').value).to.be.equal(initialEmptyInputValue);
           done();
         });
       });
