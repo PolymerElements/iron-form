@@ -233,11 +233,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </template>
   </test-fixture>
 
-  <test-fixture id="reset-dynamic">
+  <test-fixture id="reset-dynamic-polymer1">
     <template>
       <iron-form>
         <form action="/get" method="get">
+          <template id="repeat" is="dom-repeat" >
+              <paper-input name="paper_[[index]]" id="paper_[[index]]" value="input"></paper-input>
+          </template>
+        </form>
+      </iron-form>
+    </template>
+  </test-fixture>
 
+  <test-fixture id="reset-dynamic-polymer2">
+    <template>
+      <iron-form>
+        <form action="/get" method="get">
           <dom-repeat id="repeat">
             <template>
                 <paper-input name="paper_[[index]]" id="paper_[[index]]" value="input"></paper-input>
@@ -882,11 +893,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       })
 
       test('reset dynamic element', function(done) {
-        var form = fixture('reset-dynamic');
+        var form;
+
+        if (Polymer.Element) {
+          form = fixture('reset-dynamic-polymer2');
+        } else {
+          form = fixture('reset-dynamic-polymer1');
+        }
 
         document.getElementById('repeat').items = ['item'];
-       
+
         Polymer.Base.async(function() {
+
           document.getElementById('paper_0').value = 'input1++';
 
           form.reset();
