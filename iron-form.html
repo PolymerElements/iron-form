@@ -224,6 +224,7 @@ attach it to the `<iron-form>`:
       _init: function() {
         this._form.addEventListener('submit', this.submit.bind(this));
         this._form.addEventListener('reset', this.reset.bind(this));
+        this.addEventListener("dom-change", this._saveInitialValues.bind(this));
 
         // Save the initial values.
         this._defaults = this._defaults || new WeakMap();
