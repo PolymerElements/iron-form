@@ -241,11 +241,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <template id="repeat" is="dom-repeat" >
               <paper-input name="paper_[[index]]" id="paper_[[index]]" value="input"></paper-input>
           </template>
-
           <template id="if" is="dom-if" >>
                <paper-input value="dynamic field" id="dynamic_if"> </paper-input>
           </template>
-
         </form>
       </iron-form>
     </template>
@@ -919,16 +917,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         document.getElementById('repeat').items = ['item'];
       
-
         Polymer.Base.async(function() {
 
           document.getElementById('paper_0').value = 'input1++';
           document.getElementById('if').if = true;
 
           Polymer.Base.async(function() {
-
             document.getElementById('dynamic_if').value = 'input1++';
-
             form.reset();
             
             expect(document.getElementById('paper_0').value).to.be.equal('input');
