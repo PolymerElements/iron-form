@@ -234,6 +234,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </template>
   </test-fixture>
 
+  <test-fixture id="reset-disabled">
+	<template>
+		<iron-form>
+		  <form action="/get" method="get">
+			<paper-input name="paper1" id="disabled_element" value="paper1" disabled="true"></paper-input>
+			<input type="reset">
+		  </form>
+		</iron-form>
+	  </template>
+  </test-fixture>
+
   <test-fixture id="reset-dynamic-polymer1">
     <template>
       <iron-form>
@@ -896,6 +907,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           done();
         });
       })
+
+      test('reset a dynamically enabled element', function(done) {
+        var form = fixture('reset-disabled');
+
+        Polymer.Base.async(function() {
+			document.getElementById('disabled_element').disabled = false;
+			document.getElementById('disabled_element').value = 'input1++';
+			form.reset();
+			expect(document.getElementById('disabled_element').value).to.be.equal('paper1');
+			done();
+        }, 1);
+	})
 
       test('reset dynamic element', function(done) {
         var form;
