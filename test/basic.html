@@ -908,17 +908,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         });
       })
 
-	   test('reset a dynamically enabled element', function(done) {
+      test('reset a dynamically enabled element', function(done) {
         var form = fixture('reset-disabled');
 
-		Polymer.Base.async(function() {
+        Polymer.Base.async(function() {
 			document.getElementById('disabled_element').disabled = false;
 			document.getElementById('disabled_element').value = 'input1++';
 			form.reset();
 			expect(document.getElementById('disabled_element').value).to.be.equal('paper1');
-		done();
-		}, 1);
-      })
+			done();
+        }, 1);
+	})
 
       test('reset dynamic element', function(done) {
         var form;
