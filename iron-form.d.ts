@@ -98,8 +98,9 @@ interface IronFormElement extends Polymer.Element {
   headers: object|null|undefined;
 
   /**
-   * Set the `withCredentials` flag on the request. See PolymerElements/iron-ajax for
-   * more details. Only works when `allowRedirect` is false.
+   * Set the `withCredentials` flag on the request. See
+   * PolymerElements/iron-ajax for more details. Only works when
+   * `allowRedirect` is false.
    */
   withCredentials: boolean|null|undefined;
   attached(): void;
