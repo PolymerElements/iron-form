@@ -22,16 +22,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 </head>
 <body>
-  <dom-module id="x-input-wrapper">
-    <template>
-      <input name="check_wrapped" value="foo"/>
-    </template>
-    <script>
-      HTMLImports.whenReady(function() {
-        Polymer({is: 'x-input-wrapper'});
-      });
-      </script>
-  </dom-module>
 
   <dom-module id="container-slot">
     <template>
@@ -83,7 +73,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <input name="input" value="some" />
           </div>
         </div>
-        <x-input-wrapper></x-input-wrapper>
       </slotted-form>
     </template>
   </test-fixture>
@@ -167,7 +156,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         });
         test('serializes both normal and distributed nodes', function(done) {
           form.addEventListener('iron-form-response', function(event) {
-            var expectedUrl = encodeURI('/get?original=works&checkbox=on&input=some&check_wrapped=foo');
+            var expectedUrl = encodeURI('/get?original=works&checkbox=on&input=some');
             expect(event.detail.url).to.equal(expectedUrl);
             expect(event.detail.response.success).to.be.equal(true);
             done();

@@ -499,8 +499,6 @@ attach it to the `<iron-form>`:
       _searchSubmittable: function(submittable, node, ignoreName) {
         if (this._isSubmittable(node, ignoreName)) {
           submittable.push(node);
-        } else if (node.root) {
-          this._findElements(node.root, ignoreName, true /* skipSlots */, submittable);
         }
       },
 
