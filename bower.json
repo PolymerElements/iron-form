@@ -1,6 +1,6 @@
 {
   "name": "iron-form",
-  "version": "2.0.0",
+  "version": "2.3.0",
   "description": "Wrapper around native form that submits native and custom elements",
   "keywords": [
     "web-components",
@@ -34,6 +34,7 @@
     "paper-listbox": "PolymerElements/paper-listbox#1 - 2",
     "paper-spinner": "PolymerElements/paper-spinner#1 - 2",
     "paper-styles": "PolymerElements/paper-styles#1 - 2",
+    "web-animations-js": "web-animations/web-animations-js#^2.2",
     "web-component-tester": "Polymer/web-component-tester#^6.0.0",
     "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0"
   },
@@ -55,6 +56,7 @@
         "paper-spinner": "PolymerElements/paper-spinner#^1.0.0",
         "paper-styles": "PolymerElements/paper-styles#^1.0.0",
         "test-fixture": "PolymerElements/test-fixture#^1.0.0",
+        "web-animations-js": "web-animations/web-animations-js#^2.2",
         "web-component-tester": "Polymer/web-component-tester#^4.0.0",
         "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
       },
