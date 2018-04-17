@@ -24,12 +24,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 </head>
 <body>
 
-  <dom-module id="x-input-wrapper">
-    <template>
-      <input name="check_wrapped" value="foo"/>
-    </template>
-  </dom-module>
-
   <dom-module id="paper-input-wrapper">
     <template>
       <paper-input required/>
@@ -113,7 +107,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <paper-input type="number" name="number1" value="35"></paper-input>
             <paper-input name="empty" value=""></paper-input>
             <paper-input name="empty" value=""></paper-input>
-            <x-input-wrapper></x-input-wrapper>
           </form>
         </iron-form>
         <iron-form id="nested-elements">
@@ -292,7 +285,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       var server;
 
       suiteSetup(function () {
-        Polymer({is: 'x-input-wrapper'});
         Polymer({is: 'paper-input-wrapper'});
       });
 
