@@ -228,6 +228,14 @@ Polymer({
     // Save the initial values.
     this._defaults = this._defaults || new WeakMap();
     this._saveInitialValues();
+
+    // Create elements helper.
+    this.elements = {};
+    for (const e of this._getSubmittableElements()) {
+      if (e.name) {
+        this.elements[e.name] = e;
+      }
+    }
   },
 
   _saveInitialValues: function() {
