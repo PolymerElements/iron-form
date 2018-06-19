@@ -226,11 +226,26 @@ attach it to the `<iron-form>`:
         this._saveInitialValues();
       },
 
-      _saveInitialValues: function() {
+      /**
+       * Saves the values of all form elements that will be used when resetting
+       * the form. Initially called asynchronously on attach. Any time you
+       * call this function, the previously saved values for a form element will
+       * be overwritten.
+       *
+       * This function is useful if you are dynamically adding elements to
+       * the form, or if your elements are asynchronously setting their values.
+       * @return {void}
+       */
+      saveResetValues: function() {
+        this._saveInitialValues(true);
+      },
+
+
+      _saveInitialValues: function(overwriteValues) {
         var nodes = this._getValidatableElements();
         for (var i = 0; i < nodes.length; i++) {
           var node = nodes[i];
-          if (!this._defaults.has(node)) {
+          if (!this._defaults.has(node) || overwriteValues) {
             // Submittables are expected to have `value` property,
             // that's what gets serialized.
             var defaults = {value: node.value};

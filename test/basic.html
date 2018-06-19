@@ -865,6 +865,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         // Wait one tick for observeNodes.
         Polymer.Base.async(function() {
+          // HACK: In the test, the form runs the initial values before paper-input
+          // reliably saved its default value, so udpate the default values here
+          // again.
+          form.saveResetValues();
           var initial = form.serializeForm();
           var initialEmptyInputValue = document.getElementById('inputNoName').value;
           expect(JSON.stringify(initial))
