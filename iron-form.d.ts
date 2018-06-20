@@ -106,7 +106,18 @@ interface IronFormElement extends Polymer.Element {
   attached(): void;
   detached(): void;
   _init(): void;
-  _saveInitialValues(): void;
+
+  /**
+   * Saves the values of all form elements that will be used when resetting
+   * the form. Initially called asynchronously on attach. Any time you
+   * call this function, the previously saved values for a form element will
+   * be overwritten.
+   *
+   * This function is useful if you are dynamically adding elements to
+   * the form, or if your elements are asynchronously setting their values.
+   */
+  saveResetValues(): void;
+  _saveInitialValues(overwriteValues: any): void;
 
   /**
    * Validates all the required elements (custom and native) in the form.
