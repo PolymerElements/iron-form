@@ -117,7 +117,7 @@ interface IronFormElement extends Polymer.Element {
    * the form, or if your elements are asynchronously setting their values.
    */
   saveResetValues(): void;
-  _saveInitialValues(overwriteValues: any): void;
+  _saveInitialValues(overwriteValues?: boolean): void;
 
   /**
    * Validates all the required elements (custom and native) in the form.
