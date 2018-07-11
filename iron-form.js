@@ -1,20 +1,28 @@
 /**
 @license
 Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+This code may only be used under the BSD style license found at
+http://polymer.github.io/LICENSE.txt The complete set of authors may be found at
+http://polymer.github.io/AUTHORS.txt The complete set of contributors may be
+found at http://polymer.github.io/CONTRIBUTORS.txt Code distributed by Google as
+part of the polymer project is also subject to an additional IP rights grant
+found at http://polymer.github.io/PATENTS.txt
 */
+import '@polymer/polymer/polymer-legacy.js';
+import '@polymer/iron-ajax/iron-ajax.js';
+
+import {Polymer} from '@polymer/polymer/lib/legacy/polymer-fn.js';
+import {dom} from '@polymer/polymer/lib/legacy/polymer.dom.js';
+import {html} from '@polymer/polymer/lib/utils/html-tag.js';
+
 /**
 `<iron-form>` is a wrapper around the HTML `<form>` element, that can
 validate and submit both custom and native HTML elements. Note that this
 is a breaking change from iron-form 1.0, which was a type extension.
 
-It has two modes: if `allow-redirect` is true, then after the form submission you
-will be redirected to the server response. Otherwise, if it is false, it will
-use an `iron-ajax` element to submit the form contents to the server.
+It has two modes: if `allow-redirect` is true, then after the form submission
+you will be redirected to the server response. Otherwise, if it is false, it
+will use an `iron-ajax` element to submit the form contents to the server.
 
   Example:
 
@@ -47,12 +55,14 @@ call the `iron-form`'s `submit` method.
     }
 
 If you are not using the `allow-redirect` mode, then you also have the option of
-customizing the request sent to the server. To do so, you can listen to the `iron-form-presubmit`
-event, and modify the form's [`iron-ajax`](https://elements.polymer-project.org/elements/iron-ajax)
-object. However, If you want to not use `iron-ajax` at all, you can cancel the
-event and do your own custom submission:
+customizing the request sent to the server. To do so, you can listen to the
+`iron-form-presubmit` event, and modify the form's
+[`iron-ajax`](https://elements.polymer-project.org/elements/iron-ajax) object.
+However, If you want to not use `iron-ajax` at all, you can cancel the event and
+do your own custom submission:
 
-  Example of modifying the request, but still using the build-in form submission:
+  Example of modifying the request, but still using the build-in form
+submission:
 
     form.addEventListener('iron-form-presubmit', function() {
       this.request.method = 'put';
@@ -82,18 +92,6 @@ attach it to the `<iron-form>`:
 @hero hero.svg
 @demo demo/index.html
 */
-/*
-  FIXME(polymer-modulizer): the above comments were extracted
-  from HTML and may be out of place here. Review them and
-  then delete this comment!
-*/
-import '@polymer/polymer/polymer-legacy.js';
-
-import '@polymer/iron-ajax/iron-ajax.js';
-import { Polymer } from '@polymer/polymer/lib/legacy/polymer-fn.js';
-import { html } from '@polymer/polymer/lib/utils/html-tag.js';
-import { dom } from '@polymer/polymer/lib/legacy/polymer.dom.js';
-
 Polymer({
   _template: html`
     <style>
@@ -505,8 +503,7 @@ Polymer({
       // Note: assignedNodes does not contain <slot> or <content> because
       // getDistributedNodes flattens the tree.
       this._searchSubmittable(submittable, assignedNodes[i], ignoreName);
-      var nestedAssignedNodes =
-          dom(assignedNodes[i]).querySelectorAll('*');
+      var nestedAssignedNodes = dom(assignedNodes[i]).querySelectorAll('*');
       for (var j = 0; j < nestedAssignedNodes.length; j++) {
         this._searchSubmittable(
             submittable, nestedAssignedNodes[j], ignoreName);

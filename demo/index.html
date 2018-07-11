@@ -32,62 +32,54 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script type="module" src="../iron-form.js"></script>
   <script type="module" src="./cats-only.js"></script>
 
-  <!-- FIXME(polymer-modulizer):
-        These imperative modules that innerHTML your HTML are
-        a hacky way to be sure that any mixins in included style
-        modules are ready before any elements that reference them are
-        instantiated, otherwise the CSS @apply mixin polyfill won't be
-        able to expand the underlying CSS custom properties.
-        See: https://github.com/Polymer/polymer-modulizer/issues/154
-        -->
-    <script type="module">
-const $_documentContainer = document.createElement('template');
-
-$_documentContainer.innerHTML = `<custom-style>
-    <style is="custom-style" include="demo-pages-shared-styles">
-      input, paper-input, paper-checkbox {
-        margin-bottom: 8px;
-      }
-      iron-form {
-        @apply --shadow-elevation-2dp;
-        padding: 20px;
-      }
-      paper-button {
-        display: inline-block;
-        width: 45%;
-        text-align: center;
-      }
-      #form1 paper-button {
-        width: 30%;
-      }
-      paper-button:not([disabled]) {
-        background: #03a9f4;
-        color: white;
-      }
-      paper-spinner {
-        width: 14px;
-        height: 14px;
-        margin-right: 20px;
-      }
-      paper-spinner[hidden] {
-        display: none;
-      }
-      .output {
-        margin-top: 20px;
-        word-wrap: break-word;
-        font-family: monospace;
-      }
-    </style>
-  </custom-style>`;
-
-document.body.appendChild($_documentContainer.content);
-</script>
+  <script type="module">
+    import {html} from '@polymer/polymer/lib/utils/html-tag.js';
+    const template = html`
+    <custom-style>
+      <style is="custom-style" include="demo-pages-shared-styles">
+        input, paper-input, paper-checkbox {
+          margin-bottom: 8px;
+        }
+        iron-form {
+          @apply --shadow-elevation-2dp;
+          padding: 20px;
+        }
+        paper-button {
+          display: inline-block;
+          width: 45%;
+          text-align: center;
+        }
+        #form1 paper-button {
+          width: 30%;
+        }
+        paper-button:not([disabled]) {
+          background: #03a9f4;
+          color: white;
+        }
+        paper-spinner {
+          width: 14px;
+          height: 14px;
+          margin-right: 20px;
+        }
+        paper-spinner[hidden] {
+          display: none;
+        }
+        .output {
+          margin-top: 20px;
+          word-wrap: break-word;
+          font-family: monospace;
+        }
+      </style>
+    </custom-style>`;
+    document.body.appendChild(template.content);
+  </script>
 </head>
 <body unresolved>
   <script type="module">
-const $_documentContainer = document.createElement('template');
+    const $_documentContainer = document.createElement('template');
 
-$_documentContainer.innerHTML = `<div class="vertical-section-container centered">
+    $_documentContainer.innerHTML =
+        `<div class="vertical-section-container centered">
     <h3><code>iron-form</code> works with native and custom elements, and can prevent automatic redirection</h3>
     <demo-snippet>
       <template>
@@ -271,8 +263,8 @@ $_documentContainer.innerHTML = `<div class="vertical-section-container centered
     </demo-snippet>
   </div>`;
 
-document.body.appendChild($_documentContainer.content);
-</script>);
+    document.body.appendChild($_documentContainer.content);
+  </script>
 }
 </script>
       </template>
