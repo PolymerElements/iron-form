@@ -16,78 +16,66 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
 
-  <script src="../../../@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
+  <script src="https://unpkg.com/@webcomponents/webcomponentsjs@^2.0.0/webcomponents-loader.js"></script>
   <!-- Ensure Web Animations polyfill is loaded since neon-animation 2.0 doesn't import it -->
-  <link rel="import" href="../../neon-animation/web-animations.html">
-  <script type="module" src="../../iron-demo-helpers/demo-snippet.js"></script>
-  <script type="module" src="../../iron-demo-helpers/demo-pages-shared-styles.js"></script>
-  <script type="module" src="../../paper-input/paper-input.js"></script>
-  <script type="module" src="../../paper-button/paper-button.js"></script>
-  <script type="module" src="../../paper-checkbox/paper-checkbox.js"></script>
-  <script type="module" src="../../paper-dropdown-menu/paper-dropdown-menu.js"></script>
-  <script type="module" src="../../paper-item/paper-item.js"></script>
-  <script type="module" src="../../paper-listbox/paper-listbox.js"></script>
-  <script type="module" src="../../paper-spinner/paper-spinner.js"></script>
-  <script type="module" src="../../paper-styles/shadow.js"></script>
-  <script type="module" src="../iron-form.js"></script>
-  <script type="module" src="./cats-only.js"></script>
+  <script src="https://unpkg.com/web-animations-js@^2.0.0/web-animations-next-lite.min.js"></script>
+  <script type="module">
+    import '@polymer/iron-demo-helpers/demo-snippet.js';
+    import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+    import '@polymer/paper-input/paper-input.js';
+    import '@polymer/paper-button/paper-button.js';
+    import '@polymer/paper-checkbox/paper-checkbox.js';
+    import '@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
+    import '@polymer/paper-item/paper-item.js';
+    import '@polymer/paper-listbox/paper-listbox.js';
+    import '@polymer/paper-spinner/paper-spinner.js';
+    import '@polymer/paper-styles/shadow.js';
+    import '../iron-form.js';
+    import './cats-only.js';
 
-  <!-- FIXME(polymer-modulizer):
-        These imperative modules that innerHTML your HTML are
-        a hacky way to be sure that any mixins in included style
-        modules are ready before any elements that reference them are
-        instantiated, otherwise the CSS @apply mixin polyfill won't be
-        able to expand the underlying CSS custom properties.
-        See: https://github.com/Polymer/polymer-modulizer/issues/154
-        -->
-    <script type="module">
-const $_documentContainer = document.createElement('template');
-
-$_documentContainer.innerHTML = `<custom-style>
-    <style is="custom-style" include="demo-pages-shared-styles">
-      input, paper-input, paper-checkbox {
-        margin-bottom: 8px;
-      }
-      iron-form {
-        @apply --shadow-elevation-2dp;
-        padding: 20px;
-      }
-      paper-button {
-        display: inline-block;
-        width: 45%;
-        text-align: center;
-      }
-      #form1 paper-button {
-        width: 30%;
-      }
-      paper-button:not([disabled]) {
-        background: #03a9f4;
-        color: white;
-      }
-      paper-spinner {
-        width: 14px;
-        height: 14px;
-        margin-right: 20px;
-      }
-      paper-spinner[hidden] {
-        display: none;
-      }
-      .output {
-        margin-top: 20px;
-        word-wrap: break-word;
-        font-family: monospace;
-      }
-    </style>
-  </custom-style>`;
-
-document.body.appendChild($_documentContainer.content);
-</script>
+    import {html} from '@polymer/polymer/lib/utils/html-tag.js';
+    const template = html`
+    <custom-style>
+      <style is="custom-style" include="demo-pages-shared-styles">
+        input, paper-input, paper-checkbox {
+          margin-bottom: 8px;
+        }
+        iron-form {
+          @apply --shadow-elevation-2dp;
+          padding: 20px;
+        }
+        paper-button {
+          display: inline-block;
+          width: 45%;
+          text-align: center;
+        }
+        #form1 paper-button {
+          width: 30%;
+        }
+        paper-button:not([disabled]) {
+          background: #03a9f4;
+          color: white;
+        }
+        paper-spinner {
+          width: 14px;
+          height: 14px;
+          margin-right: 20px;
+        }
+        paper-spinner[hidden] {
+          display: none;
+        }
+        .output {
+          margin-top: 20px;
+          word-wrap: break-word;
+          font-family: monospace;
+        }
+      </style>
+    </custom-style>`;
+    document.body.appendChild(template.content);
+  </script>
 </head>
 <body unresolved>
-  <script type="module">
-const $_documentContainer = document.createElement('template');
-
-$_documentContainer.innerHTML = `<div class="vertical-section-container centered">
+  <div class="vertical-section-container centered">
     <h3><code>iron-form</code> works with native and custom elements, and can prevent automatic redirection</h3>
     <demo-snippet>
       <template>
@@ -113,9 +101,9 @@ $_documentContainer.innerHTML = `<div class="vertical-section-container centered
               </paper-listbox>
             </paper-dropdown-menu>
             <br><br>
-            <paper-button raised="" onclick="form1.submit()">Submit</paper-button>
-            <paper-button raised="" onclick="form1.reset()">Reset</paper-button>
-            <paper-button raised="" onclick="form1.validate()">Validate</paper-button>
+            <paper-button raised onclick="form1.submit()">Submit</paper-button>
+            <paper-button raised onclick="form1.reset()">Reset</paper-button>
+            <paper-button raised onclick="form1.validate()">Validate</paper-button>
           </form>
           <br>
           <div class="output"></div>
@@ -124,7 +112,7 @@ $_documentContainer.innerHTML = `<div class="vertical-section-container centered
           form1.addEventListener('iron-form-submit', function(event) {
             this.querySelector('.output').innerHTML = JSON.stringify(event.detail);
           });
-        &lt;/script>
+        </script>
       </template>
     </demo-snippet>
 
@@ -143,8 +131,8 @@ $_documentContainer.innerHTML = `<div class="vertical-section-container centered
 
             <p>Using a custom element to submit the form will not display
             the native browser validation UI:</p>
-            <paper-button raised="" onclick="form2.submit()">Submit</paper-button>
-            <paper-button raised="" onclick="form2.reset()">Reset</paper-button>
+            <paper-button raised onclick="form2.submit()">Submit</paper-button>
+            <paper-button raised onclick="form2.reset()">Reset</paper-button>
           </form>
           <br>
           <div class="output"></div>
@@ -153,7 +141,7 @@ $_documentContainer.innerHTML = `<div class="vertical-section-container centered
           form2.addEventListener('iron-form-submit', function(event) {
             this.querySelector('.output').innerHTML = JSON.stringify(event.detail);
           });
-        &lt;/script>
+        </script>
       </template>
     </demo-snippet>
 
@@ -163,8 +151,8 @@ $_documentContainer.innerHTML = `<div class="vertical-section-container centered
         <iron-form id="form3">
           <form action="/foo" method="get">
             <paper-input name="name" label="Name" value="Batman" required=""></paper-input>
-            <paper-button raised="" onclick="form3.submit()">Submit</paper-button>
-            <paper-button raised="" onclick="form3.reset()">Reset</paper-button>
+            <paper-button raised onclick="form3.submit()">Submit</paper-button>
+            <paper-button raised onclick="form3.reset()">Reset</paper-button>
           </form>
           <div class="output"></div>
         </iron-form>
@@ -175,7 +163,7 @@ $_documentContainer.innerHTML = `<div class="vertical-section-container centered
           form3.addEventListener('iron-form-submit', function(event) {
             this.querySelector('.output').innerHTML = JSON.stringify(event.detail);
           });
-        &lt;/script>
+        </script>
       </template>
     </demo-snippet>
 
@@ -190,9 +178,9 @@ $_documentContainer.innerHTML = `<div class="vertical-section-container centered
             <paper-input name="name" label="Name" required="" auto-validate=""></paper-input>
             <paper-checkbox name="read" required="">You must check this box</paper-checkbox><br>
 
-            <paper-button raised="" onclick="_delayedSubmit(event)" disabled="" id="form4Submit">
+            <paper-button raised onclick="_delayedSubmit(event)" disabled="" id="form4Submit">
               <paper-spinner id="spinner" hidden=""></paper-spinner>Submit</paper-button>
-            <paper-button raised="" onclick="form4.reset()">Reset</paper-button>
+            <paper-button raised onclick="form4.reset()">Reset</paper-button>
           </form>
           <div class="output"></div>
         </iron-form>
@@ -216,7 +204,7 @@ $_documentContainer.innerHTML = `<div class="vertical-section-container centered
               form4.submit()
             }, 1000);
           }
-        &lt;/script>
+        </script>
       </template>
     </demo-snippet>
 
@@ -231,8 +219,8 @@ $_documentContainer.innerHTML = `<div class="vertical-section-container centered
             <input name="animal" placeholder="animal" required="" value="meerkat"><br>
             <paper-checkbox name="cheese" required="">Cheese</paper-checkbox>
             <br>
-            <paper-button raised="" onclick="form5.submit()">Submit</paper-button>
-            <paper-button raised="" onclick="form5.reset()">Reset</paper-button>
+            <paper-button raised onclick="form5.submit()">Submit</paper-button>
+            <paper-button raised onclick="form5.reset()">Reset</paper-button>
           </form>
           <div class="output"></div>
         </iron-form>
@@ -240,7 +228,7 @@ $_documentContainer.innerHTML = `<div class="vertical-section-container centered
           form5.addEventListener('iron-form-submit', function(event) {
             this.querySelector('.output').innerHTML = JSON.stringify(event.detail);
           });
-        &lt;/script>
+        </script>
       </template>
     </demo-snippet>
 
@@ -257,8 +245,8 @@ $_documentContainer.innerHTML = `<div class="vertical-section-container centered
 
             <input type="submit" value="Submit">
             <br>
-            <paper-button raised="" onclick="form6.submit()">Submit</paper-button>
-            <paper-button raised="" onclick="form6.reset()">Reset</paper-button>
+            <paper-button raised onclick="form6.submit()">Submit</paper-button>
+            <paper-button raised onclick="form6.reset()">Reset</paper-button>
           </form>
           <div class="output"></div>
         </iron-form>
@@ -266,92 +254,9 @@ $_documentContainer.innerHTML = `<div class="vertical-section-container centered
           form6.addEventListener('iron-form-submit', function(event) {
             this.querySelector('.output').innerHTML = JSON.stringify(event.detail);
           });
-        &lt;/script>
-      </template>
-    </demo-snippet>
-  </div>`;
-
-document.body.appendChild($_documentContainer.content);
-</script>);
-}
-</script>
-      </template>
-    </demo-snippet>
-
-
-    <h3>Iron-form respects the <code>novalidate</code> form attribute</h3>
-    <demo-snippet>
-      <template>
-        <iron-form id="form5">
-          <form method="get" action="/foo" novalidate>
-            <paper-input name="name" label="Name" required></paper-input>
-            <cats-only name="cats"></cats-only>
-            <input name="animal" placeholder="animal" required value="meerkat"><br>
-            <paper-checkbox name="cheese" required>Cheese</paper-checkbox>
-            <br>
-            <paper-button raised onclick="form5.submit()">Submit</paper-button>
-            <paper-button raised onclick="form5.reset()">Reset</paper-button>
-          </form>
-          <div class="output"></div>
-        </iron-form>
-        <script type="module">
-import '@polymer/iron-demo-helpers/demo-snippet.js';
-import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
-import '@polymer/paper-input/paper-input.js';
-import '@polymer/paper-button/paper-button.js';
-import '@polymer/paper-checkbox/paper-checkbox.js';
-import '@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
-import '@polymer/paper-item/paper-item.js';
-import '@polymer/paper-listbox/paper-listbox.js';
-import '@polymer/paper-spinner/paper-spinner.js';
-import '@polymer/paper-styles/shadow.js';
-import '../iron-form.js';
-import './cats-only.js';
-form5.addEventListener('iron-form-submit', function(event) {
-  this.querySelector('.output').innerHTML = JSON.stringify(event.detail);
-});
-</script>
-      </template>
-    </demo-snippet>
-
-    <h3><code>iron-form</code> respects nested elements</h3>
-    <demo-snippet>
-      <template>
-        <iron-form id="form6">
-          <form method="get" action="/foo">
-            <p>
-              <input name="name" label="Name" required>
-              <cats-only name="cats"></cats-only>
-              <paper-checkbox name="cheese" required>Cheese</paper-checkbox>
-            </p>
-
-            <input type="submit" value="Submit">
-            <br>
-            <paper-button raised onclick="form6.submit()">Submit</paper-button>
-            <paper-button raised onclick="form6.reset()">Reset</paper-button>
-          </form>
-          <div class="output"></div>
-        </iron-form>
-        <script type="module">
-import '@polymer/iron-demo-helpers/demo-snippet.js';
-import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
-import '@polymer/paper-input/paper-input.js';
-import '@polymer/paper-button/paper-button.js';
-import '@polymer/paper-checkbox/paper-checkbox.js';
-import '@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
-import '@polymer/paper-item/paper-item.js';
-import '@polymer/paper-listbox/paper-listbox.js';
-import '@polymer/paper-spinner/paper-spinner.js';
-import '@polymer/paper-styles/shadow.js';
-import '../iron-form.js';
-import './cats-only.js';
-form6.addEventListener('iron-form-submit', function(event) {
-  this.querySelector('.output').innerHTML = JSON.stringify(event.detail);
-});
-</script>
+        </script>
       </template>
     </demo-snippet>
   </div>
-
 </body>
 </html>
