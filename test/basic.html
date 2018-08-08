@@ -77,8 +77,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <input type="text" name="input2" value="bar">
             <input type="password" name="pass1" value="pass">
             <input type="number" name="number1" value="35">
-            <input name="empty" value="">
-            <input name="empty" value="">
+            <input name="empty" value>
+            <input name="empty" value>
           </form>
         </iron-form>
         <iron-form id="native-inputs-empty">
@@ -97,14 +97,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </iron-form>
         <iron-form id="custom-inputs">
           <form action="/get" method="get">
-            <paper-input name="input1" value=""></paper-input>
+            <paper-input name="input1" value></paper-input>
             <paper-input name="input1" value="foo"></paper-input>
             <paper-input name="input1" value="zag"></paper-input>
             <paper-input name="input2" value="bar"></paper-input>
             <paper-input type="password" name="pass1" value="pass"></paper-input>
             <paper-input type="number" name="number1" value="35"></paper-input>
-            <paper-input name="empty" value=""></paper-input>
-            <paper-input name="empty" value=""></paper-input>
+            <paper-input name="empty" value></paper-input>
+            <paper-input name="empty" value></paper-input>
             <x-input-wrapper></x-input-wrapper>
           </form>
         </iron-form>
@@ -128,14 +128,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </iron-form>
         <iron-form id="duplicate-names">
           <form action="/get" method="get">
-            <input name="input1" value="">
+            <input name="input1" value>
             <input name="input1" value="foo">
-            <paper-input name="input1" value=""></paper-input>
+            <paper-input name="input1" value></paper-input>
             <paper-input name="input1" value="bar"></paper-input>
-            <input name="empty" value="">
-            <input name="empty" value="">
-            <paper-input name="empty" value=""></paper-input>
-            <paper-input name="empty" value=""></paper-input>
+            <input name="empty" value>
+            <input name="empty" value>
+            <paper-input name="empty" value></paper-input>
+            <paper-input name="empty" value></paper-input>
           </form>
         </iron-form>
 
@@ -219,7 +219,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <paper-checkbox name="papercheck1" id="papercheck1" checked></paper-checkbox>
           <paper-checkbox name="papercheck2" id="papercheck2"></paper-checkbox>
           <paper-input name="paper1" id="paper1" value="paper1"></paper-input>
-          <paper-input name="paper2" id="paper2" value="" required auto-validate></paper-input>
+          <paper-input name="paper2" id="paper2" value required auto-validate></paper-input>
           <input type="reset">
         </form>
       </iron-form>
