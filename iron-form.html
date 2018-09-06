@@ -99,7 +99,7 @@ attach it to the `<iron-form>`:
     <slot></slot>
 
     <!-- This form is used for submission -->
-    <form id="helper" action$="[[action]]" method$="[[method]]" enctype$="[[enctype]]"></form>
+    <form class="helper" action$="[[action]]" method$="[[method]]" enctype$="[[enctype]]"></form>
   </template>
 
   <script>
@@ -318,7 +318,7 @@ attach it to the `<iron-form>`:
 
         // Remove any existing children in the submission form (from a previous
         // submit).
-        this.$.helper.textContent = '';
+        this.$$('.helper').textContent = '';
 
         var json = this.serializeForm();
 
@@ -327,17 +327,17 @@ attach it to the `<iron-form>`:
           // If we're submitting the form natively, then create a hidden element for
           // each of the values.
           for (var element in json) {
-            this.$.helper.appendChild(
+            this.$$('.helper').appendChild(
                 this._createHiddenElement(element, json[element]));
           }
 
           // Copy the original form attributes.
-          this.$.helper.action = this._form.getAttribute('action');
-          this.$.helper.method = this._form.getAttribute('method') || 'GET';
-          this.$.helper.contentType = this._form.getAttribute('enctype') ||
+          this.$$('.helper').action = this._form.getAttribute('action');
+          this.$$('.helper').method = this._form.getAttribute('method') || 'GET';
+          this.$$('.helper').contentType = this._form.getAttribute('enctype') ||
               'application/x-www-form-urlencoded';
 
-          this.$.helper.submit();
+          this.$$('.helper').submit();
           this.fire('iron-form-submit');
         } else {
           this._makeAjaxRequest(json);
