@@ -15,14 +15,14 @@
   "devDependencies": {
     "webmat": "^0.2.0",
     "@polymer/iron-demo-helpers": "^3.0.1",
-    "@polymer/paper-button": "^3.0.0-pre.25",
-    "@polymer/paper-checkbox": "^3.0.0-pre.25",
-    "@polymer/paper-dropdown-menu": "^3.0.0-pre.25",
-    "@polymer/paper-input": "^3.0.0-pre.25",
-    "@polymer/paper-item": "^3.0.0-pre.25",
-    "@polymer/paper-listbox": "^3.0.0-pre.25",
-    "@polymer/paper-spinner": "^3.0.0-pre.25",
-    "@polymer/paper-styles": "^3.0.0-pre.25",
+    "@polymer/paper-button": "^3.0.0-pre.26",
+    "@polymer/paper-checkbox": "^3.0.0-pre.26",
+    "@polymer/paper-dropdown-menu": "^3.0.0-pre.26",
+    "@polymer/paper-input": "^3.0.0-pre.26",
+    "@polymer/paper-item": "^3.0.0-pre.26",
+    "@polymer/paper-listbox": "^3.0.0-pre.26",
+    "@polymer/paper-spinner": "^3.0.0-pre.26",
+    "@polymer/paper-styles": "^3.0.0-pre.26",
     "web-animations-js": "^2.3.1",
     "wct-browser-legacy": "^1.0.1",
     "@webcomponents/webcomponentsjs": "^2.0.0",
@@ -38,6 +38,6 @@
   "author": "The Polymer Authors",
   "dependencies": {
     "@polymer/polymer": "^3.0.0",
-    "@polymer/iron-ajax": "^3.0.0-pre.25"
+    "@polymer/iron-ajax": "^3.0.0-pre.26"
   }
 }
