@@ -92,15 +92,6 @@ attach it to the `<actindo-form>`:
 
     <!-- This form is used for submission -->
     <form id="helper" action$="[[action]]" method$="[[method]]" enctype$="[[enctype]]"></form>
-
-    <paper-dialog id="dialog">
-        <h2>Error</h2>
-        <paper-dialog-scrollable></paper-dialog-scrollable>
-
-        <div class="buttons">
-            <paper-button dialog-dismiss>Schließen</paper-button>
-        </div>
-    </paper-dialog>
   </template>
 
   <script>
@@ -453,12 +444,28 @@ attach it to the `<actindo-form>`:
             var resp = event.detail.request.response;
             if(resp && typeof resp === 'object')
             {
-                if (resp.fieldValidationMessages && Array.isArray(resp.fieldValidationMessages)) {
-
+                if (!resp.fieldValidationMessages) {
+                  return;
                 }
-                this.$.dialog.querySelector('h2').innerHTML = resp.error;
-                this.$.dialog.querySelector('paper-dialog-scrollable').innerHTML = resp.trace;
-                this.$.dialog.open();
+                if (!Array.isArray(resp.fieldValidationMessages))
+                {
+                  return;
+                }
+                if (!resp.fieldValidationMessages.length)
+                {
+                  return;
+                }
+                const submitableElements = this._getSubmittableElements();
+                const mapNameWithElement = {};
+                submitableElements.forEach( element => {
+                  mapNameWithElement[element.getAttribute('name')] = element 
+                });
+                resp.fieldValidationMessages.forEach( field => {
+                  mapNameWithElement[field.id].errorMessage = field.msg;
+                  mapNameWithElement[field.id].setProperties({
+                    invalid: true
+                  });
+                });
             }
         }
       },
@@ -518,7 +525,8 @@ attach it to the `<actindo-form>`:
           var node = nodes[i];
           // An element is submittable if it is not disabled, and if it has a
           // 'name' attribute.
-          if((ignoreDisabled || !node.disabled) && (ignoreName || node.name)) {
+          // should ignore element with tagName equal to SLOT
+          if((ignoreDisabled || !node.disabled) && (ignoreName || node.name) && node.tagName !== 'SLOT') {
             submittable.push(node);
           }
           else {
