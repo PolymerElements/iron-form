@@ -85,21 +85,79 @@ attach it to the `<actindo-form>`:
       :host {
         display: block;
       }
+        div.slotWrapper
+        {
+            height: 100%;
+            position: relative;
+        }
+        paper-progress
+        {
+            background-color: var(--actindo-primary-light);
+            @apply(--paper-progress-style);
+        }
+        div.overlay
+        {
+            @apply(--font-subheader);
+            background-color: white;
+            z-index: 1;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            @apply(--loading-overlay-style);
+        }
+        div.opacque
+        {
+            opacity: 0.85;
+        }
+        div.overlay div
+        {
+            margin: 1rem 0;
+        }
+        div.backgroundGrey
+        {
+            background-color: var(--actindo-secondary);
+        }
+        paper-spinner-lite
+        {
+            --paper-spinner-color: var(--actindo-primary);
+        }
     </style>
 
     <!-- This form is used to collect the elements that should be submitted -->
-    <slot></slot>
-
+    <div class="slotWrapper">
+        <template is="dom-if" if="[[inLoad]]">
+            <div class="overlay">
+                <div>[[loadingLabel]]</div>
+                <paper-spinner-lite active="[[inLoad]]"></paper-spinner-lite>
+                <!--<paper-progress indeterminate>-->
+                <!--</paper-progress>-->
+            </div>
+        </template>
+        <template is="dom-if" if="[[inSubmit]]">
+            <div class="overlay opacque">
+            </div>
+        </template>
+        <template is="dom-if" if="[[showError]]">
+            <div class="overlay">
+                <h2>Error</h2>
+            </div>
+        </template>
+      <slot></slot>
+    </div>
     <!-- This form is used for submission -->
     <form id="helper" action$="[[action]]" method$="[[method]]" enctype$="[[enctype]]"></form>
 
     <paper-dialog id="dialog">
-        <h2>Error</h2>
+
         <paper-dialog-scrollable></paper-dialog-scrollable>
 
-        <div class="buttons">
-            <paper-button dialog-dismiss>Schließen</paper-button>
-        </div>
+
     </paper-dialog>
   </template>
 
@@ -108,6 +166,19 @@ attach it to the `<actindo-form>`:
       is: 'actindo-form',
 
       properties: {
+
+          /**
+           * Determines label during load
+           */
+          loadingLabel: {
+              type: String
+          },
+
+          showError: {
+              type: Boolean,
+              value: false
+          },
+
           /*
            * Set this to true if you don't want the form to be submitted through an
            * ajax request, and you want the page to redirect to the action URL
@@ -140,6 +211,11 @@ attach it to the `<actindo-form>`:
           loadAction: {
               type: String,
               value: ''
+          },
+
+          loadingLabel: {
+              type: String,
+              value: "Loading data"
           },
 
           /**
@@ -220,6 +296,7 @@ attach it to the `<actindo-form>`:
        */
 
       attached: function() {
+          console.log("attached in form");
         this.inLoad = false;
         this.inSubmit = false;
         this.loadOnInit = false;
@@ -227,6 +304,7 @@ attach it to the `<actindo-form>`:
 
         this._nodeObserver = Polymer.dom(this).observeNodes(
           function(mutations) {
+              console.log("got mutation");
             for (var i = 0; i < mutations.addedNodes.length; i++) {
               if (mutations.addedNodes[i].tagName === 'FORM' && !this._alreadyCalledInit) {
                 this._alreadyCalledInit = true;
@@ -456,9 +534,10 @@ attach it to the `<actindo-form>`:
                 if (resp.fieldValidationMessages && Array.isArray(resp.fieldValidationMessages)) {
 
                 }
-                this.$.dialog.querySelector('h2').innerHTML = resp.error;
-                this.$.dialog.querySelector('paper-dialog-scrollable').innerHTML = resp.trace;
-                this.$.dialog.open();
+                // this.$.dialog.querySelector('h2').innerHTML = resp.error;
+                // this.$.dialog.querySelector('paper-dialog-scrollable').innerHTML = resp.trace;
+                this.showError = true;
+                // this.$.dialog.open();
             }
         }
       },
