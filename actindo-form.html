@@ -92,6 +92,13 @@ attach it to the `<actindo-form>`:
 
     <!-- This form is used for submission -->
     <form id="helper" action$="[[action]]" method$="[[method]]" enctype$="[[enctype]]"></form>
+    <paper-dialog id="dialog">
+      <h2>Error</h2>
+      <paper-dialog-scrollable></paper-dialog-scrollable>
+       <div class="buttons">
+          <paper-button dialog-dismiss>Schließen</paper-button>
+      </div>
+    </paper-dialog>
   </template>
 
   <script>
@@ -436,6 +443,15 @@ attach it to the `<actindo-form>`:
         this.fire('actindo-form-response', event.detail);
       },
 
+      _isShowFieldValidationMessages(resp = {})
+      {
+        if (Array.isArray(resp.fieldValidationMessages) && resp.fieldValidationMessages.length > 0)
+        {
+          return true;
+        }
+        return false;
+      },
+
       _handleFormError: function (event) {
         this.inLoad = this.inSubmit = false;
         this.fire('actindo-form-error', event.detail);
@@ -444,15 +460,11 @@ attach it to the `<actindo-form>`:
             var resp = event.detail.request.response;
             if(resp && typeof resp === 'object')
             {
-                if (!resp.fieldValidationMessages) {
-                  return;
-                }
-                if (!Array.isArray(resp.fieldValidationMessages))
+                if (!this._isShowFieldValidationMessages(resp))
                 {
-                  return;
-                }
-                if (!resp.fieldValidationMessages.length)
-                {
+                  this.$.dialog.querySelector('h2').innerHTML = resp.error;
+                  this.$.dialog.querySelector('paper-dialog-scrollable').innerHTML = resp.trace;
+                  this.$.dialog.open();
                   return;
                 }
                 const submitableElements = this._getSubmittableElements();
