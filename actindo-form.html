@@ -165,6 +165,25 @@ attach it to the `<actindo-form>`:
                 align-items: center;
                 justify-content: space-between;
             }
+
+            div.wrapper
+            {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                flex-direction: column;
+                position: relative;
+            }
+            div.buttonWrapper
+            {
+                position:absolute;
+                bottom: -90%;
+                display: flex;
+                justify-content: center;
+                left:0;
+                right:0
+            }
+
         </style>
 
         <!-- This form is used to collect the elements that should be submitted -->
@@ -184,31 +203,35 @@ attach it to the `<actindo-form>`:
             </template>
             <template is="dom-if" if="[[hasLoadingError]]">
                 <div class="overlay">
-                    <div class="spinnerContainer">
-                        <iron-icon class="circle" icon="actindo-form:circle"></iron-icon>
-                        <iron-icon icon="error" class="error"></iron-icon>
-                    </div>
-                    <div>[[loadErrorMessage]]</div>
-                    <div style="position:absolute; top: 13rem; display: flex; justify-content: center; left:0; right:0">
-                        <paper-button on-click="_retryLoad" raised>
-                            <iron-icon icon="refresh"></iron-icon>
-                            Retry
-                        </paper-button>
+                    <div class="wrapper">
+                        <div class="spinnerContainer">
+                            <iron-icon class="circle" icon="actindo-form:circle"></iron-icon>
+                            <iron-icon icon="error" class="error"></iron-icon>
+                        </div>
+                        [[loadErrorMessage]]
+                        <div class="buttonWrapper">
+                            <paper-button on-click="_closeSubmitError" raised>
+                                <iron-icon icon="close"></iron-icon>
+                                Retry
+                            </paper-button>
+                        </div>
                     </div>
                 </div>
             </template>
             <template is="dom-if" if="[[hasSubmitError]]">
                 <div class="overlay">
-                    <div class="spinnerContainer">
-                        <iron-icon class="circle" icon="actindo-form:circle"></iron-icon>
-                        <iron-icon icon="error" class="error"></iron-icon>
-                    </div>
-                    <div>[[submitErrorMessage]]</div>
-                    <div style="position:absolute; top: 13rem; display: flex; justify-content: center; left:0; right:0">
-                        <paper-button on-click="_closeSubmitError" raised>
-                            <iron-icon icon="close"></iron-icon>
-                            Close
+                    <div class="wrapper">
+                        <div class="spinnerContainer">
+                            <iron-icon class="circle" icon="actindo-form:circle"></iron-icon>
+                            <iron-icon icon="error" class="error"></iron-icon>
+                        </div>
+                        [[submitErrorMessage]]
+                        <div class="buttonWrapper">
+                            <paper-button on-click="_closeSubmitError" raised>
+                                <iron-icon icon="close"></iron-icon>
+                                Close
                         </paper-button>
+                        </div>
                     </div>
                 </div>
             </template>
