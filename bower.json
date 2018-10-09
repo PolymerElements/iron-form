@@ -22,7 +22,9 @@
   "ignore": [],
   "dependencies": {
     "polymer": "Polymer/polymer#^1.1.0",
-    "iron-ajax": "PolymerElements/iron-ajax#^1.0.0"
+    "iron-ajax": "PolymerElements/iron-ajax#^1.0.0",
+    "iron-icon": "PolymerElements/iron-icon#^2.0.0",
+    "iron-iconset-svg": "PolymerElements/iron-iconset-svg#^2.0.0"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",

@@ -7,18 +7,160 @@
       "path": "actindo-form.html",
       "properties": [
         {
+          "name": "loadingLabel",
+          "type": "string",
+          "description": "Determines label during load",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 230,
+              "column": 16
+            },
+            "end": {
+              "line": 232,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "\"Loading data\""
+        },
+        {
+          "name": "loadingParams",
+          "type": "Object",
+          "description": "Parameters used when loading",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 237,
+              "column": 16
+            },
+            "end": {
+              "line": 242,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "{}"
+        },
+        {
+          "name": "loadErrorMessage",
+          "type": "string",
+          "description": "Error message of the last failed load",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 247,
+              "column": 16
+            },
+            "end": {
+              "line": 249,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "hasSubmitError",
+          "type": "boolean",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 251,
+              "column": 16
+            },
+            "end": {
+              "line": 254,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "false"
+        },
+        {
+          "name": "submitErrorMessage",
+          "type": "string",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 256,
+              "column": 16
+            },
+            "end": {
+              "line": 258,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "hasLoadingError",
+          "type": "boolean",
+          "description": "True if has error after loading",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 263,
+              "column": 16
+            },
+            "end": {
+              "line": 267,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true
+            }
+          },
+          "defaultValue": "false"
+        },
+        {
+          "name": "disableSafeButton",
+          "type": "boolean",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 269,
+              "column": 16
+            },
+            "end": {
+              "line": 273,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true,
+              "readOnly": true
+            }
+          }
+        },
+        {
           "name": "allowRedirect",
           "type": "boolean",
           "description": "Set this to true if you don't want the form to be submitted through an\najax request, and you want the page to redirect to the action URL\nafter the form has been submitted.",
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 106,
-              "column": 10
+              "line": 280,
+              "column": 16
             },
             "end": {
-              "line": 109,
-              "column": 11
+              "line": 283,
+              "column": 17
             }
           },
           "metadata": {
@@ -33,12 +175,12 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 114,
-              "column": 10
+              "line": 288,
+              "column": 16
             },
             "end": {
-              "line": 117,
-              "column": 11
+              "line": 293,
+              "column": 17
             }
           },
           "metadata": {
@@ -53,12 +195,12 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 122,
-              "column": 10
+              "line": 298,
+              "column": 16
             },
             "end": {
-              "line": 125,
-              "column": 11
+              "line": 301,
+              "column": 17
             }
           },
           "metadata": {
@@ -73,12 +215,12 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 130,
-              "column": 10
+              "line": 306,
+              "column": 16
             },
             "end": {
-              "line": 133,
-              "column": 11
+              "line": 309,
+              "column": 17
             }
           },
           "metadata": {
@@ -87,18 +229,62 @@
           "defaultValue": "\"\""
         },
         {
+          "name": "inLoad",
+          "type": "boolean",
+          "description": "true if load is active",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 319,
+              "column": 16
+            },
+            "end": {
+              "line": 323,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true
+            }
+          },
+          "defaultValue": "false"
+        },
+        {
+          "name": "inSubmit",
+          "type": "boolean",
+          "description": "true if submit is active",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 328,
+              "column": 16
+            },
+            "end": {
+              "line": 332,
+              "column": 17
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true
+            }
+          },
+          "defaultValue": "false"
+        },
+        {
           "name": "showErrors",
           "type": "boolean",
           "description": "If an error occurs, show a paper-dialog with error & stack trace",
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 138,
-              "column": 10
+              "line": 337,
+              "column": 16
             },
             "end": {
-              "line": 141,
-              "column": 11
+              "line": 340,
+              "column": 17
             }
           },
           "metadata": {
@@ -113,12 +299,12 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 146,
-              "column": 10
+              "line": 345,
+              "column": 16
             },
             "end": {
-              "line": 152,
-              "column": 11
+              "line": 351,
+              "column": 17
             }
           },
           "metadata": {
@@ -136,12 +322,12 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 212,
-              "column": 6
+              "line": 411,
+              "column": 12
             },
             "end": {
-              "line": 228,
-              "column": 7
+              "line": 425,
+              "column": 13
             }
           },
           "metadata": {},
@@ -153,12 +339,12 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 230,
-              "column": 6
+              "line": 427,
+              "column": 12
             },
             "end": {
-              "line": 235,
-              "column": 7
+              "line": 432,
+              "column": 13
             }
           },
           "metadata": {},
@@ -170,16 +356,77 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 237,
-              "column": 6
+              "line": 434,
+              "column": 12
             },
             "end": {
-              "line": 258,
-              "column": 7
+              "line": 456,
+              "column": 13
             }
           },
           "metadata": {},
           "params": []
+        },
+        {
+          "name": "_closeSubmitError",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 458,
+              "column": 12
+            },
+            "end": {
+              "line": 460,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "_retryLoad",
+          "description": "Retries load with previous params",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 465,
+              "column": 12
+            },
+            "end": {
+              "line": 467,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "_disableSafeButton",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 469,
+              "column": 12
+            },
+            "end": {
+              "line": 472,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "inLoad"
+            },
+            {
+              "name": "inSubmit"
+            },
+            {
+              "name": "hasLoadingError"
+            }
+          ]
         },
         {
           "name": "validate",
@@ -187,12 +434,12 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 264,
-              "column": 6
+              "line": 478,
+              "column": 12
             },
             "end": {
-              "line": 282,
-              "column": 7
+              "line": 496,
+              "column": 13
             }
           },
           "metadata": {},
@@ -208,12 +455,12 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 285,
-              "column": 8
+              "line": 499,
+              "column": 12
             },
             "end": {
-              "line": 318,
-              "column": 9
+              "line": 524,
+              "column": 13
             }
           },
           "metadata": {},
@@ -235,12 +482,12 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 323,
-              "column": 6
+              "line": 529,
+              "column": 12
             },
             "end": {
-              "line": 376,
-              "column": 7
+              "line": 581,
+              "column": 13
             }
           },
           "metadata": {},
@@ -256,12 +503,12 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 381,
-              "column": 6
+              "line": 586,
+              "column": 12
             },
             "end": {
-              "line": 403,
-              "column": 7
+              "line": 608,
+              "column": 13
             }
           },
           "metadata": {},
@@ -277,12 +524,12 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 412,
-              "column": 6
+              "line": 617,
+              "column": 12
             },
             "end": {
-              "line": 423,
-              "column": 7
+              "line": 628,
+              "column": 13
             }
           },
           "metadata": {},
@@ -298,12 +545,12 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 425,
-              "column": 6
+              "line": 630,
+              "column": 12
             },
             "end": {
-              "line": 436,
-              "column": 7
+              "line": 640,
+              "column": 13
             }
           },
           "metadata": {},
@@ -314,17 +561,38 @@
           ]
         },
         {
+          "name": "_isShowFieldValidationMessages",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 642,
+              "column": 12
+            },
+            "end": {
+              "line": 647,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "resp = {}"
+            }
+          ]
+        },
+        {
           "name": "_handleFormError",
           "description": "",
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 438,
-              "column": 6
+              "line": 649,
+              "column": 12
             },
             "end": {
-              "line": 471,
-              "column": 7
+              "line": 708,
+              "column": 13
             }
           },
           "metadata": {},
@@ -340,12 +608,12 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 473,
-              "column": 6
+              "line": 710,
+              "column": 12
             },
             "end": {
-              "line": 506,
-              "column": 7
+              "line": 742,
+              "column": 13
             }
           },
           "metadata": {},
@@ -361,12 +629,12 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 508,
-              "column": 6
+              "line": 744,
+              "column": 12
             },
             "end": {
-              "line": 510,
-              "column": 7
+              "line": 746,
+              "column": 13
             }
           },
           "metadata": {},
@@ -378,12 +646,12 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 512,
-              "column": 6
+              "line": 748,
+              "column": 12
             },
             "end": {
-              "line": 514,
-              "column": 7
+              "line": 750,
+              "column": 13
             }
           },
           "metadata": {},
@@ -395,12 +663,12 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 516,
-              "column": 6
+              "line": 752,
+              "column": 12
             },
             "end": {
-              "line": 518,
-              "column": 7
+              "line": 754,
+              "column": 13
             }
           },
           "metadata": {},
@@ -412,12 +680,12 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 520,
-              "column": 6
+              "line": 756,
+              "column": 12
             },
             "end": {
-              "line": 540,
-              "column": 7
+              "line": 776,
+              "column": 13
             }
           },
           "metadata": {},
@@ -439,12 +707,12 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 542,
-              "column": 6
+              "line": 778,
+              "column": 12
             },
             "end": {
-              "line": 574,
-              "column": 7
+              "line": 810,
+              "column": 13
             }
           },
           "metadata": {},
@@ -460,12 +728,12 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 576,
-              "column": 6
+              "line": 812,
+              "column": 12
             },
             "end": {
-              "line": 586,
-              "column": 7
+              "line": 822,
+              "column": 13
             }
           },
           "metadata": {},
@@ -481,12 +749,12 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 588,
-              "column": 6
+              "line": 824,
+              "column": 12
             },
             "end": {
-              "line": 600,
-              "column": 7
+              "line": 836,
+              "column": 13
             }
           },
           "metadata": {},
@@ -502,12 +770,12 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 602,
-              "column": 6
+              "line": 838,
+              "column": 12
             },
             "end": {
-              "line": 608,
-              "column": 7
+              "line": 844,
+              "column": 13
             }
           },
           "metadata": {},
@@ -526,12 +794,12 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 610,
-              "column": 6
+              "line": 846,
+              "column": 12
             },
             "end": {
-              "line": 621,
-              "column": 7
+              "line": 857,
+              "column": 13
             }
           },
           "metadata": {},
@@ -553,12 +821,12 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 626,
-              "column": 6
+              "line": 862,
+              "column": 12
             },
             "end": {
-              "line": 674,
-              "column": 7
+              "line": 906,
+              "column": 13
             }
           },
           "metadata": {},
@@ -574,12 +842,12 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 676,
-              "column": 6
+              "line": 908,
+              "column": 12
             },
             "end": {
-              "line": 753,
-              "column": 7
+              "line": 973,
+              "column": 13
             }
           },
           "metadata": {},
@@ -600,28 +868,140 @@
       "metadata": {},
       "sourceRange": {
         "start": {
-          "line": 97,
-          "column": 12
+          "line": 222,
+          "column": 16
         },
         "end": {
-          "line": 754,
-          "column": 5
+          "line": 974,
+          "column": 9
         }
       },
       "privacy": "public",
       "superclass": "HTMLElement",
       "attributes": [
         {
+          "name": "loading-label",
+          "description": "Determines label during load",
+          "sourceRange": {
+            "start": {
+              "line": 230,
+              "column": 16
+            },
+            "end": {
+              "line": 232,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "loading-params",
+          "description": "Parameters used when loading",
+          "sourceRange": {
+            "start": {
+              "line": 237,
+              "column": 16
+            },
+            "end": {
+              "line": 242,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "Object"
+        },
+        {
+          "name": "load-error-message",
+          "description": "Error message of the last failed load",
+          "sourceRange": {
+            "start": {
+              "line": 247,
+              "column": 16
+            },
+            "end": {
+              "line": 249,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "has-submit-error",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 251,
+              "column": 16
+            },
+            "end": {
+              "line": 254,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "boolean"
+        },
+        {
+          "name": "submit-error-message",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 256,
+              "column": 16
+            },
+            "end": {
+              "line": 258,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "has-loading-error",
+          "description": "True if has error after loading",
+          "sourceRange": {
+            "start": {
+              "line": 263,
+              "column": 16
+            },
+            "end": {
+              "line": 267,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "boolean"
+        },
+        {
+          "name": "disable-safe-button",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 269,
+              "column": 16
+            },
+            "end": {
+              "line": 273,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "boolean"
+        },
+        {
           "name": "allow-redirect",
           "description": "Set this to true if you don't want the form to be submitted through an\najax request, and you want the page to redirect to the action URL\nafter the form has been submitted.",
           "sourceRange": {
             "start": {
-              "line": 106,
-              "column": 10
+              "line": 280,
+              "column": 16
             },
             "end": {
-              "line": 109,
-              "column": 11
+              "line": 283,
+              "column": 17
             }
           },
           "metadata": {},
@@ -632,12 +1012,12 @@
           "description": "HTTP request headers to send. See PolymerElements/iron-ajax for\nmore details. Only works when `allowRedirect` is false.",
           "sourceRange": {
             "start": {
-              "line": 114,
-              "column": 10
+              "line": 288,
+              "column": 16
             },
             "end": {
-              "line": 117,
-              "column": 11
+              "line": 293,
+              "column": 17
             }
           },
           "metadata": {},
@@ -648,12 +1028,12 @@
           "description": "Set the `withCredentials` flag on the request. See PolymerElements/iron-ajax for\nmore details. Only works when `allowRedirect` is false.",
           "sourceRange": {
             "start": {
-              "line": 122,
-              "column": 10
+              "line": 298,
+              "column": 16
             },
             "end": {
-              "line": 125,
-              "column": 11
+              "line": 301,
+              "column": 17
             }
           },
           "metadata": {},
@@ -664,28 +1044,60 @@
           "description": "Load action url",
           "sourceRange": {
             "start": {
-              "line": 130,
-              "column": 10
+              "line": 306,
+              "column": 16
             },
             "end": {
-              "line": 133,
-              "column": 11
+              "line": 309,
+              "column": 17
             }
           },
           "metadata": {},
           "type": "string"
         },
         {
+          "name": "in-load",
+          "description": "true if load is active",
+          "sourceRange": {
+            "start": {
+              "line": 319,
+              "column": 16
+            },
+            "end": {
+              "line": 323,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "boolean"
+        },
+        {
+          "name": "in-submit",
+          "description": "true if submit is active",
+          "sourceRange": {
+            "start": {
+              "line": 328,
+              "column": 16
+            },
+            "end": {
+              "line": 332,
+              "column": 17
+            }
+          },
+          "metadata": {},
+          "type": "boolean"
+        },
+        {
           "name": "show-errors",
           "description": "If an error occurs, show a paper-dialog with error & stack trace",
           "sourceRange": {
             "start": {
-              "line": 138,
-              "column": 10
+              "line": 337,
+              "column": 16
             },
             "end": {
-              "line": 141,
-              "column": 11
+              "line": 340,
+              "column": 17
             }
           },
           "metadata": {},
@@ -696,12 +1108,12 @@
           "description": "last loaded form data",
           "sourceRange": {
             "start": {
-              "line": 146,
-              "column": 10
+              "line": 345,
+              "column": 16
             },
             "end": {
-              "line": 152,
-              "column": 11
+              "line": 351,
+              "column": 17
             }
           },
           "metadata": {},
@@ -765,6 +1177,30 @@
         },
         {
           "type": "CustomEvent",
+          "name": "has-loading-error-changed",
+          "description": "Fired when the `hasLoadingError` property changes.",
+          "metadata": {}
+        },
+        {
+          "type": "CustomEvent",
+          "name": "disable-safe-button-changed",
+          "description": "Fired when the `disableSafeButton` property changes.",
+          "metadata": {}
+        },
+        {
+          "type": "CustomEvent",
+          "name": "in-load-changed",
+          "description": "Fired when the `inLoad` property changes.",
+          "metadata": {}
+        },
+        {
+          "type": "CustomEvent",
+          "name": "in-submit-changed",
+          "description": "Fired when the `inSubmit` property changes.",
+          "metadata": {}
+        },
+        {
+          "type": "CustomEvent",
           "name": "form-data-changed",
           "description": "Fired when the `formData` property changes.",
           "metadata": {}
@@ -781,12 +1217,12 @@
           "range": {
             "file": "actindo-form.html",
             "start": {
-              "line": 90,
-              "column": 4
+              "line": 214,
+              "column": 12
             },
             "end": {
-              "line": 90,
-              "column": 17
+              "line": 214,
+              "column": 25
             }
           }
         }

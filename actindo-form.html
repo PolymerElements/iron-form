@@ -10,7 +10,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../iron-ajax/iron-ajax.html">
-
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="form-icon-set.html">
 <!--
 `<actindo-form>` is a wrapper around the HTML `<form>` element, that can
 validate and submit both custom and native HTML elements. Note that this
@@ -80,763 +81,897 @@ attach it to the `<actindo-form>`:
 -->
 
 <dom-module id="actindo-form">
-  <template>
-    <style>
-      :host {
-        display: block;
-      }
-        div.slotWrapper
-        {
-            height: 100%;
-            position: relative;
-        }
-        paper-progress
-        {
-            background-color: var(--actindo-primary-light);
-            @apply(--paper-progress-style);
-        }
-        div.overlay
-        {
-            @apply(--font-subheader);
-            background-color: white;
-            z-index: 1;
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            @apply(--loading-overlay-style);
-        }
-        div.opacque
-        {
-            opacity: 0.85;
-        }
-        div.overlay div
-        {
-            margin: 1rem 0;
-        }
-        div.backgroundGrey
-        {
-            background-color: var(--actindo-secondary);
-        }
-        paper-spinner-lite
-        {
-            --paper-spinner-color: var(--actindo-primary);
-        }
-    </style>
-
-    <!-- This form is used to collect the elements that should be submitted -->
-    <div class="slotWrapper">
-        <template is="dom-if" if="[[inLoad]]">
-            <div class="overlay">
-                <div>[[loadingLabel]]</div>
-                <paper-spinner-lite active="[[inLoad]]"></paper-spinner-lite>
-                <!--<paper-progress indeterminate>-->
-                <!--</paper-progress>-->
-            </div>
-        </template>
-        <template is="dom-if" if="[[inSubmit]]">
-            <div class="overlay opacque">
-            </div>
-        </template>
-        <template is="dom-if" if="[[showError]]">
-            <div class="overlay">
-                <h2>Error</h2>
-            </div>
-        </template>
-      <slot></slot>
-    </div>
-    <!-- This form is used for submission -->
-    <form id="helper" action$="[[action]]" method$="[[method]]" enctype$="[[enctype]]"></form>
-    </paper-dialog>
-  </template>
-
-  <script>
-    Polymer({
-      is: 'actindo-form',
-
-      properties: {
-
-          /**
-           * Determines label during load
-           */
-          loadingLabel: {
-              type: String
-          },
-
-          showError: {
-              type: Boolean,
-              value: false
-          },
-
-          /*
-           * Set this to true if you don't want the form to be submitted through an
-           * ajax request, and you want the page to redirect to the action URL
-           * after the form has been submitted.
-           */
-          allowRedirect: {
-            type: Boolean,
-            value: false
-          },
-          /**
-          * HTTP request headers to send. See PolymerElements/iron-ajax for
-          * more details. Only works when `allowRedirect` is false.
-          */
-          headers: {
-            type: Object,
-            value: function() { return {}; }
-          },
-          /**
-          * Set the `withCredentials` flag on the request. See PolymerElements/iron-ajax for
-          * more details. Only works when `allowRedirect` is false.
-          */
-          withCredentials: {
-            type: Boolean,
-            value: false
-          },
-
-          /**
-           * Load action url
-           */
-          loadAction: {
-              type: String,
-              value: ''
-          },
-
-          loadingLabel: {
-              type: String,
-              value: "Loading data"
-          },
-
-          /**
-           * If an error occurs, show a paper-dialog with error & stack trace
-           */
-          showErrors: {
-              type: Boolean,
-              value: true
-          },
-
-          /**
-           * last loaded form data
-           */
-          formData: {
-              type: Object,
-              notify: true,
-              value: function() {
-                  return {};
-              }
-          },
-      },
-      /**
-       * Fired before the form is loaded.
-       *
-       * @event actindo-form-preload
-       */
-
-      /**
-       * Fired after the form is loaded.
-       * The request has not yet finished when this event is fired
-       *
-       * @event actindo-form-load
-       */
-
-      /**
-       * Fired after the form is loaded and a response is received. An
-       * IronRequestElement is included as the event.detail object.
-       *
-       * @event actindo-form-load-response
-       */
-
-      /**
-       * Fired if the form cannot be submitted because it's invalid.
-       *
-       * @event actindo-form-invalid
-       */
-
-      /**
-       * Fired after the form is submitted.
-       *
-       * @event actindo-form-submit
-       */
-
-      /**
-       * Fired before the form is submitted.
-       *
-       * @event actindo-form-presubmit
-       */
-
-      /**
-       * Fired after the form is submitted and a response is received. An
-       * IronRequestElement is included as the event.detail object.
-       *
-       * @event actindo-form-response
-      */
-
-      /**
-       * Fired after the form is submitted and an error is received. An
-       * IronRequestElement is included as the event.detail object.
-       *
-       * @event actindo-form-error
-      */
-
-      /**
-       * Fired after the form is reset.
-       *
-       * @event actindo-form-reset
-       */
-
-      attached: function() {
-          console.log("attached in form");
-        this.inLoad = false;
-        this.inSubmit = false;
-        this.loadOnInit = false;
-        this._form = null;
-
-        this._nodeObserver = Polymer.dom(this).observeNodes(
-          function(mutations) {
-              console.log("got mutation");
-            for (var i = 0; i < mutations.addedNodes.length; i++) {
-              if (mutations.addedNodes[i].tagName === 'FORM' && !this._alreadyCalledInit) {
-                this._alreadyCalledInit = true;
-                this._form = mutations.addedNodes[i];
-                this._init();
-              }
+    <template>
+        <style>
+            :host {
+                display: block;
             }
-          }.bind(this));
-      },
 
-      detached: function() {
-        if (this._nodeObserver) {
-          Polymer.dom(this).unobserveNodes(this._nodeObserver);
-          this._nodeObserver = null;
-        }
-      },
-
-      _init: function() {
-        this._form.addEventListener('submit', this.submit.bind(this));
-        this._form.addEventListener('reset', this.reset.bind(this));
-
-        // Save the initial values.
-        this._defaults = this._defaults || new WeakMap();
-        var nodes = this._getSubmittableElements();
-        for (var i = 0; i < nodes.length; i++) {
-          var node = nodes[i];
-          if (!this._defaults.has(node)) {
-            this._defaults.set(node, {
-              checked: node.checked,
-              value: node.value,
-            });
-          }
-        }
-
-        if(this.loadAction && this.loadOnInit)
-        {
-            this.load();
-        }
-      },
-
-      /**
-       * Validates all the required elements (custom and native) in the form.
-       * @return {boolean} True if all the elements are valid.
-       */
-      validate: function() {
-        if (this._form.getAttribute('novalidate') === '')
-          return true;
-
-        // Start by making the form check the native elements it knows about.
-        var valid = this._form.checkValidity();
-        var elements = this._getValidatableElements();
-
-        // Go through all the elements, and validate the custom ones.
-        for (var el, i = 0; el = elements[i], i < elements.length; i++) {
-          // This is weird to appease the compiler. We assume the custom element
-          // has a validate() method, otherwise we can't check it.
-          var validatable = /** @type {{validate: (function() : boolean)}} */ (el);
-          if (validatable.validate) {
-            valid = !!validatable.validate() && valid;
-          }
-        }
-        return valid;
-      },
-
-
-        _flattenFormData: function( object, currentName, flat )
-        {
-            if( object === null || object === undefined )
-            {
-                return;
+            div.slotWrapper {
+                height: 100%;
+                position: relative;
             }
-            if( typeof object === "object" )
-            {
-                if( Array.isArray( object ) )
-                {
-                    for( let i=0;i<object.length;i++)
-                    {
-                        let name = currentName;
-                        name += "["+String(i)+"]";
-                        this._flattenFormData( object[i], name, flat );
+
+            paper-progress {
+                background-color: var(--actindo-primary-light);
+                @apply(--paper-progress-style);
+            }
+
+            div.overlay {
+                @apply(--font-subheader);
+                background-color: white;
+                z-index: 1;
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+                @apply(--loading-overlay-style);
+            }
+
+            div.opacque {
+                opacity: 0.85;
+            }
+
+            div.overlay div {
+                margin: 1rem 0;
+            }
+
+            div.backgroundGrey {
+                background-color: var(--actindo-secondary);
+            }
+
+            paper-spinner-lite {
+                --paper-spinner-color: var(--actindo-primary);
+                --paper-spinner-stroke-width: 4px;
+                width: 60px;
+                height: 60px;
+                z-index: 1;
+            }
+
+            div.spinnerContainer {
+                position: relative;
+            }
+
+            div.spinnerContainer iron-icon.circle {
+                width: 63px;
+                height: 63px;
+
+            }
+
+            div.spinnerContainer iron-icon.circle.absolute {
+                position: absolute;
+                top: -1.4px;
+                left: -1.6px;
+            }
+
+            iron-icon.error {
+                color: var(--actindo-error);
+                position: absolute;
+                top: 6.5px;
+                left: 6.5px;
+                height: 50px;
+                width: 50px;
+            }
+
+            paper-button {
+                color: white;
+                background-color: var(--actindo-primary);
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+        </style>
+
+        <!-- This form is used to collect the elements that should be submitted -->
+        <div class="slotWrapper">
+            <template is="dom-if" if="[[inLoad]]">
+                <div class="overlay">
+                    <div class="spinnerContainer">
+                        <paper-spinner-lite active="[[inLoad]]"></paper-spinner-lite>
+                        <iron-icon class="circle absolute" icon="actindo-form:circle"></iron-icon>
+                    </div>
+                    <div>[[loadingLabel]]</div>
+                </div>
+            </template>
+            <template is="dom-if" if="[[inSubmit]]">
+                <div class="overlay opacque">
+                </div>
+            </template>
+            <template is="dom-if" if="[[hasLoadingError]]">
+                <div class="overlay">
+                    <div class="spinnerContainer">
+                        <iron-icon class="circle" icon="actindo-form:circle"></iron-icon>
+                        <iron-icon icon="error" class="error"></iron-icon>
+                    </div>
+                    <div>[[loadErrorMessage]]</div>
+                    <div style="position:absolute; top: 13rem; display: flex; justify-content: center; left:0; right:0">
+                        <paper-button on-click="_retryLoad" raised>
+                            <iron-icon icon="refresh"></iron-icon>
+                            Retry
+                        </paper-button>
+                    </div>
+                </div>
+            </template>
+            <template is="dom-if" if="[[hasSubmitError]]">
+                <div class="overlay">
+                    <div class="spinnerContainer">
+                        <iron-icon class="circle" icon="actindo-form:circle"></iron-icon>
+                        <iron-icon icon="error" class="error"></iron-icon>
+                    </div>
+                    <div>[[submitErrorMessage]]</div>
+                    <div style="position:absolute; top: 13rem; display: flex; justify-content: center; left:0; right:0">
+                        <paper-button on-click="_closeSubmitError" raised>
+                            <iron-icon icon="close"></iron-icon>
+                            Close
+                        </paper-button>
+                    </div>
+                </div>
+            </template>
+            <slot></slot>
+        </div>
+        <!-- This form is used for submission -->
+        <form id="helper" action$="[[action]]" method$="[[method]]" enctype$="[[enctype]]"></form>
+        </paper-dialog>
+    </template>
+
+    <script>
+        Polymer({
+            is: 'actindo-form',
+
+            properties: {
+
+                /**
+                 * Determines label during load
+                 */
+                loadingLabel: {
+                    type: String
+                },
+
+                /**
+                 * Parameters used when loading
+                 */
+                loadingParams: {
+                    type: Object,
+                    value: function () {
+                        return {}
+                    }
+                },
+
+                /**
+                 * Error message of the last failed load
+                 */
+                loadErrorMessage: {
+                    type: String
+                },
+
+                hasSubmitError: {
+                    type: Boolean,
+                    value: false
+                },
+
+                submitErrorMessage: {
+                    type: String
+                },
+
+                /**
+                 * True if has error after loading
+                 */
+                hasLoadingError: {
+                    type: Boolean,
+                    value: false,
+                    notify: true
+                },
+
+                disableSafeButton: {
+                    type: Boolean,
+                    notify: true,
+                    computed: "_disableSafeButton(inLoad, inSubmit, hasLoadingError)"
+                },
+
+                /*
+                 * Set this to true if you don't want the form to be submitted through an
+                 * ajax request, and you want the page to redirect to the action URL
+                 * after the form has been submitted.
+                 */
+                allowRedirect: {
+                    type: Boolean,
+                    value: false
+                },
+                /**
+                 * HTTP request headers to send. See PolymerElements/iron-ajax for
+                 * more details. Only works when `allowRedirect` is false.
+                 */
+                headers: {
+                    type: Object,
+                    value: function () {
+                        return {};
+                    }
+                },
+                /**
+                 * Set the `withCredentials` flag on the request. See PolymerElements/iron-ajax for
+                 * more details. Only works when `allowRedirect` is false.
+                 */
+                withCredentials: {
+                    type: Boolean,
+                    value: false
+                },
+
+                /**
+                 * Load action url
+                 */
+                loadAction: {
+                    type: String,
+                    value: ''
+                },
+
+                loadingLabel: {
+                    type: String,
+                    value: "Loading data"
+                },
+
+                /**
+                 * true if load is active
+                 */
+                inLoad: {
+                    type: Boolean,
+                    value: false,
+                    notify: true
+                },
+
+                /**
+                 * true if submit is active
+                 */
+                inSubmit: {
+                    type: Boolean,
+                    value: false,
+                    notify: true
+                },
+
+                /**
+                 * If an error occurs, show a paper-dialog with error & stack trace
+                 */
+                showErrors: {
+                    type: Boolean,
+                    value: true
+                },
+
+                /**
+                 * last loaded form data
+                 */
+                formData: {
+                    type: Object,
+                    notify: true,
+                    value: function () {
+                        return {};
+                    }
+                },
+            },
+            /**
+             * Fired before the form is loaded.
+             *
+             * @event actindo-form-preload
+             */
+
+            /**
+             * Fired after the form is loaded.
+             * The request has not yet finished when this event is fired
+             *
+             * @event actindo-form-load
+             */
+
+            /**
+             * Fired after the form is loaded and a response is received. An
+             * IronRequestElement is included as the event.detail object.
+             *
+             * @event actindo-form-load-response
+             */
+
+            /**
+             * Fired if the form cannot be submitted because it's invalid.
+             *
+             * @event actindo-form-invalid
+             */
+
+            /**
+             * Fired after the form is submitted.
+             *
+             * @event actindo-form-submit
+             */
+
+            /**
+             * Fired before the form is submitted.
+             *
+             * @event actindo-form-presubmit
+             */
+
+            /**
+             * Fired after the form is submitted and a response is received. An
+             * IronRequestElement is included as the event.detail object.
+             *
+             * @event actindo-form-response
+             */
+
+            /**
+             * Fired after the form is submitted and an error is received. An
+             * IronRequestElement is included as the event.detail object.
+             *
+             * @event actindo-form-error
+             */
+
+            /**
+             * Fired after the form is reset.
+             *
+             * @event actindo-form-reset
+             */
+
+            attached: function () {
+                this.loadOnInit = false;
+                this._form = null;
+
+                this._nodeObserver = Polymer.dom(this).observeNodes(
+                    function (mutations) {
+                        for (var i = 0; i < mutations.addedNodes.length; i++) {
+                            if (mutations.addedNodes[i].tagName === 'FORM' && !this._alreadyCalledInit) {
+                                this._alreadyCalledInit = true;
+                                this._form = mutations.addedNodes[i];
+                                this._init();
+                            }
+                        }
+                    }.bind(this));
+            },
+
+            detached: function () {
+                if (this._nodeObserver) {
+                    Polymer.dom(this).unobserveNodes(this._nodeObserver);
+                    this._nodeObserver = null;
+                }
+            },
+
+            _init: function () {
+                this._form.addEventListener('submit', this.submit.bind(this));
+                this._form.addEventListener('reset', this.reset.bind(this));
+
+                // Save the initial values.
+                this._defaults = this._defaults || new WeakMap();
+                var nodes = this._getSubmittableElements();
+                for (var i = 0; i < nodes.length; i++) {
+                    var node = nodes[i];
+                    if (!this._defaults.has(node)) {
+                        this._defaults.set(node, {
+                            checked: node.checked,
+                            value: node.value,
+                        });
                     }
                 }
-                else
-                {
-                    let keys = Object.keys( object );
-                    for(let i=0;i<keys.length;i++)
-                    {
-                        let key = keys[i];
-                        let name = currentName;
-                        name += "["+String(key)+"]";
-                        this._flattenFormData(object[key], name, flat);
+
+                if (this.loadAction && this.loadOnInit) {
+                    window.setTimeout(() => {
+                        this.load()
+                    }, 0);
+                }
+            },
+
+            _closeSubmitError: function() {
+                this.hasSubmitError = false;
+            },
+
+            /**
+             * Retries load with previous params
+             */
+            _retryLoad: function () {
+                this.load(this.lastParams);
+            },
+
+            _disableSafeButton: function(inLoad, inSubmit, hasLoadingError)
+            {
+                return inLoad || inSubmit || hasLoadingError;
+            },
+
+            /**
+             * Validates all the required elements (custom and native) in the form.
+             * @return {boolean} True if all the elements are valid.
+             */
+            validate: function () {
+                if (this._form.getAttribute('novalidate') === '')
+                    return true;
+
+                // Start by making the form check the native elements it knows about.
+                var valid = this._form.checkValidity();
+                var elements = this._getValidatableElements();
+
+                // Go through all the elements, and validate the custom ones.
+                for (var el, i = 0; el = elements[i], i < elements.length; i++) {
+                    // This is weird to appease the compiler. We assume the custom element
+                    // has a validate() method, otherwise we can't check it.
+                    var validatable = /** @type {{validate: (function() : boolean)}} */ (el);
+                    if (validatable.validate) {
+                        valid = !!validatable.validate() && valid;
+                    }
+                }
+                return valid;
+            },
+
+
+            _flattenFormData: function (object, currentName, flat) {
+                if (object === null || object === undefined) {
+                    return;
+                }
+                if (typeof object === "object") {
+                    if (Array.isArray(object)) {
+                        for (let i = 0; i < object.length; i++) {
+                            let name = currentName;
+                            name += "[" + String(i) + "]";
+                            this._flattenFormData(object[i], name, flat);
+                        }
+                    }
+                    else {
+                        let keys = Object.keys(object);
+                        for (let i = 0; i < keys.length; i++) {
+                            let key = keys[i];
+                            let name = currentName;
+                            name += "[" + String(key) + "]";
+                            this._flattenFormData(object[key], name, flat);
+                        }
+                    }
+                }
+                else {
+                    flat[currentName] = object;
+                }
+            },
+
+            /**
+             * Submits the form.
+             */
+            submit: function (event) {
+                // We are not using this form for submission, so always cancel its event.
+                if (event) {
+                    event.preventDefault();
+                }
+
+                // If you've called this before distribution happened, bail out.
+                if (!this._form) {
+                    return;
+                }
+
+                if (this.inSubmit || this.inLoad) {
+                    return;
+                }
+
+                if (!this.validate()) {
+                    this.fire('actindo-form-invalid');
+                    return;
+                }
+
+                this.hasSubmitError = false;
+                this.inSubmit = true;
+
+                // Remove any existing children in the submission form (from a previous submit).
+                this.$.helper.textContent = '';
+
+                var json = this.serializeForm();
+
+                let flat = {};
+                let keys = Object.keys(json);
+                for (let i = 0; i < keys.length; i++) {
+                    this._flattenFormData(json[keys[i]], keys[i], flat);
+                }
+
+                // If we want a redirect, submit the form natively.
+                if (this.allowRedirect) {
+                    // If we're submitting the form natively, then create a hidden element for
+                    // each of the values.
+                    for (element in flat) {
+                        this.$.helper.appendChild(this._createHiddenElement(element, flat[element]));
+                    }
+
+                    // Copy the original form attributes.
+                    this.$.helper.action = this._form.getAttribute('action');
+                    this.$.helper.method = this._form.getAttribute('method') || 'GET';
+                    this.$.helper.contentType = this._form.getAttribute('enctype');
+
+                    this.$.helper.submit();
+                    this.fire('actindo-form-submit');
+                } else {
+                    this._makeAjaxRequest(flat);
+                }
+            },
+
+            /**
+             * Resets the form to the default values.
+             */
+            reset: function (event) {
+                // We are not using this form for submission, so always cancel its event.
+                if (event)
+                    event.preventDefault();
+
+                // If you've called this before distribution happened, bail out.
+                if (!this._form) {
+                    return;
+                }
+
+                // Load the initial values.
+                var nodes = this._getSubmittableElements();
+                for (var i = 0; i < nodes.length; i++) {
+                    var node = nodes[i];
+                    if (this._defaults.has(node)) {
+                        var defaults = this._defaults.get(node);
+                        node.value = defaults.value;
+                        node.checked = defaults.checked;
+                    }
+                }
+
+                this.fire('actindo-form-reset');
+            },
+
+            /**
+             * Serializes the form as will be used in submission. Note that `serialize`
+             * is a Polymer reserved keyword, so calling `someIronForm`.serialize()`
+             * will give you unexpected results.
+             * @return {Object} An object containing name-value pairs for elements that
+             *                  would be submitted.
+             */
+            serializeForm: function () {
+                // Only elements that have a `name` and are not disabled are submittable.
+                var elements = this._getSubmittableElements();
+                var json = {};
+                for (var i = 0; i < elements.length; i++) {
+                    var values = this._serializeElementValues(elements[i]);
+                    for (var v = 0; v < values.length; v++) {
+                        this._addSerializedElement(json, elements[i].name, values[v]);
+                    }
+                }
+                return json;
+            },
+
+            _handleFormResponse: function (event) {
+                if (this.inLoad) {
+                    this.inLoad = this.inSubmit = false;
+                    this._fillForm(this.request.lastResponse);
+                    this.fire('actindo-form-load-response', event.detail);
+                    return;
+                }
+
+                this.inLoad = this.inSubmit = false;
+                this.fire('actindo-form-response', event.detail);
+            },
+
+            _isShowFieldValidationMessages(resp = {}) {
+                if (Array.isArray(resp.fieldValidationMessages) && resp.fieldValidationMessages.length > 0) {
+                    return true;
+                }
+                return false;
+            },
+
+            _handleFormError: function (event) {
+                let isLoad = false;
+                if (this.inLoad) {
+                    isLoad = true;
+                }
+                this.inLoad = this.inSubmit = false;
+                this.fire('actindo-form-error', event.detail);
+                if (this.showErrors) {
+                    var resp = event.detail.request.response;
+                    if (resp && typeof resp === 'object') {
+                        if (isLoad) {
+                            this.hasLoadingError = true;
+                            this.loadErrorMessage = resp.error ? resp.error : 'Unknown error occured';
+                            return;
+                        }
+                        if( this._isShowFieldValidationMessages(resp) )
+                        {
+                            const submitableElements = this._getSubmittableElements();
+                            const mapNameWithElement = {};
+                            submitableElements.forEach(element => {
+                                mapNameWithElement[element.getAttribute('name')] = element
+                            });
+
+                            fieldNames = [];
+
+                            resp.fieldValidationMessages.forEach(field => {
+                                if (mapNameWithElement[field.id]) {
+                                    mapNameWithElement[field.id].errorMessage = field.msg;
+                                    if( fieldNames.length < 5 )
+                                    {
+                                        if( mapNameWithElement[field.id].label )
+                                        {
+                                            fieldNames.push( "\""+mapNameWithElement[field.id].label+"\"" );
+                                        }
+                                        else {
+                                            fieldNames.push( "\""+field.id+"\"" );
+                                        }
+                                    }
+                                    else if( fieldNames.length === 5 )
+                                    {
+                                        fieldNames.push( "..." );
+                                    }
+                                    mapNameWithElement[field.id].setProperties({
+                                        invalid: true
+                                    });
+                                }
+                            });
+
+
+                            this.submitErrorMessage = "Fields "+fieldNames.join(", ")+" could not be validated";
+                        }
+                        else
+                        {
+                            this.submitErrorMessage = resp.error ? resp.error : 'Unknown error occured';
+                        }
+                        this.hasSubmitError = true;
+
+                    }
+                }
+            },
+
+            _makeAjaxRequest: function (json) {
+                // Initialize the iron-ajax element if we haven't already.
+                if (!this.request) {
+                    this.request = document.createElement('iron-ajax');
+                    this.request.addEventListener('response', this._handleFormResponse.bind(this));
+                    this.request.addEventListener('error', this._handleFormError.bind(this));
+                }
+
+                // Native forms can also index elements magically by their name (can't make
+                // this up if I tried) so we need to get the correct attributes, not the
+                // elements with those names.
+                this.request.url = this._form.getAttribute('action');
+                this.request.method = this._form.getAttribute('method') || 'GET';
+                this.request.contentType = this._form.getAttribute('enctype');
+                this.request.withCredentials = this.withCredentials;
+                this.request.headers = this.headers;
+
+                if (this._form.method.toUpperCase() === 'POST') {
+                    this.request.body = json;
+                } else {
+                    this.request.params = json;
+                }
+
+                // Allow for a presubmit hook
+                var event = this.fire('actindo-form-presubmit', {}, {cancelable: true});
+                if (!event.defaultPrevented) {
+                    this.request.generateRequest();
+                    this.fire('actindo-form-submit', json);
+                }
+                else {
+                    this.inSubmit = false;
+                }
+            },
+
+            _getValidatableElements: function () {
+                return this._findElements(this._form, true, false);
+            },
+
+            _getSubmittableElements: function () {
+                return this._findElements(this._form, false, false);
+            },
+
+            _getLoadableElements: function () {
+                return this._findElements(this._form, false, true);
+            },
+
+            _findElements: function (parent, ignoreName, ignoreDisabled) {
+                var nodes = Polymer.dom(parent).querySelectorAll('*');
+                var submittable = [];
+
+                for (var i = 0; i < nodes.length; i++) {
+                    var node = nodes[i];
+                    // An element is submittable if it is not disabled, and if it has a
+                    // 'name' attribute.
+                    // should ignore element with tagName equal to SLOT
+                    if ((ignoreDisabled || !node.disabled) && (ignoreName || node.name) && node.tagName !== 'SLOT') {
+                        submittable.push(node);
+                    }
+                    else {
+                        // This element has a root which could contain more submittable elements.
+                        if (node.root) {
+                            Array.prototype.push.apply(submittable, this._findElements(node.root, ignoreName));
+                        }
+                    }
+                }
+                return submittable;
+            },
+
+            _serializeElementValues: function (element) {
+                // We will assume that every custom element that needs to be serialized
+                // has a `value` property, and it contains the correct value.
+                // The only weird one is an element that implements IronCheckedElementBehaviour,
+                // in which case like the native checkbox/radio button, it's only used
+                // when checked.
+                // For native elements, from https://www.w3.org/TR/html5/forms.html#the-form-element.
+                // Native submittable elements: button, input, keygen, object, select, textarea;
+                // 1. We will skip `keygen and `object` for this iteration, and deal with
+                // them if they're actually required.
+                // 2. <button> and <textarea> have a `value` property, so they behave like
+                //    the custom elements.
+                // 3. <select> can have multiple options selected, in which case its
+                //    `value` is incorrect, and we must use the values of each of its
+                //    `selectedOptions`
+                // 4. <input> can have a whole bunch of behaviours, so it's handled separately.
+                // 5. Buttons are hard. The button that was clicked to submit the form
+                //    is the one who's name/value gets sent to the server.
+                var tag = element.tagName.toLowerCase();
+                if (tag === 'button' || (tag === 'input' && (element.type === 'submit' || element.type === 'reset'))) {
+                    return [];
+                }
+
+                if (tag === 'select') {
+                    return this._serializeSelectValues(element);
+                } else if (tag === 'input') {
+                    return this._serializeInputValues(element);
+                } else {
+                    if (element['_hasIronCheckedElementBehavior'] && !element.checked)
+                        return [];
+                    return [element.value];
+                }
+            },
+
+            _serializeSelectValues: function (element) {
+                var values = [];
+
+                // A <select multiple> has an array of options, some of which can be selected.
+                for (var i = 0; i < element.options.length; i++) {
+                    if (element.options[i].selected) {
+                        values.push(element.options[i].value)
+                    }
+                }
+                return values;
+            },
+
+            _serializeInputValues: function (element) {
+                // Most of the inputs use their 'value' attribute, with the exception
+                // of radio buttons, checkboxes and file.
+                var type = element.type.toLowerCase();
+
+                // Don't do anything for unchecked checkboxes/radio buttons.
+                // Don't do anything for file, since that requires a different request.
+                if (((type === 'checkbox' || type === 'radio') && !element.checked) ||
+                    type === 'file') {
+                    return [];
+                }
+                return [element.value];
+            },
+
+            _createHiddenElement: function (name, value) {
+                var input = document.createElement("input");
+                input.setAttribute("type", "hidden");
+                input.setAttribute("name", name);
+                input.setAttribute("value", value);
+                return input;
+            },
+
+            _addSerializedElement: function (json, name, value) {
+                // If the name doesn't exist, add it. Otherwise, serialize it to
+                // an array,
+                if (json[name] === undefined) {
+                    json[name] = value;
+                } else {
+                    if (!Array.isArray(json[name])) {
+                        json[name] = [json[name]];
+                    }
+                    json[name].push(value);
+                }
+            },
+
+            /**
+             * Loads the form.
+             */
+            load: function (json) {
+                if (this._form === null) {
+                    this.loadOnInit = true;
+                    return;
+                }
+
+                if (this.inSubmit || this.inLoad) {
+                    return;
+                }
+                this.inLoad = true;
+                this.hasLoadingError = false;
+                if (!this.request) {
+                    this.request = document.createElement('iron-ajax');
+                    this.request.addEventListener('response', this._handleFormResponse.bind(this));
+                    this.request.addEventListener('error', this._handleFormError.bind(this));
+                }
+
+                this.request.url = this.loadAction;
+                this.request.method = this._form.getAttribute('method') || 'GET';
+                this.request.contentType = this._form.getAttribute('enctype');
+                this.request.withCredentials = this.withCredentials;
+                this.request.headers = this.headers;
+
+
+                this.lastParams = Object.assign(this.loadingParams, json === undefined || json === null ? {} : json,);
+
+                if (json || this.loadingParams) {
+                    if (this.request.method.toUpperCase() === 'POST') {
+                        this.request.body = this.lastParams;
+                    }
+                    else {
+                        this.request.params = this.lastParams;
+                    }
+                }
+
+                // Allow for a presubmit hook
+                var event = this.fire('actindo-form-preload', {}, {cancelable: true});
+                if (!event.defaultPrevented) {
+                    this.request.generateRequest();
+                    this.fire('actindo-form-load', json);
+                }
+                else {
+                    this.inLoad = false;
+                }
+            },
+
+            _fillForm: function (resp) {
+                var data = {};
+                var recurse = function (r, pfx) {
+                    if (typeof r === 'object') {
+                        for (var i in r) {
+                            if (!pfx.length) {
+                                recurse(r[i], i);
+                            }
+                            else {
+                                recurse(r[i], pfx + '[' + i + ']');
+                            }
+                        }
+                    }
+                    else {
+                        data[pfx] = r;
+                    }
+                };
+
+                if (resp === null || typeof(resp) !== 'object') {
+                    throw new Error('resp is not an object');
+                }
+                if (!resp.hasOwnProperty('data')) {
+                    console.log('no data element in resp');
+                    return;
+                }
+
+                resp = resp.data;
+                if (Array.isArray(resp)) {
+                    resp = resp[0];
+                }
+
+                this.formData = resp;
+
+                recurse(resp, '');
+
+                for (var fieldName in data) {
+                    var nodes = this._getLoadableElements();
+                    for (var i = 0, c = nodes.length; i < c; i++) {
+                        var node = nodes[i],
+                            value = data[fieldName];
+
+                        if (!node.name || node.name !== fieldName) {
+                            continue;
+                        }
+
+                        // handle selects
+                        if (node.tagName.toLowerCase() === 'select') {
+                            var values = Array.isArray(value) ? value : [value];
+
+                            for (var o = 0; o < node.options.length; o++) {
+                                for (var j = 0; j < values.length; j++) {
+                                    if (node.options[o].value === values[j]) {
+                                        node.options[o].selected = true;
+                                        break;
+                                    }
+                                }
+                                node.options[o].selected = false;
+                            }
+                        }
+                        // default: set value on element
+                        else {
+                            node.value = value;
+                        }
                     }
                 }
             }
-            else
-            {
-                flat[currentName] = object;
-            }
-        },
-
-      /**
-       * Submits the form.
-       */
-      submit: function(event) {
-        // We are not using this form for submission, so always cancel its event.
-        if (event) {
-          event.preventDefault();
-        }
-
-        // If you've called this before distribution happened, bail out.
-        if (!this._form) {
-          return;
-        }
-
-        if(this.inSubmit || this.inLoad)
-        {
-            return;
-        }
-
-        if (!this.validate()) {
-          this.fire('actindo-form-invalid');
-          return;
-        }
-
-        this.inSubmit = true;
-
-        // Remove any existing children in the submission form (from a previous submit).
-        this.$.helper.textContent = '';
-
-        var json = this.serializeForm();
-
-          let flat = {};
-          let keys = Object.keys( json );
-          for(let i=0;i<keys.length;i++)
-          {
-              this._flattenFormData( json[keys[i]], keys[i], flat );
-          }
-
-        // If we want a redirect, submit the form natively.
-        if (this.allowRedirect) {
-          // If we're submitting the form natively, then create a hidden element for
-          // each of the values.
-          for (element in flat) {
-            this.$.helper.appendChild(this._createHiddenElement(element, flat[element]));
-          }
-
-          // Copy the original form attributes.
-          this.$.helper.action = this._form.getAttribute('action');
-          this.$.helper.method = this._form.getAttribute('method') || 'GET';
-          this.$.helper.contentType = this._form.getAttribute('enctype');
-
-          this.$.helper.submit();
-          this.fire('actindo-form-submit');
-        } else {
-          this._makeAjaxRequest(flat);
-        }
-      },
-
-      /**
-       * Resets the form to the default values.
-       */
-      reset: function(event) {
-        // We are not using this form for submission, so always cancel its event.
-        if (event)
-          event.preventDefault();
-
-        // If you've called this before distribution happened, bail out.
-        if (!this._form) {
-          return;
-        }
-
-        // Load the initial values.
-        var nodes = this._getSubmittableElements();
-        for (var i = 0; i < nodes.length; i++) {
-          var node = nodes[i];
-          if (this._defaults.has(node)) {
-            var defaults = this._defaults.get(node);
-            node.value = defaults.value;
-            node.checked = defaults.checked;
-          }
-        }
-
-        this.fire('actindo-form-reset');
-      },
-
-      /**
-       * Serializes the form as will be used in submission. Note that `serialize`
-       * is a Polymer reserved keyword, so calling `someIronForm`.serialize()`
-       * will give you unexpected results.
-       * @return {Object} An object containing name-value pairs for elements that
-       *                  would be submitted.
-       */
-      serializeForm: function() {
-        // Only elements that have a `name` and are not disabled are submittable.
-        var elements = this._getSubmittableElements();
-        var json = {};
-        for (var i = 0; i < elements.length; i++) {
-          var values = this._serializeElementValues(elements[i]);
-          for (var v = 0; v < values.length; v++) {
-            this._addSerializedElement(json, elements[i].name, values[v]);
-          }
-        }
-        return json;
-      },
-
-      _handleFormResponse: function (event) {
-        if(this.inLoad)
-        {
-            this.inLoad = this.inSubmit = false;
-            this._fillForm(this.request.lastResponse);
-            this.fire('actindo-form-load-response', event.detail);
-            return;
-        }
-
-        this.inLoad = this.inSubmit = false;
-        this.fire('actindo-form-response', event.detail);
-      },
-
-      _isShowFieldValidationMessages(resp = {})
-      {
-        if (Array.isArray(resp.fieldValidationMessages) && resp.fieldValidationMessages.length > 0)
-        {
-          return true;
-        }
-        return false;
-      },
-
-      _handleFormError: function (event) {
-        this.inLoad = this.inSubmit = false;
-        this.fire('actindo-form-error', event.detail);
-        if(this.showErrors)
-        {
-            var resp = event.detail.request.response;
-            if(resp && typeof resp === 'object')
-            {
-                if (!this._isShowFieldValidationMessages(resp))
-                {
-                  this.$.dialog.querySelector('h2').innerHTML = resp.error;
-                  this.$.dialog.querySelector('paper-dialog-scrollable').innerHTML = resp.trace;
-                  this.$.dialog.open();
-                  return;
-                }
-                const submitableElements = this._getSubmittableElements();
-                const mapNameWithElement = {};
-                submitableElements.forEach( element => {
-                  mapNameWithElement[element.getAttribute('name')] = element 
-                });
-                resp.fieldValidationMessages.forEach( field => {
-                  mapNameWithElement[field.id].errorMessage = field.msg;
-                  mapNameWithElement[field.id].setProperties({
-                    invalid: true
-                  });
-                });
-            }
-        }
-      },
-
-      _makeAjaxRequest: function(json) {
-        // Initialize the iron-ajax element if we haven't already.
-        if (!this.request) {
-          this.request = document.createElement('iron-ajax');
-          this.request.addEventListener('response', this._handleFormResponse.bind(this));
-          this.request.addEventListener('error', this._handleFormError.bind(this));
-        }
-
-        // Native forms can also index elements magically by their name (can't make
-        // this up if I tried) so we need to get the correct attributes, not the
-        // elements with those names.
-        this.request.url = this._form.getAttribute('action');
-        this.request.method = this._form.getAttribute('method') || 'GET';
-        this.request.contentType = this._form.getAttribute('enctype');
-        this.request.withCredentials = this.withCredentials;
-        this.request.headers = this.headers;
-
-        if (this._form.method.toUpperCase() === 'POST') {
-          this.request.body = json;
-        } else {
-          this.request.params = json;
-        }
-
-        // Allow for a presubmit hook
-        var event = this.fire('actindo-form-presubmit', {}, {cancelable: true});
-        if(!event.defaultPrevented) {
-          this.request.generateRequest();
-          this.fire('actindo-form-submit', json);
-        }
-        else
-        {
-          this.inSubmit = false;
-        }
-      },
-
-      _getValidatableElements: function() {
-        return this._findElements(this._form, true, false);
-      },
-
-      _getSubmittableElements: function() {
-        return this._findElements(this._form, false, false);
-      },
-
-      _getLoadableElements: function () {
-        return this._findElements(this._form, false, true);
-      },
-
-      _findElements: function(parent, ignoreName, ignoreDisabled) {
-        var nodes = Polymer.dom(parent).querySelectorAll('*');
-        var submittable = [];
-
-        for (var i = 0; i < nodes.length; i++) {
-          var node = nodes[i];
-          // An element is submittable if it is not disabled, and if it has a
-          // 'name' attribute.
-          // should ignore element with tagName equal to SLOT
-          if((ignoreDisabled || !node.disabled) && (ignoreName || node.name) && node.tagName !== 'SLOT') {
-            submittable.push(node);
-          }
-          else {
-            // This element has a root which could contain more submittable elements.
-            if(node.root) {
-              Array.prototype.push.apply(submittable, this._findElements(node.root, ignoreName));
-            }
-          }
-        }
-        return submittable;
-      },
-
-      _serializeElementValues: function(element) {
-        // We will assume that every custom element that needs to be serialized
-        // has a `value` property, and it contains the correct value.
-        // The only weird one is an element that implements IronCheckedElementBehaviour,
-        // in which case like the native checkbox/radio button, it's only used
-        // when checked.
-        // For native elements, from https://www.w3.org/TR/html5/forms.html#the-form-element.
-        // Native submittable elements: button, input, keygen, object, select, textarea;
-        // 1. We will skip `keygen and `object` for this iteration, and deal with
-        // them if they're actually required.
-        // 2. <button> and <textarea> have a `value` property, so they behave like
-        //    the custom elements.
-        // 3. <select> can have multiple options selected, in which case its
-        //    `value` is incorrect, and we must use the values of each of its
-        //    `selectedOptions`
-        // 4. <input> can have a whole bunch of behaviours, so it's handled separately.
-        // 5. Buttons are hard. The button that was clicked to submit the form
-        //    is the one who's name/value gets sent to the server.
-        var tag = element.tagName.toLowerCase();
-        if (tag === 'button' || (tag === 'input' && (element.type === 'submit' || element.type === 'reset'))) {
-          return [];
-        }
-
-        if (tag === 'select') {
-          return this._serializeSelectValues(element);
-        } else if (tag === 'input') {
-          return this._serializeInputValues(element);
-        } else {
-          if (element['_hasIronCheckedElementBehavior'] && !element.checked)
-            return [];
-          return [element.value];
-        }
-      },
-
-      _serializeSelectValues: function(element) {
-        var values = [];
-
-        // A <select multiple> has an array of options, some of which can be selected.
-        for (var i = 0; i < element.options.length; i++) {
-          if (element.options[i].selected) {
-            values.push(element.options[i].value)
-          }
-        }
-        return values;
-      },
-
-      _serializeInputValues: function(element) {
-        // Most of the inputs use their 'value' attribute, with the exception
-        // of radio buttons, checkboxes and file.
-        var type = element.type.toLowerCase();
-
-        // Don't do anything for unchecked checkboxes/radio buttons.
-        // Don't do anything for file, since that requires a different request.
-        if (((type === 'checkbox' || type === 'radio') && !element.checked) ||
-            type === 'file') {
-          return [];
-        }
-        return [element.value];
-      },
-
-      _createHiddenElement: function(name, value) {
-        var input = document.createElement("input");
-        input.setAttribute("type", "hidden");
-        input.setAttribute("name", name);
-        input.setAttribute("value", value);
-        return input;
-      },
-
-      _addSerializedElement: function(json, name, value) {
-        // If the name doesn't exist, add it. Otherwise, serialize it to
-        // an array,
-        if (json[name] === undefined) {
-          json[name] = value;
-        } else {
-          if (!Array.isArray(json[name])) {
-            json[name] = [json[name]];
-          }
-          json[name].push(value);
-        }
-      },
-
-      /**
-       * Loads the form.
-       */
-      load: function(json) {
-          if(this._form === null)
-          {
-              this.loadOnInit = true;
-              return;
-          }
-
-          if(this.inSubmit || this.inLoad)
-          {
-              return;
-          }
-          this.inLoad = true;
-
-          if (!this.request) {
-              this.request = document.createElement('iron-ajax');
-              this.request.addEventListener('response', this._handleFormResponse.bind(this));
-              this.request.addEventListener('error', this._handleFormError.bind(this));
-          }
-
-          this.request.url = this.loadAction;
-          this.request.method = this._form.getAttribute('method') || 'GET';
-          this.request.contentType = this._form.getAttribute('enctype');
-          this.request.withCredentials = this.withCredentials;
-          this.request.headers = this.headers;
-
-          if(json)
-          {
-              if(this.request.method.toUpperCase() === 'POST')
-              {
-                  this.request.body = json;
-              }
-              else
-              {
-                  this.request.params = json;
-              }
-          }
-
-          // Allow for a presubmit hook
-          var event = this.fire('actindo-form-preload', {}, {cancelable: true});
-          if(!event.defaultPrevented)
-          {
-              this.request.generateRequest();
-              this.fire('actindo-form-load', json);
-          }
-          else
-          {
-              this.inLoad = false;
-          }
-      },
-
-      _fillForm: function( resp ) {
-          var data = {};
-          var recurse = function(r, pfx) {
-              if(typeof r === 'object' ) {
-                  for(var i in r)
-                  {
-                      if( !pfx.length ) {
-                          recurse(r[i], i);
-                      }
-                      else {
-                          recurse(r[i], pfx + '[' + i + ']');
-                      }
-                  }
-              }
-              else {
-                  data[pfx] = r;
-              }
-          };
-
-          if(resp === null || typeof(resp) !== 'object')
-          {
-              throw new Error('resp is not an object');
-          }
-          if(!resp.hasOwnProperty('data'))
-          {
-              console.log( 'no data element in resp' );
-              return;
-          }
-
-          resp = resp.data;
-          if(Array.isArray(resp))
-          {
-              resp = resp[0];
-          }
-
-          this.formData = resp;
-
-          recurse( resp, '' );
-
-          for(var fieldName in data)
-          {
-              var nodes = this._getLoadableElements();
-              for(var i = 0, c = nodes.length; i < c; i++)
-              {
-                  var node = nodes[i],
-                      value = data[fieldName];
-
-                  if(!node.name || node.name !== fieldName)
-                  {
-                      continue;
-                  }
-
-                  // handle selects
-                  if(node.tagName.toLowerCase() === 'select')
-                  {
-                      var values = Array.isArray(value) ? value : [value];
-
-                      for(var o = 0; o < node.options.length; o++)
-                      {
-                          for(var j = 0; j < values.length; j++)
-                          {
-                              if(node.options[o].value === values[j])
-                              {
-                                  node.options[o].selected = true;
-                                  break;
-                              }
-                          }
-                          node.options[o].selected = false;
-                      }
-                  }
-                  // default: set value on element
-                  else
-                  {
-                      node.value = value;
-                  }
-              }
-          }
-      }
-    });
-  </script>
+        });
+    </script>
 </dom-module>
