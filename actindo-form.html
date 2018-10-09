@@ -267,10 +267,13 @@ attach it to the `<actindo-form>`:
                     notify: true
                 },
 
-                disableSafeButton: {
+                /**
+                 * Provides information if an existing save button should be disabled; binding this variable is up to the dev using the component
+                 */
+                disableSaveButton: {
                     type: Boolean,
                     notify: true,
-                    computed: "_disableSafeButton(inLoad, inSubmit, hasLoadingError)"
+                    computed: "_disableSaveButton(inLoad, inSubmit, hasLoadingError)"
                 },
 
                 /*
@@ -467,7 +470,7 @@ attach it to the `<actindo-form>`:
                 this.load(this.lastParams);
             },
 
-            _disableSafeButton: function(inLoad, inSubmit, hasLoadingError)
+            _disableSaveButton: function(inLoad, inSubmit, hasLoadingError)
             {
                 return inLoad || inSubmit || hasLoadingError;
             },

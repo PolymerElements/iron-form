@@ -127,17 +127,17 @@
           "defaultValue": "false"
         },
         {
-          "name": "disableSafeButton",
+          "name": "disableSaveButton",
           "type": "boolean",
-          "description": "",
+          "description": "Provides information if an existing save button should be disabled; binding this variable is up to the dev using the component",
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 269,
+              "line": 272,
               "column": 16
             },
             "end": {
-              "line": 273,
+              "line": 276,
               "column": 17
             }
           },
@@ -155,11 +155,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 280,
+              "line": 283,
               "column": 16
             },
             "end": {
-              "line": 283,
+              "line": 286,
               "column": 17
             }
           },
@@ -175,11 +175,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 288,
+              "line": 291,
               "column": 16
             },
             "end": {
-              "line": 293,
+              "line": 296,
               "column": 17
             }
           },
@@ -195,11 +195,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 298,
+              "line": 301,
               "column": 16
             },
             "end": {
-              "line": 301,
+              "line": 304,
               "column": 17
             }
           },
@@ -215,11 +215,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 306,
+              "line": 309,
               "column": 16
             },
             "end": {
-              "line": 309,
+              "line": 312,
               "column": 17
             }
           },
@@ -235,11 +235,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 319,
+              "line": 322,
               "column": 16
             },
             "end": {
-              "line": 323,
+              "line": 326,
               "column": 17
             }
           },
@@ -257,11 +257,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 328,
+              "line": 331,
               "column": 16
             },
             "end": {
-              "line": 332,
+              "line": 335,
               "column": 17
             }
           },
@@ -279,11 +279,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 337,
+              "line": 340,
               "column": 16
             },
             "end": {
-              "line": 340,
+              "line": 343,
               "column": 17
             }
           },
@@ -299,11 +299,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 345,
+              "line": 348,
               "column": 16
             },
             "end": {
-              "line": 351,
+              "line": 354,
               "column": 17
             }
           },
@@ -322,11 +322,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 411,
+              "line": 414,
               "column": 12
             },
             "end": {
-              "line": 425,
+              "line": 428,
               "column": 13
             }
           },
@@ -339,11 +339,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 427,
+              "line": 430,
               "column": 12
             },
             "end": {
-              "line": 432,
+              "line": 435,
               "column": 13
             }
           },
@@ -356,11 +356,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 434,
+              "line": 437,
               "column": 12
             },
             "end": {
-              "line": 456,
+              "line": 459,
               "column": 13
             }
           },
@@ -373,11 +373,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 458,
+              "line": 461,
               "column": 12
             },
             "end": {
-              "line": 460,
+              "line": 463,
               "column": 13
             }
           },
@@ -390,11 +390,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 465,
+              "line": 468,
               "column": 12
             },
             "end": {
-              "line": 467,
+              "line": 470,
               "column": 13
             }
           },
@@ -407,11 +407,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 469,
+              "line": 472,
               "column": 12
             },
             "end": {
-              "line": 472,
+              "line": 475,
               "column": 13
             }
           },
@@ -434,11 +434,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 478,
+              "line": 481,
               "column": 12
             },
             "end": {
-              "line": 496,
+              "line": 499,
               "column": 13
             }
           },
@@ -455,11 +455,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 499,
+              "line": 502,
               "column": 12
             },
             "end": {
-              "line": 524,
+              "line": 527,
               "column": 13
             }
           },
@@ -482,11 +482,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 529,
+              "line": 532,
               "column": 12
             },
             "end": {
-              "line": 581,
+              "line": 584,
               "column": 13
             }
           },
@@ -503,11 +503,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 586,
+              "line": 589,
               "column": 12
             },
             "end": {
-              "line": 608,
+              "line": 611,
               "column": 13
             }
           },
@@ -524,11 +524,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 617,
+              "line": 620,
               "column": 12
             },
             "end": {
-              "line": 628,
+              "line": 631,
               "column": 13
             }
           },
@@ -545,11 +545,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 630,
+              "line": 633,
               "column": 12
             },
             "end": {
-              "line": 640,
+              "line": 643,
               "column": 13
             }
           },
@@ -566,11 +566,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 642,
+              "line": 645,
               "column": 12
             },
             "end": {
-              "line": 647,
+              "line": 650,
               "column": 13
             }
           },
@@ -587,11 +587,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 649,
+              "line": 652,
               "column": 12
             },
             "end": {
-              "line": 708,
+              "line": 711,
               "column": 13
             }
           },
@@ -608,11 +608,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 710,
+              "line": 713,
               "column": 12
             },
             "end": {
-              "line": 742,
+              "line": 745,
               "column": 13
             }
           },
@@ -629,11 +629,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 744,
+              "line": 747,
               "column": 12
             },
             "end": {
-              "line": 746,
+              "line": 749,
               "column": 13
             }
           },
@@ -646,11 +646,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 748,
+              "line": 751,
               "column": 12
             },
             "end": {
-              "line": 750,
+              "line": 753,
               "column": 13
             }
           },
@@ -663,11 +663,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 752,
+              "line": 755,
               "column": 12
             },
             "end": {
-              "line": 754,
+              "line": 757,
               "column": 13
             }
           },
@@ -680,11 +680,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 756,
+              "line": 759,
               "column": 12
             },
             "end": {
-              "line": 776,
+              "line": 779,
               "column": 13
             }
           },
@@ -707,11 +707,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 778,
+              "line": 781,
               "column": 12
             },
             "end": {
-              "line": 810,
+              "line": 813,
               "column": 13
             }
           },
@@ -728,11 +728,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 812,
+              "line": 815,
               "column": 12
             },
             "end": {
-              "line": 822,
+              "line": 825,
               "column": 13
             }
           },
@@ -749,11 +749,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 824,
+              "line": 827,
               "column": 12
             },
             "end": {
-              "line": 836,
+              "line": 839,
               "column": 13
             }
           },
@@ -770,11 +770,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 838,
+              "line": 841,
               "column": 12
             },
             "end": {
-              "line": 844,
+              "line": 847,
               "column": 13
             }
           },
@@ -794,11 +794,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 846,
+              "line": 849,
               "column": 12
             },
             "end": {
-              "line": 857,
+              "line": 860,
               "column": 13
             }
           },
@@ -821,11 +821,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 862,
+              "line": 865,
               "column": 12
             },
             "end": {
-              "line": 906,
+              "line": 909,
               "column": 13
             }
           },
@@ -842,11 +842,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 908,
+              "line": 911,
               "column": 12
             },
             "end": {
-              "line": 973,
+              "line": 976,
               "column": 13
             }
           },
@@ -872,7 +872,7 @@
           "column": 16
         },
         "end": {
-          "line": 974,
+          "line": 977,
           "column": 9
         }
       },
@@ -976,15 +976,15 @@
           "type": "boolean"
         },
         {
-          "name": "disable-safe-button",
-          "description": "",
+          "name": "disable-save-button",
+          "description": "Provides information if an existing save button should be disabled; binding this variable is up to the dev using the component",
           "sourceRange": {
             "start": {
-              "line": 269,
+              "line": 272,
               "column": 16
             },
             "end": {
-              "line": 273,
+              "line": 276,
               "column": 17
             }
           },
@@ -996,11 +996,11 @@
           "description": "Set this to true if you don't want the form to be submitted through an\najax request, and you want the page to redirect to the action URL\nafter the form has been submitted.",
           "sourceRange": {
             "start": {
-              "line": 280,
+              "line": 283,
               "column": 16
             },
             "end": {
-              "line": 283,
+              "line": 286,
               "column": 17
             }
           },
@@ -1012,11 +1012,11 @@
           "description": "HTTP request headers to send. See PolymerElements/iron-ajax for\nmore details. Only works when `allowRedirect` is false.",
           "sourceRange": {
             "start": {
-              "line": 288,
+              "line": 291,
               "column": 16
             },
             "end": {
-              "line": 293,
+              "line": 296,
               "column": 17
             }
           },
@@ -1028,11 +1028,11 @@
           "description": "Set the `withCredentials` flag on the request. See PolymerElements/iron-ajax for\nmore details. Only works when `allowRedirect` is false.",
           "sourceRange": {
             "start": {
-              "line": 298,
+              "line": 301,
               "column": 16
             },
             "end": {
-              "line": 301,
+              "line": 304,
               "column": 17
             }
           },
@@ -1044,11 +1044,11 @@
           "description": "Load action url",
           "sourceRange": {
             "start": {
-              "line": 306,
+              "line": 309,
               "column": 16
             },
             "end": {
-              "line": 309,
+              "line": 312,
               "column": 17
             }
           },
@@ -1060,11 +1060,11 @@
           "description": "true if load is active",
           "sourceRange": {
             "start": {
-              "line": 319,
+              "line": 322,
               "column": 16
             },
             "end": {
-              "line": 323,
+              "line": 326,
               "column": 17
             }
           },
@@ -1076,11 +1076,11 @@
           "description": "true if submit is active",
           "sourceRange": {
             "start": {
-              "line": 328,
+              "line": 331,
               "column": 16
             },
             "end": {
-              "line": 332,
+              "line": 335,
               "column": 17
             }
           },
@@ -1092,11 +1092,11 @@
           "description": "If an error occurs, show a paper-dialog with error & stack trace",
           "sourceRange": {
             "start": {
-              "line": 337,
+              "line": 340,
               "column": 16
             },
             "end": {
-              "line": 340,
+              "line": 343,
               "column": 17
             }
           },
@@ -1108,11 +1108,11 @@
           "description": "last loaded form data",
           "sourceRange": {
             "start": {
-              "line": 345,
+              "line": 348,
               "column": 16
             },
             "end": {
-              "line": 351,
+              "line": 354,
               "column": 17
             }
           },
@@ -1183,8 +1183,8 @@
         },
         {
           "type": "CustomEvent",
-          "name": "disable-safe-button-changed",
-          "description": "Fired when the `disableSafeButton` property changes.",
+          "name": "disable-save-button-changed",
+          "description": "Fired when the `disableSaveButton` property changes.",
           "metadata": {}
         },
         {
