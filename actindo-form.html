@@ -152,12 +152,6 @@ attach it to the `<actindo-form>`:
     </div>
     <!-- This form is used for submission -->
     <form id="helper" action$="[[action]]" method$="[[method]]" enctype$="[[enctype]]"></form>
-
-    <paper-dialog id="dialog">
-
-        <paper-dialog-scrollable></paper-dialog-scrollable>
-
-
     </paper-dialog>
   </template>
 
@@ -523,6 +517,15 @@ attach it to the `<actindo-form>`:
         this.fire('actindo-form-response', event.detail);
       },
 
+      _isShowFieldValidationMessages(resp = {})
+      {
+        if (Array.isArray(resp.fieldValidationMessages) && resp.fieldValidationMessages.length > 0)
+        {
+          return true;
+        }
+        return false;
+      },
+
       _handleFormError: function (event) {
         this.inLoad = this.inSubmit = false;
         this.fire('actindo-form-error', event.detail);
@@ -531,13 +534,24 @@ attach it to the `<actindo-form>`:
             var resp = event.detail.request.response;
             if(resp && typeof resp === 'object')
             {
-                if (resp.fieldValidationMessages && Array.isArray(resp.fieldValidationMessages)) {
-
+                if (!this._isShowFieldValidationMessages(resp))
+                {
+                  this.$.dialog.querySelector('h2').innerHTML = resp.error;
+                  this.$.dialog.querySelector('paper-dialog-scrollable').innerHTML = resp.trace;
+                  this.$.dialog.open();
+                  return;
                 }
-                // this.$.dialog.querySelector('h2').innerHTML = resp.error;
-                // this.$.dialog.querySelector('paper-dialog-scrollable').innerHTML = resp.trace;
-                this.showError = true;
-                // this.$.dialog.open();
+                const submitableElements = this._getSubmittableElements();
+                const mapNameWithElement = {};
+                submitableElements.forEach( element => {
+                  mapNameWithElement[element.getAttribute('name')] = element 
+                });
+                resp.fieldValidationMessages.forEach( field => {
+                  mapNameWithElement[field.id].errorMessage = field.msg;
+                  mapNameWithElement[field.id].setProperties({
+                    invalid: true
+                  });
+                });
             }
         }
       },
@@ -597,7 +611,8 @@ attach it to the `<actindo-form>`:
           var node = nodes[i];
           // An element is submittable if it is not disabled, and if it has a
           // 'name' attribute.
-          if((ignoreDisabled || !node.disabled) && (ignoreName || node.name)) {
+          // should ignore element with tagName equal to SLOT
+          if((ignoreDisabled || !node.disabled) && (ignoreName || node.name) && node.tagName !== 'SLOT') {
             submittable.push(node);
           }
           else {
