@@ -104,7 +104,7 @@ Polymer({
     <slot></slot>
 
     <!-- This form is used for submission -->
-    <form id="helper" action\$="[[action]]" method\$="[[method]]" enctype\$="[[enctype]]"></form>
+    <form id="helper" action$="[[action]]" method$="[[method]]" enctype$="[[enctype]]"></form>
 `,
 
   is: 'iron-form',
