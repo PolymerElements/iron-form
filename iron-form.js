@@ -89,10 +89,10 @@ attach it to the `<iron-form>`:
   wrapper.appendChild(form);
 
 @element iron-form
-@hero hero.svg
 @demo demo/index.html
 */
 Polymer({
+  /** @override */
   _template: html`
     <style>
       :host {
@@ -175,6 +175,7 @@ Polymer({
 
   /**
    * @return {void}
+   * @override
    */
   attached: function() {
     // We might have been detached then re-attached.
@@ -211,6 +212,7 @@ Polymer({
 
   /**
    * @return {void}
+   * @override
    */
   detached: function() {
     if (this._nodeObserver) {
