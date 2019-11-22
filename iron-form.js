@@ -249,7 +249,7 @@ Polymer({
    * @return {void}
    */
   _saveInitialValues: function(overwriteValues) {
-    var nodes = this._getValidatableElements();
+    var nodes = this._getResettableElements();
     for (var i = 0; i < nodes.length; i++) {
       var node = nodes[i];
       if (!this._defaults.has(node) || overwriteValues) {
@@ -374,7 +374,7 @@ Polymer({
     }
 
     // Load the initial values.
-    var nodes = this._getValidatableElements();
+    var nodes = this._getResettableElements();
     for (var i = 0; i < nodes.length; i++) {
       var node = nodes[i];
       if (this._defaults.has(node)) {
@@ -449,14 +449,28 @@ Polymer({
     }
   },
 
+  _getResettableElements: function() {
+    return this._findElements(
+        this._form,
+        true /* ignoreName */,
+        false /* skipSlots */,
+        true /* ignoreDisabled */);
+  },
+
   _getValidatableElements: function() {
     return this._findElements(
-        this._form, true /* ignoreName */, false /* skipSlots */);
+        this._form,
+        true /* ignoreName */,
+        false /* skipSlots */,
+        false /* ignoreDisabled */);
   },
 
   _getSubmittableElements: function() {
     return this._findElements(
-        this._form, false /* ignoreName */, false /* skipSlots */);
+        this._form,
+        false /* ignoreName */,
+        false /* skipSlots */,
+        false /* ignoreDisabled */);
   },
 
   /**
@@ -465,11 +479,13 @@ Polymer({
    * @param  {!Node} parent The parent node
    * @param  {!boolean} ignoreName  Whether the name of the submittable nodes should be disregarded
    * @param  {!boolean} skipSlots  Whether to skip traversing of slot elements
+   * @param  {!boolean} ignoreDisabled  Whether the disabled state of the submittable nodes should be disregarded.
    * @param  {!Array<!Node>=} submittable Reference to the array of submittables
    * @return {!Array<!Node>}
    * @private
    */
-  _findElements: function(parent, ignoreName, skipSlots, submittable) {
+  _findElements: function(
+      parent, ignoreName, skipSlots, ignoreDisabled, submittable) {
     submittable = submittable || [];
     var nodes = dom(parent).querySelectorAll('*');
     for (var i = 0; i < nodes.length; i++) {
@@ -477,9 +493,11 @@ Polymer({
       // name attribute.
       if (!skipSlots &&
           (nodes[i].localName === 'slot' || nodes[i].localName === 'content')) {
-        this._searchSubmittableInSlot(submittable, nodes[i], ignoreName);
+        this._searchSubmittableInSlot(
+            submittable, nodes[i], ignoreName, ignoreDisabled);
       } else {
-        this._searchSubmittable(submittable, nodes[i], ignoreName);
+        this._searchSubmittable(
+            submittable, nodes[i], ignoreName, ignoreDisabled);
       }
     }
     return submittable;
@@ -491,10 +509,12 @@ Polymer({
    * @param  {!Array<!Node>} submittable Reference to the array of submittables
    * @param  {!Node} node The slot or content node
    * @param  {!boolean} ignoreName  Whether the name of the submittable nodes should be disregarded
+   * @param  {!boolean} ignoreDisabled  Whether the disabled state of the submittable nodes should be disregarded.
    * @return {void}
    * @private
    */
-  _searchSubmittableInSlot: function(submittable, node, ignoreName) {
+  _searchSubmittableInSlot: function(
+      submittable, node, ignoreName, ignoreDisabled) {
     var assignedNodes = dom(node).getDistributedNodes();
 
     for (var i = 0; i < assignedNodes.length; i++) {
@@ -504,11 +524,13 @@ Polymer({
 
       // Note: assignedNodes does not contain <slot> or <content> because
       // getDistributedNodes flattens the tree.
-      this._searchSubmittable(submittable, assignedNodes[i], ignoreName);
+      this._searchSubmittable(
+          submittable, assignedNodes[i], ignoreName, ignoreDisabled);
       var nestedAssignedNodes = dom(assignedNodes[i]).querySelectorAll('*');
       for (var j = 0; j < nestedAssignedNodes.length; j++) {
         this._searchSubmittable(
-            submittable, nestedAssignedNodes[j], ignoreName);
+            submittable, nestedAssignedNodes[j], ignoreName),
+            ignoreDisabled;
       }
     }
   },
@@ -519,15 +541,20 @@ Polymer({
    * @param  {!Array<!Node>} submittable Reference to the array of submittables
    * @param  {!Node} node The node to be
    * @param  {!boolean} ignoreName  Whether the name of the submittable nodes should be disregarded
+   * @param  {!boolean} ignoreDisabled  Whether the disabled state of the submittable nodes should be disregarded.
    * @return {void}
    * @private
    */
-  _searchSubmittable: function(submittable, node, ignoreName) {
-    if (this._isSubmittable(node, ignoreName)) {
+  _searchSubmittable: function(submittable, node, ignoreName, ignoreDisabled) {
+    if (this._isSubmittable(node, ignoreName, ignoreDisabled)) {
       submittable.push(node);
     } else if (node.root) {
       this._findElements(
-          node.root, ignoreName, true /* skipSlots */, submittable);
+          node.root,
+          ignoreName,
+          true /* skipSlots */,
+          ignoreDisabled,
+          submittable);
     }
   },
 
@@ -539,12 +566,13 @@ Polymer({
    * we don't search for validatables in its shadowRoot.
    * @param {!Node} node
    * @param {!boolean} ignoreName
+   * @param  {!boolean} ignoreDisabled  Whether the disabled state of the submittable nodes should be disregarded.
    * @return {boolean}
    * @private
    */
-  _isSubmittable: function(node, ignoreName) {
+  _isSubmittable: function(node, ignoreName, ignoreDisabled) {
     return (
-        !node.disabled &&
+        (ignoreDisabled || !node.disabled) &&
         (ignoreName ? node.name || typeof node.validate === 'function' :
                       node.name));
   },
