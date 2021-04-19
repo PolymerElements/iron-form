@@ -475,8 +475,12 @@ Polymer({
     for (var i = 0; i < nodes.length; i++) {
       // An element is submittable if it is not disabled, and if it has a
       // name attribute.
-      if (!skipSlots &&
-          (nodes[i].localName === 'slot' || nodes[i].localName === 'content')) {
+      var isSlot = nodes[i].localName === 'slot' || nodes[i].localName === 'content';
+      if (skipSlots && isSlot) {
+        continue;
+      }
+
+      if (isSlot) {
         this._searchSubmittableInSlot(submittable, nodes[i], ignoreName);
       } else {
         this._searchSubmittable(submittable, nodes[i], ignoreName);
