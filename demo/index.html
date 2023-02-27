@@ -66,7 +66,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
         .output {
           margin-top: 20px;
-          word-wrap: break-word;
+          white-space: pre-wrap;
           font-family: monospace;
         }
       </style>
@@ -110,7 +110,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </iron-form>
         <script>
           form1.addEventListener('iron-form-submit', function(event) {
-            this.querySelector('.output').innerHTML = JSON.stringify(event.detail);
+            this.querySelector('.output').innerText = JSON.stringify(event.detail, undefined, 2);
           });
         </script>
       </template>
@@ -139,7 +139,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </iron-form>
         <script>
           form2.addEventListener('iron-form-submit', function(event) {
-            this.querySelector('.output').innerHTML = JSON.stringify(event.detail);
+            this.querySelector('.output').innerText = JSON.stringify(event.detail, undefined, 2);
           });
         </script>
       </template>
@@ -161,7 +161,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             this.request.params['sidekick'] = 'Robin';
           });
           form3.addEventListener('iron-form-submit', function(event) {
-            this.querySelector('.output').innerHTML = JSON.stringify(event.detail);
+            this.querySelector('.output').innerText = JSON.stringify(event.detail, undefined, 2);
           });
         </script>
       </template>
@@ -186,7 +186,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </iron-form>
         <script>
           form4.addEventListener('iron-form-submit', function(event) {
-            this.querySelector('.output').innerHTML = JSON.stringify(event.detail);
+            this.querySelector('.output').innerText = JSON.stringify(event.detail, undefined, 2);
             spinner.active = false;
             spinner.hidden = true;
             form4Submit.disabled = false;
@@ -226,7 +226,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </iron-form>
         <script>
           form5.addEventListener('iron-form-submit', function(event) {
-            this.querySelector('.output').innerHTML = JSON.stringify(event.detail);
+            this.querySelector('.output').innerHTML = JSON.stringify(event.detail, undefined, 2);
           });
         </script>
       </template>
@@ -252,7 +252,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </iron-form>
         <script>
           form6.addEventListener('iron-form-submit', function(event) {
-            this.querySelector('.output').innerHTML = JSON.stringify(event.detail);
+            this.querySelector('.output').innerHTML = JSON.stringify(event.detail, undefined, 2);
           });
         </script>
       </template>
